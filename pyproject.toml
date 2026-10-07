@@ -1,0 +1,32 @@
+[project]
+name = "managed_futures"
+version = "0.1.0"
+description = "Systematic managed futures research framework"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "openpyxl",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "mypy", "ruff"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
