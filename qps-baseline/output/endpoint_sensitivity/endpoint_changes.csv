@@ -1,0 +1,9 @@
+instrument,month,prior_return,assumed_return,start_price_date,end_price_date,start_price,end_price,status,applied_to_primary,applied_to_sensitivity
+DT,1997-03,,-0.022984731571170536,1997-02-28,1997-03-27,60.91,59.51,unverified_research_assumption,False,True
+DT,1997-04,,0.011930767938161724,1997-03-27,1997-04-30,59.51,60.22,unverified_research_assumption,False,True
+GS,1997-03,,-0.02570610666937967,1997-02-28,1997-03-27,57.0098,55.5443,unverified_research_assumption,False,True
+GS,1997-04,,0.01491242125654657,1997-03-27,1997-04-30,55.5443,56.3726,unverified_research_assumption,False,True
+LX,1997-03,,0.0016485854073600148,1997-02-28,1997-03-27,3760.8,3767.0,unverified_research_assumption,False,True
+LX,1997-04,,0.032227236527740954,1997-03-27,1997-04-30,3767.0,3888.4,unverified_research_assumption,False,True
+SS,1997-03,,-0.0014940239043823578,1997-02-28,1997-03-27,92.368,92.23,unverified_research_assumption,False,True
+SS,1997-04,,0.001073403447901855,1997-03-27,1997-04-30,92.23,92.329,unverified_research_assumption,False,True

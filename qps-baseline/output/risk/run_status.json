@@ -1,0 +1,111 @@
+{
+  "status": "blocked_missing_held_returns",
+  "full_period_comparison_published": false,
+  "sample": {
+    "start": "1976-01",
+    "end": "2014-12",
+    "months": 468,
+    "initialization_start": "1969-01",
+    "prior_risk_window_start": "1973-01",
+    "prior_risk_window_end": "1975-12",
+    "eligible_at_start": 7,
+    "minimum_required": 10,
+    "start_ready": false,
+    "below_minimum_months": 1,
+    "first_investable_month": "1976-02",
+    "treatment": "Requested dates retained; existing minimum-instrument rule leaves portfolios flat below threshold.",
+    "retained_columns": 58,
+    "excluded_columns": [
+      "YM",
+      "EC"
+    ],
+    "observed_instrument_returns": 20233,
+    "eligible_instrument_observations": 17977,
+    "endpoint_return_corrections_in_sample": 8,
+    "source_switch_month": "2006-01",
+    "source_known_before_all_months": true,
+    "duplicate_columns_absent": [
+      "ER",
+      "EN",
+      "ES",
+      "SC"
+    ],
+    "data_scenario": "preserved_policy",
+    "assumed_return_additions": 0,
+    "endpoint_assumption_verified": null
+  },
+  "failures": [
+    {
+      "strategy": "trend",
+      "band": 0.0,
+      "cost_bps": 0,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "static",
+      "band": 0.0,
+      "cost_bps": 0,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "trend",
+      "band": 0.0,
+      "cost_bps": 5,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "static",
+      "band": 0.0,
+      "cost_bps": 5,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "trend",
+      "band": 0.0,
+      "cost_bps": 10,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "static",
+      "band": 0.0,
+      "cost_bps": 10,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "trend",
+      "band": 0.1,
+      "cost_bps": 0,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "static",
+      "band": 0.1,
+      "cost_bps": 0,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "trend",
+      "band": 0.1,
+      "cost_bps": 5,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "static",
+      "band": 0.1,
+      "cost_bps": 5,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "trend",
+      "band": 0.1,
+      "cost_bps": 10,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    },
+    {
+      "strategy": "static",
+      "band": 0.1,
+      "cost_bps": 10,
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+    }
+  ]
+}

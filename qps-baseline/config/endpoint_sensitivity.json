@@ -1,0 +1,11 @@
+{
+  "name": "march_1997_endpoint_assumption",
+  "status": "unverified_research_assumption",
+  "description": "Treat the observed 27 March 1997 close as the March endpoint for DT, GS, LX and SS, restoring March and April returns. This is a separate sensitivity, not an amendment to the preserved primary data policy.",
+  "instruments": ["DT", "GS", "LX", "SS"],
+  "previous_endpoint": "1997-02-28",
+  "assumed_endpoint": "1997-03-27",
+  "following_endpoint": "1997-04-30",
+  "return_months": ["1997-03", "1997-04"],
+  "source_evidence": "Raw closes exist on the specified dates; public-holiday evidence corroborates Easter timing, but exact 1997 venue closure evidence and vendor identity are unverified."
+}

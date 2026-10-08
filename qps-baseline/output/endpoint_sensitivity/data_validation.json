@@ -1,0 +1,39 @@
+{
+  "checked_utc": "2026-10-08T23:33:05.566279+00:00",
+  "passed": true,
+  "tests": 64,
+  "comparison_runs": 12,
+  "months_per_run": 468,
+  "prior_comparison_unchanged": true,
+  "primary_data_policy_unchanged": true,
+  "raw_hashes_unchanged": true,
+  "reconciliation_maximum_absolute_errors": {
+    "trend": {
+      "net_return": 3.0531133177191805e-16,
+      "cost": 2.3635607360183997e-16,
+      "forecast_risk": 3.0531133177191805e-16,
+      "linked_pnl": 7.105427357601002e-15
+    },
+    "static": {
+      "net_return": 2.9913137938875067e-16,
+      "cost": 8.563841909919878e-17,
+      "forecast_risk": 3.0531133177191805e-16,
+      "linked_pnl": 1.7763568394002505e-15
+    }
+  },
+  "report_checks": {
+    "REPORT": {
+      "sections": 8,
+      "presentation_minutes": 15,
+      "embedded_images": 5,
+      "local_links_resolve": true
+    },
+    "ENDPOINT_SENSITIVITY": {
+      "compatible_copy": true,
+      "embedded_images": 5
+    },
+    "DATA_STATUS": {
+      "preserved_policy_blocker": true
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "verified_utc": "2026-10-08T23:31:57.578538+00:00",
+  "command": "python run_research.py --validate",
+  "passed": 64,
+  "failed": 0,
+  "skipped": 0,
+  "files": {
+    "scripts/audit_daily.py": "39714331190604243893dfd5c660da0bd90350a408db0c3eb090b7a21732e81b",
+    "scripts/audit_timing.py": "0184cb6fc18c0d5e746ee2a9a3abfcd4a6a159bf4db9b4ad2748f02d3ebccefb",
+    "scripts/backtest.py": "d23a04821af56056723ff14339053c0185394b600d45393ab627cc858837c558",
+    "scripts/construct_returns.py": "0a9181cb29795651ff5b42e04e5facbf967866629e4be4de5bef63cb8f7c3d99",
+    "scripts/eda.py": "eb319801830dd4a1ba4e7adf06b9e980d96a7933f0435d3f52e66880af802336",
+    "scripts/endpoint_sensitivity.py": "2a6f06018012b0841650667f6f467ad416079e5441533b3a4e24c2ca2f196a61",
+    "scripts/export_report.py": "3f8e737ffc77ffcefe39576362d115eef422ccb8e2fcab5ff27238ab00f6280d",
+    "scripts/research_report.py": "8b36f8666a22dc67ece3647b13cb139b4e89ae9b36f6ea5b8dcef5319a614dda",
+    "scripts/research_statistics.py": "43a8f396d29bf0e1b0a25ab3eee613d637f3a472c3b14a60b3e1a68fa2775a5e",
+    "scripts/review_endpoints.py": "0ce69f987c966083a71569b12ae527f560fcee46f95d654f8423a95f29d75aff",
+    "scripts/risk_model.py": "337a095d4833df68ef9949909969e62994121c6aaf60f093ab2ed33d68c11fba",
+    "scripts/run_risk_research.py": "911a5b88062d6d302101c07b8854728363c062ff83f65e9362861a3bca36c389",
+    "scripts/strategy_inputs.py": "e0e8c37c5fa26c7660e3b983e3043825f141947a428af487e17ef48a0c2be3ec",
+    "scripts/verify_legacy.py": "03c642e6dcaf8b44c0bab08e5731cea24141ac174ddff1a37f20c80064c5cafe",
+    "tests/test_backtest.py": "cea1629a6c88c79f0cd43e427a07e331ff5dbd291eac1eceab16b0b8268a66b1",
+    "tests/test_endpoint_sensitivity.py": "b7c0f8f52cc2bbbab8125cc62dd295026e7853532c4fe70727d99248e05461ce",
+    "tests/test_lookahead.py": "9ad2303bd7aa4be7f4f1e60cc010d691c3eec00bee6c1c91b0785e48869ee82b",
+    "tests/test_research_statistics.py": "299c6b10597eac4283f8ec68aec29dcc83a36a08ce1f0156229f9079713752c2",
+    "tests/test_risk_model.py": "c024cc36cced0fa263371aeeb7abc5e06ce3aa5d8d8d6b7399e8cdc59ff55d2a",
+    "run_research.py": "a5e77670f0febf7a3bc6f5cb165a98a3ea4c66231b5888042d9187dc81810b89",
+    "pytest.ini": "00bf4481467c28b31fff7b64e72c67f58e45be68fa03380ff6dd7eab021dabde",
+    "config/baseline_config.json": "f660b8b72c6e2be0bd52dd1e2f8660da3c68285fbf6c5c35ed714689dbcfca8c",
+    "config/endpoint_sensitivity.json": "caccc741fe29ba9a1b3cff0544d5e0ce52d44fd1a6ddb77cc26eb392db115027",
+    "config/risk_config.json": "f9ac6bcea81ea362403894195c411039cba436c0b328412237b0bc73a15ca144"
+  }
+}
