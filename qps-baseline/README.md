@@ -1,28 +1,28 @@
 # Managed futures: risk-controlled twelve-month trend
 
-This project tests whether following one-year trends adds value over an always-long portfolio with the same risk controls.
+A monthly futures strategy that goes long or short based on the sign of the preceding 12 months of returns. Positions use inverse-volatility sizing and a correlation-aware risk model estimated from the preceding 36 months. The primary settings are 50% correlation shrinkage, a 2% annual volatility floor, a 10% forecast portfolio-risk ceiling, a 3× gross exposure cap, ±10% trading bands, and 5 bps costs per traded notional.
 
-**Read first:** [midterm report](REPORT.md) or [offline HTML](REPORT.html). At 5 bps trading costs, the conditional 1976–2014 study reports **10.82% CAGR, 1.06 Sharpe and −15.82% maximum drawdown**, versus STATIC's **5.15%, 0.48 and −55.95%**. The recent-period advantage is smaller.
+The benchmark, **STATIC**, stays long with the same eligibility rules, risk controls, and costs. Read the [report](REPORT.md) or [offline HTML](REPORT.html) for results. The 1976–2014 study assumes March 27, 1997 is the March endpoint for DT, GS, LX, and SS; venue closures remain unverified. The preserved-policy run stops on missing held returns. See [data status](docs/DATA_STATUS.md).
 
-**Data qualification:** these results assume March 27, 1997 is the March endpoint for DT, GS, LX and SS. The exact venue closures remain unverified. The preserved-policy run stops on missing held returns; [data-status note](docs/DATA_STATUS.md) explains the issue. January 1976 is flat because only seven instruments meet the ten-instrument minimum.
+## File structure
 
-## Files to review and share
-
-| File | Purpose |
+| Path | Purpose |
 |---|---|
-| `REPORT.md` / `.html` | Main presentation report: eight sections, timing table, charts and results |
-| `ENDPOINT_SENSITIVITY.md` / `.html` | Compatible copy of the conditional presentation report |
-| `MIDTERM_GUIDE.md` | 15-minute presentation flow, strength assessment and likely questions |
-| `CODE_GUIDE.md` | Short explanation of architecture and main functions |
-| `run_research.py`, `config/`, `scripts/`, `tests/` | Reproducible code and frozen settings |
-| `docs/` | Supporting methods, validation and data evidence |
-| Selected files in `output/` | Charts, result tables and validation records |
-
-Keep `.gitignore`, `requirements.txt`, `pytest.ini` and `data/README.md` too. The sharing rules exclude course datasets, local environments, caches and bulky run archives. Markdown needs its chart folders; HTML embeds all figures. Historical EDA and earlier audits are supporting material, not the current presentation.
+| `REPORT.md` / `REPORT.html` | Main report; HTML embeds all figures |
+| [`CODE_GUIDE.md`](CODE_GUIDE.md) | Architecture and calculation sequence |
+| `run_research.py` | Validation and research entry point |
+| `config/` | Strategy, risk, and endpoint-assumption settings |
+| `scripts/` | Data construction, backtesting, risk, statistics, audits, and reporting |
+| `tests/` | Timing, accounting, risk, and statistical checks |
+| `docs/` | Methods, data evidence, and validation notes |
+| `output/risk/` | Preserved-policy diagnostics and validation records |
+| `output/endpoint_sensitivity/` | Conditional results, charts, and assumption records |
+| [`data/README.md`](data/README.md) | Required local datasets and placement instructions |
+| `requirements.txt`, `pytest.ini` | Dependencies and test configuration |
 
 ## Run
 
-Python 3.11 or newer:
+Python 3.11 or newer, from this folder:
 
 ```sh
 python -m venv .venv
@@ -32,6 +32,6 @@ python run_research.py --validate
 python run_research.py --endpoint-sensitivity
 ```
 
-Tests need no course data. For the analysis, place inputs as described in [data/README.md](data/README.md). Add `--full` to rebuild all source audits. A normal run returns code 2 on the preserved-policy data issue; the sensitivity command returns 0 when the conditional scenario completes.
+Validation needs no source data. Research runs require the inputs in [data/README.md](data/README.md). Use `--full` to rebuild source audits. A normal run returns code 2 on the preserved-policy data issue; `--endpoint-sensitivity` returns 0 when the conditional scenario completes.
 
-The strategy uses prior 12-month signals, prior 36-month risk estimates, 50% correlation shrinkage, a 2% volatility floor, a 10% forecast-risk ceiling, a 3× gross cap and ±10% trading bands. Main cost: 5 bps. [Methods](docs/RISK_METHODS.md) · [Validation](docs/VALIDATION.md).
+[Methods](docs/RISK_METHODS.md) · [Validation](docs/VALIDATION.md)

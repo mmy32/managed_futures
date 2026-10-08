@@ -1,116 +1,39 @@
-# managed_futures
+# Managed futures research
 
-A systematic managed futures research framework: forecast returns across ~60 futures markets, size risk, account for trading costs, construct a portfolio, backtest it, and feed realized results back into the models.
+Research on a monthly futures trend strategy, with code, conditional backtest results, and validation in [`qps-baseline/`](qps-baseline/). Start with the [research report](qps-baseline/REPORT.md); [REPORT.html](qps-baseline/REPORT.html) embeds the charts for offline viewing.
 
-## Quickstart
+## Strategy
 
-```bash
-# 1. Clone
-git clone <repo-url> && cd managed_futures
+Positions go long or short based on the sign of the preceding 12 months of returns. A risk model uses the preceding 36 months of returns, inverse-volatility sizing, and 50% correlation shrinkage. Monthly portfolios apply a 2% annual volatility floor, a 10% forecast portfolio-risk ceiling, a 3× gross exposure cap, and ±10% trading bands. The primary transaction-cost assumption is 5 bps per traded notional.
 
-# 2. Install dependencies
-python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
+The strategy is compared with an always-long **STATIC** portfolio using the same eligibility rules, risk controls, and costs. Signals and risk estimates use prior observations. The 1976–2014 results are conditional on an unverified March 1997 endpoint assumption; the preserved-policy run stops on missing held returns. See [data status](qps-baseline/docs/DATA_STATUS.md).
 
-# 3. Configure environment
-cp .env.example .env
-
-# 4. Run tests
-pytest
-```
-
-## Usage
-
-```python
-from src.data_loader import load_data
-
-data = load_data("data/raw/MonthlyReturns.csv")
-```
-
-## Architecture
-
-The strategy is a pipeline of six model components plus shared infrastructure. Each component lives in its own package under `src/` and talks to the others through narrow interfaces.
-
-```
- data/raw ──► data_loader ──► data_processing ──► feature_registry / transformations
-                                                          │
-                                                          ▼
-                                                    alpha_model ──────► expected returns (forecasts)
-                                                          │
-                          risk_model ◄── returns ─────────┤──────► covariance, vol, risk limits
-                                                          │
-                     transaction_cost_model ◄─────────────┤──────► expected cost of trading
-                                                          ▼
-                                              portfolio_construction ──► target weights
-                                                          │
-                                                          ▼
-                                                      backtest ──► P&L, turnover, performance stats
-                                                          │
-                                                          ▼
-                                                    feedback_loop ──► recalibrate models
-                                                          │
-                                         (updated parameters flow back to alpha / risk / cost models)
-```
-
-| Component | Package | Responsibility |
-|---|---|---|
-| Alpha model | `src/alpha_model/` | Forecasts: turns features (e.g. trend, carry) into expected returns per market. |
-| Risk model | `src/risk_model/` | Risk measurement and control: volatility and covariance estimation, risk budgets, exposure and drawdown limits. |
-| Transaction cost model | `src/transaction_cost_model/` | Estimates commissions, spread, slippage and market impact for a proposed trade. |
-| Portfolio construction | `src/portfolio_construction/` | Combines forecasts, risk and costs into target positions (optimization, sizing, constraints). |
-| Backtest | `src/backtest/` | Simulates the strategy historically; computes returns, turnover and performance statistics. |
-| Feedback loop | `src/feedback_loop/` | Compares realized vs. forecast outcomes (returns, risk, costs) and recalibrates model parameters. |
-
-Supporting packages: `config/` (settings), `models/` (data schemas), `data_loader/` (ingestion), `data_processing/` (cleaning), `feature_registry/` (feature definitions), `transformations/` (reusable transforms), `utils/` (helpers).
-
-## Data
-
-All datasets live in `data/` (gitignored — large files).
+## File structure
 
 | Path | Contents |
 |---|---|
-| `data/raw/MonthlyReturns.csv` | Monthly returns by date (rows) and futures market ID (columns), from 1969. |
-| `data/raw/AssetMapCsv.csv` | Market ID → name, currency, asset class. |
-| `data/raw/futures_underlying/` | One CSV per market (62 files) of underlying futures data. |
-| `data/raw/FuturesUnderlyingData.zip` | Original archive of `futures_underlying/`. |
-| `data/raw/Lecture3_livedata.xlsx` | Live data workbook from Lecture 3. |
-| `data/interim/` | Intermediate cleaning outputs. |
-| `data/processed/` | Analysis-ready datasets. |
+| [`qps-baseline/`](qps-baseline/) | Current research implementation and reproduction instructions |
+| [`qps-baseline/REPORT.md`](qps-baseline/REPORT.md) / `.html` | Strategy, results, charts, and qualifications |
+| [`qps-baseline/run_research.py`](qps-baseline/run_research.py) | Validation and research entry point |
+| `qps-baseline/config/` | Strategy, risk, and endpoint-assumption settings |
+| `qps-baseline/scripts/` | Return construction, backtesting, risk, statistics, audits, and reporting |
+| `qps-baseline/tests/` | Timing, accounting, risk, and statistical checks |
+| `qps-baseline/docs/` | Methods, data evidence, and validation notes |
+| `qps-baseline/output/` | Saved result tables, charts, and validation records |
+| [`qps-baseline/data/README.md`](qps-baseline/data/README.md) | Required local datasets and placement instructions |
+| `src/`, `tests/`, `pyproject.toml` | Earlier framework scaffold and data-loader implementation |
 
-`data/raw/` is immutable — never modify it.
+## Run the research
 
-## Project Structure
+Python 3.11 or newer, from the repository root:
 
+```sh
+cd qps-baseline
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python run_research.py --validate
+python run_research.py --endpoint-sensitivity
 ```
-managed_futures/
-├── README.md
-├── TODO.md
-├── CLAUDE.md
-├── pyproject.toml
-├── .env.example
-├── .gitignore
-├── data/
-│   ├── raw/                     # immutable source data
-│   │   └── futures_underlying/
-│   ├── interim/
-│   └── processed/
-├── src/
-│   ├── config/
-│   ├── models/
-│   ├── data_loader/
-│   ├── data_processing/
-│   ├── feature_registry/
-│   ├── transformations/
-│   ├── alpha_model/
-│   ├── risk_model/
-│   ├── transaction_cost_model/
-│   ├── portfolio_construction/
-│   ├── backtest/
-│   ├── feedback_loop/
-│   └── utils/
-├── tests/                       # mirrors src/
-├── scripts/
-├── notebooks/
-├── research/
-└── reports/
-```
+
+Validation needs no source data. Research runs require the datasets described in [`data/README.md`](qps-baseline/data/README.md). See the [code guide](qps-baseline/CODE_GUIDE.md) for the calculation sequence.
