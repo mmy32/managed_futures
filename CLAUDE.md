@@ -4,7 +4,7 @@ Project-level instructions. These extend the global rules in `~/.claude/CLAUDE.m
 
 ## Project Layout
 
-Model components under `src/`: `alpha_model` (forecasts), `risk_model` (risk measurement and control), `transaction_cost_model`, `portfolio_construction`, `backtest`, `feedback_loop`. Data lives in `data/` (gitignored; `data/raw/` is immutable). See `README.md`.
+Model components under `src/`: `alpha_model` (forecasts), `risk_model` (risk measurement and control), `transaction_cost_model`, `portfolio_construction`, `backtest`, `feedback_loop`. Data lives in `data/` (gitignored; `data/raw/` is immutable). Scripts in `scripts/` build reports; generated results go to `reports/`. See `README.md`.
 
 ## Design Principles
 
@@ -23,7 +23,7 @@ Depend on abstractions, not concrete implementations. Pass dependencies in (cons
 Validate inputs at boundaries. Raise errors immediately on invalid state instead of silently propagating bad data downstream. The earlier a bug surfaces, the cheaper it is to fix.
 
 ### Configuration over Hardcoding
-No magic numbers, hardcoded paths, or inline credentials. Externalize settings to `src/config/`, environment variables, or config files. One place to change a value, not twenty.
+No magic numbers, hardcoded paths, or inline credentials. Externalize settings to `src/config/` (paths, thresholds), environment variables, or the repo-root `config/*.json` files (strategy and risk parameters, read via `src.config.CONFIG_DIR`). One place to change a value, not twenty.
 
 ### YAGNI (You Aren't Gonna Need It)
 Do not build for hypothetical future requirements. Write the code you need today. Speculative abstractions are tech debt with no offsetting value.

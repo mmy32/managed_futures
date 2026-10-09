@@ -1,0 +1,5 @@
+comparison,months,correlation,mean_gap_ann,gap_vol_ann
+SP vs Mkt-RF,180,0.986699235,-0.0116265215,0.0258023864
+EQ average vs Mkt-RF,180,0.968197785,-0.0127021201,0.0408518067
+COMM average vs GSCI,180,0.713793643,-0.0374342119,0.163973345
+SG Trend vs market total,180,-0.135186131,0.0187602941,0.228636748

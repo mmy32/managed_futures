@@ -1,0 +1,13 @@
+strategy,band,cost_bps,error
+trend,0.0,0,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+static,0.0,0,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+trend,0.0,5,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+static,0.0,5,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+trend,0.0,10,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+static,0.0,10,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+trend,0.1,0,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+static,0.1,0,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+trend,0.1,5,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+static,0.1,5,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+trend,0.1,10,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"
+static,0.1,10,"Missing held return at 1997-03: ['DT', 'GS', 'LX']"

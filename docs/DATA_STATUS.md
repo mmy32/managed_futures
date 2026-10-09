@@ -19,7 +19,7 @@ The [candidate return table](../reports/qps_baseline/output/risk/proposed_endpoi
 
 The requested 468 months remain January 1976–December 2014. January 1976 has 7 eligible instruments versus the required 10, so it is flat. First trading month: 1976-02.
 
-85 tests pass. The archived 2000–2014 refactor replay is independent of the endpoint sensitivity. [Validation record](../reports/qps_baseline/output/risk/validation.json) · [Sample audit](../reports/qps_baseline/output/risk/sample_audit.json) · [Run status](../reports/qps_baseline/output/risk/run_status.json).
+86 tests pass. The archived 2000–2014 refactor replay is independent of the endpoint sensitivity. [Validation record](../reports/qps_baseline/output/risk/validation.json) · [Sample audit](../reports/qps_baseline/output/risk/sample_audit.json) · [Run status](../reports/qps_baseline/output/risk/run_status.json).
 
 ## Reproduce
 

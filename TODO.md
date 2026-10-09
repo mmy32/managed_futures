@@ -47,10 +47,11 @@ Baseline TSMOM (Moskowitz-Ooi-Pedersen 2012): 12-month sign signal, 1-month hold
   - [ ] Parameter recalibration: later
 
 - [x] Incorporate `qps-baseline/` (risk-controlled 12-month trend vs STATIC): backtest/risk code in `src/backtest/` and `src/risk_model/`, audits and reports in `scripts/`, tests by component, config in `config/`, docs in `docs/`, outputs in `reports/qps_baseline/`. Moved as-is (excluded from ruff, see `pyproject.toml`)
-- [ ] Reconcile qps data construction with `data_loader`/`data_cleaning`
-  - [ ] `construct_returns`, `strategy_inputs`, `review_endpoints` read raw files directly; route them through `load_monthly_returns`, `load_asset_map`, `load_daily_prices`
-  - [ ] Resolve conflicting treatment: qps excludes YM and EC, `data_cleaning` merges YM+ZD and excludes nothing
-  - [ ] Decide where RL->ER source switch and the March 1997 endpoint override live
+- [x] Reconcile qps data construction with `data_loader`/`data_cleaning`
+  - [x] `construct_returns` and `review_endpoints` use `load_monthly_returns` and `load_daily_prices` (`close_frames` splits the panel); raw string tokens are still read for the decimal-precision check
+  - [x] Decision: the qps strategy follows Anay's treatment: YM and EC excluded, RL->ER source switch, March 1997 endpoint as a labeled sensitivity. `data_cleaning` still merges YM+ZD for the TSMOM path
+  - [ ] `strategy_inputs`, `run_risk_research`, `audit_daily`, `verify_legacy` still read raw CSVs directly
+  - [ ] Verify the March 1997 endpoint against the real exchange calendar
 - [ ] Shared strategy abstractions up front so TSMOM baseline and qps strategy coexist
   - [ ] Interfaces for signal, risk estimate, position sizing and cost model; `engine.weights_and_signals` currently mixes signal, sizing and eligibility
   - [ ] Port qps strategy and the TSMOM baseline above behind them

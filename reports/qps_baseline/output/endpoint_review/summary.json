@@ -1,0 +1,24 @@
+{
+  "rule": "weekday_end_3d_bounded",
+  "matched_values": 20987,
+  "mismatched_values": 0,
+  "missing_observed": 0,
+  "extra_values": 0,
+  "matched_blanks": 11029,
+  "max_abs_difference": 4.6592380423040865e-08,
+  "cells": 32016,
+  "supplied_dates_are_last_weekday": true,
+  "RL_fallback_months": 73,
+  "RL_fallback_start": "2008-12",
+  "RL_fallback_end": "2014-12",
+  "blank_categories": {
+    "leading_history_or_first_return": 10997,
+    "endpoint_outside_3_calendar_days": 26,
+    "target_beyond_raw_end": 6
+  },
+  "source_files_unchanged": true,
+  "boundary_checks_passed": true,
+  "all_values_match_saved_csv_precision": true,
+  "match_tolerance_decimal": 5e-08,
+  "caveat": "Agreement to stored CSV precision is not proof of original code or vendor data accuracy."
+}

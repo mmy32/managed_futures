@@ -7,26 +7,18 @@ from decimal import Decimal
 import numpy as np
 import pandas as pd
 
-from src.config import (
-    FUTURES_UNDERLYING_DIR,
-    MONTHLY_RETURNS_PATH,
-    PROJECT_ROOT,
-    QPS_OUTPUT_DIR,
-    RAW_DATA_DIR,
-)
-from src.data_processing.endpoints import endpoints
+from src.config import MONTHLY_RETURNS_PATH, PROJECT_ROOT, QPS_OUTPUT_DIR, RAW_DATA_DIR
+from src.data_loader import load_daily_prices, load_monthly_returns
+from src.data_processing.endpoints import close_frames, endpoints
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "construction"
 
 
 def read_inputs():
-    raw = {
-        p.stem: pd.read_csv(p, index_col=0, parse_dates=True)
-        for p in sorted((FUTURES_UNDERLYING_DIR).glob("*.csv"))
-    }
-    supplied = pd.read_csv(MONTHLY_RETURNS_PATH, index_col=0)
-    supplied.index = pd.to_datetime(supplied.index).to_period("M")
+    raw = close_frames(load_daily_prices())
+    supplied = load_monthly_returns()
+    supplied.index = supplied.index.to_period("M")
     return raw, supplied
 
 
@@ -88,6 +80,7 @@ def main():
     }
     raw, supplied = read_inputs()
     replica, _provenance, _ = assemble(raw, supplied.index, supplied.columns)
+    # Loaders return floats; the stored decimal strings set the comparison tolerance.
     tokens = pd.read_csv(MONTHLY_RETURNS_PATH, index_col=0, dtype=str)
     tokens.index = supplied.index
     assert replica.notna().equals(supplied.notna())

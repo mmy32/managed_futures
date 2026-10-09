@@ -1,0 +1,9 @@
+rule,matched_values,mismatched_values,missing_observed,extra_values,matched_blanks,max_abs_difference
+calendar_end_3d_bounded,20913,0,74,0,11029,4.6592380423e-08
+weekday_end_1d_bounded,20259,0,728,0,11029,4.6592380423e-08
+weekday_end_2d_bounded,20399,0,588,0,11029,4.6592380423e-08
+weekday_end_3d_unbounded,20987,0,0,6,11023,4.6592380423e-08
+weekday_end_3d_bounded,20987,0,0,0,11029,4.6592380423e-08
+weekday_end_4d_bounded,20987,0,0,10,11019,4.6592380423e-08
+weekday_end_3weekdays_bounded,20987,0,0,10,11019,4.6592380423e-08
+last_observed_bounded,20987,0,0,26,11003,4.6592380423e-08

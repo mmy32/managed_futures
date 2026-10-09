@@ -12,7 +12,8 @@ import numpy as np
 import pandas as pd
 
 from src.config import FUTURES_UNDERLYING_DIR, MONTHLY_RETURNS_PATH, PROJECT_ROOT, QPS_OUTPUT_DIR
-from src.data_processing.endpoints import endpoints
+from src.data_loader import load_daily_prices, load_monthly_returns
+from src.data_processing.endpoints import close_frames, endpoints
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "endpoint_review"
@@ -74,10 +75,11 @@ def main():
         QPS_OUTPUT_DIR / "daily_audit/calendar_gaps.csv",
     ]
     hashes = {str(p.relative_to(ROOT)): sha(p) for p in source_paths}
-    raw = {p.stem: pd.read_csv(p, index_col=0, parse_dates=True) for p in files}
-    supplied = pd.read_csv(MONTHLY_RETURNS_PATH, index_col=0)
+    raw = close_frames(load_daily_prices())
+    supplied = load_monthly_returns()
+    # Loaders return floats; the stored decimal strings are kept as audit evidence.
     saved_tokens = pd.read_csv(MONTHLY_RETURNS_PATH, index_col=0, dtype=str)
-    labels = pd.to_datetime(supplied.index)
+    labels = supplied.index
     supplied.index = labels.to_period("M")
     saved_tokens.index = supplied.index
     months = supplied.index

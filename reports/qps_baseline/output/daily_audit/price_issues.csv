@@ -1,0 +1,2 @@
+ID,date,Open,High,Low,Close,Volume,OpenInterest,ohlc_inconsistent,negative_activity,nonpositive_price
+ER,2012-05-28,823.77,829.35,822.16,820.45,83570,442335,True,False,False

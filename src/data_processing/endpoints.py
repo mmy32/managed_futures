@@ -4,6 +4,11 @@ import numpy as np
 import pandas as pd
 
 
+def close_frames(prices: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    """Split a daily Close panel into one Close frame per market, over its own history."""
+    return {market: prices[market].dropna().to_frame("Close") for market in prices.columns}
+
+
 def endpoints(
     data, months, anchor_kind="weekday", lookback=3, bound_span=True, age_kind="calendar"
 ):
