@@ -35,23 +35,3 @@ ignore_missing_imports = true
 
 [tool.ruff]
 line-length = 100
-# Moved from qps-baseline as-is; see TODO "Lint and split the qps modules".
-extend-exclude = [
-    "scripts/audit_*.py",
-    "scripts/construct_returns.py",
-    "scripts/eda.py",
-    "scripts/export_report.py",
-    "scripts/research_report.py",
-    "scripts/review_endpoints.py",
-    "scripts/run_research.py",
-    "scripts/run_risk_research.py",
-    "scripts/verify_legacy.py",
-    "src/backtest/engine.py",
-    "src/backtest/research_statistics.py",
-    "src/data_processing/endpoint_sensitivity.py",
-    "src/data_processing/strategy_inputs.py",
-    "src/risk_model/risk_model.py",
-    "tests/backtest/test_*.py",
-    "tests/data_processing/test_endpoint_sensitivity.py",
-    "tests/risk_model/test_risk_model.py",
-]

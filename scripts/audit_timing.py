@@ -1,68 +1,110 @@
 """Timing audit and descriptive stability checks; these are not OOS validation."""
-from pathlib import Path
-import copy,json,hashlib
+
+import copy
+import hashlib
+import json
+
 import numpy as np
 import pandas as pd
-from src.data_processing.strategy_inputs import load_strategy_inputs
-from src.risk_model.risk_model import build_forecasts,BandPolicy
-from src.backtest.engine import simulate,performance,regression_alpha
+
+from src.backtest.engine import performance, regression_alpha, simulate
 from src.config import ASSET_MAP_PATH, CONFIG_DIR, DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR
+from src.data_processing.strategy_inputs import load_strategy_inputs
+from src.risk_model.risk_model import BandPolicy, build_forecasts
 
 ROOT = PROJECT_ROOT
-OUT=QPS_OUTPUT_DIR / 'timing_audit'
+OUT = QPS_OUTPUT_DIR / "timing_audit"
 
 
 def main():
-    OUT.mkdir(parents=True,exist_ok=True)
-    settings=json.loads((CONFIG_DIR / 'risk_config.json').read_text())
-    base=json.loads((ROOT/settings['base_config']).read_text())
-    returns,source,known,schedule=load_strategy_inputs(settings,write=True)
-    sample=returns.loc[base['start']:base['end']]
-    meta=pd.read_csv(ASSET_MAP_PATH).set_index('ID')
-    rows=[];series={};alphas=[]
-    for lag in [1,2]:
-        cfg=copy.deepcopy(base);cfg['information_lag_months']=lag
-        target,cov,diag=build_forecasts(returns,meta,cfg,settings,'correlated')
-        pair={}
-        for name in ['trend','static']:
-            ledger,_=simulate(sample,target[name],5,source.loc[sample.index],
-                              position_policy=BandPolicy(cov,settings,.1),source_known_at=known.loc[sample.index])
-            ledger.to_csv(OUT/f'lag{lag}_{name}_ledger.csv')
-            rows.append(dict(information_lag_months=lag,strategy=name,**performance(ledger)))
-            series[f'lag{lag}_{name}']=ledger.net_return
-            pair[name]=ledger.net_return
-        a,_=regression_alpha(pair['trend'],pair['static'].to_frame('STATIC'),6)
-        alphas.append(dict(information_lag_months=lag,**a))
-    metrics=pd.DataFrame(rows);metrics.to_csv(OUT/'timing_comparison.csv',index=False)
-    pd.DataFrame(alphas).to_csv(OUT/'timing_alpha.csv',index=False)
-    pd.DataFrame(series).to_csv(OUT/'monthly_returns.csv')
-    blocks=[]
-    for name,r in series.items():
-        for start,end in [('1976','1984'),('1985','1994'),('1995','2004'),('2005','2014')]:
-            s=r.loc[start:end]
-            blocks.append(dict(strategy=name,period=f'{start}-{end}',months=len(s),mean_ann=s.mean()*12,vol_ann=s.std(ddof=1)*np.sqrt(12)))
-        s=r[r.index.year!=2008]
-        blocks.append(dict(strategy=name,period='All except 2008 (noncontiguous diagnostic)',months=len(s),mean_ann=s.mean()*12,vol_ann=s.std(ddof=1)*np.sqrt(12)))
-    pd.DataFrame(blocks).to_csv(OUT/'subperiods.csv',index=False)
-    old=pd.read_csv(QPS_OUTPUT_DIR / 'construction/monthly_returns_research.csv',index_col=0)
-    old.index=pd.PeriodIndex(old.index,freq='M')
-    difference=returns.RL-old.RL
-    changes=pd.DataFrame({'previous_return':old.RL,'strategy_return':returns.RL,'difference':difference})
-    changes=changes[difference.abs()>1e-12]
-    changes.to_csv(OUT/'source_rule_changes.csv')
-    first_er=str(schedule.loc[schedule.source.eq('ER'),'month'].iloc[0])
-    evidence=dict(signal_and_covariance_information_lag=base['information_lag_months'],source_decision_lag=2,
-                  source_switch_month=first_er,changed_RL_returns=len(changes),maximum_RL_change=float(difference.abs().max()),
-                  source_known_before_all_holding_months=bool((known.to_numpy()<returns.index.to_timestamp().to_numpy()).all()),
-                  current_return_used_by_position_policy=False,
-                  same_endpoint_execution_remains_idealized=True,vendor_point_in_time_adjustments_verified=False,
-                  out_of_sample_data_tested=False,
-                  frozen_config_sha256=hashlib.sha256((CONFIG_DIR / 'risk_config.json').read_bytes()).hexdigest())
-    (OUT/'summary.json').write_text(json.dumps(evidence,indent=2)+'\n')
-    primary=metrics[(metrics.information_lag_months==1)&(metrics.strategy=='trend')].iloc[0]
-    delayed=metrics[(metrics.information_lag_months==2)&(metrics.strategy=='trend')].iloc[0]
-    a=pd.DataFrame(alphas).iloc[0]
-    body=f'''# Timing audit and OOS assessment
+    OUT.mkdir(parents=True, exist_ok=True)
+    settings = json.loads((CONFIG_DIR / "risk_config.json").read_text())
+    base = json.loads((ROOT / settings["base_config"]).read_text())
+    returns, source, known, schedule = load_strategy_inputs(settings, write=True)
+    sample = returns.loc[base["start"] : base["end"]]
+    meta = pd.read_csv(ASSET_MAP_PATH).set_index("ID")
+    rows = []
+    series = {}
+    alphas = []
+    for lag in [1, 2]:
+        cfg = copy.deepcopy(base)
+        cfg["information_lag_months"] = lag
+        target, cov, _diag = build_forecasts(returns, meta, cfg, settings, "correlated")
+        pair = {}
+        for name in ["trend", "static"]:
+            ledger, _ = simulate(
+                sample,
+                target[name],
+                5,
+                source.loc[sample.index],
+                position_policy=BandPolicy(cov, settings, 0.1),
+                source_known_at=known.loc[sample.index],
+            )
+            ledger.to_csv(OUT / f"lag{lag}_{name}_ledger.csv")
+            rows.append(dict(information_lag_months=lag, strategy=name, **performance(ledger)))
+            series[f"lag{lag}_{name}"] = ledger.net_return
+            pair[name] = ledger.net_return
+        a, _ = regression_alpha(pair["trend"], pair["static"].to_frame("STATIC"), 6)
+        alphas.append(dict(information_lag_months=lag, **a))
+    metrics = pd.DataFrame(rows)
+    metrics.to_csv(OUT / "timing_comparison.csv", index=False)
+    pd.DataFrame(alphas).to_csv(OUT / "timing_alpha.csv", index=False)
+    pd.DataFrame(series).to_csv(OUT / "monthly_returns.csv")
+    blocks = []
+    for name, r in series.items():
+        for start, end in [("1976", "1984"), ("1985", "1994"), ("1995", "2004"), ("2005", "2014")]:
+            s = r.loc[start:end]
+            blocks.append(
+                {
+                    "strategy": name,
+                    "period": f"{start}-{end}",
+                    "months": len(s),
+                    "mean_ann": s.mean() * 12,
+                    "vol_ann": s.std(ddof=1) * np.sqrt(12),
+                }
+            )
+        s = r[r.index.year != 2008]
+        blocks.append(
+            {
+                "strategy": name,
+                "period": "All except 2008 (noncontiguous diagnostic)",
+                "months": len(s),
+                "mean_ann": s.mean() * 12,
+                "vol_ann": s.std(ddof=1) * np.sqrt(12),
+            }
+        )
+    pd.DataFrame(blocks).to_csv(OUT / "subperiods.csv", index=False)
+    old = pd.read_csv(QPS_OUTPUT_DIR / "construction/monthly_returns_research.csv", index_col=0)
+    old.index = pd.PeriodIndex(old.index, freq="M")
+    difference = returns.RL - old.RL
+    changes = pd.DataFrame(
+        {"previous_return": old.RL, "strategy_return": returns.RL, "difference": difference}
+    )
+    changes = changes[difference.abs() > 1e-12]
+    changes.to_csv(OUT / "source_rule_changes.csv")
+    first_er = str(schedule.loc[schedule.source.eq("ER"), "month"].iloc[0])
+    evidence = {
+        "signal_and_covariance_information_lag": base["information_lag_months"],
+        "source_decision_lag": 2,
+        "source_switch_month": first_er,
+        "changed_RL_returns": len(changes),
+        "maximum_RL_change": float(difference.abs().max()),
+        "source_known_before_all_holding_months": bool(
+            (known.to_numpy() < returns.index.to_timestamp().to_numpy()).all()
+        ),
+        "current_return_used_by_position_policy": False,
+        "same_endpoint_execution_remains_idealized": True,
+        "vendor_point_in_time_adjustments_verified": False,
+        "out_of_sample_data_tested": False,
+        "frozen_config_sha256": hashlib.sha256(
+            (CONFIG_DIR / "risk_config.json").read_bytes()
+        ).hexdigest(),
+    }
+    (OUT / "summary.json").write_text(json.dumps(evidence, indent=2) + "\n")
+    primary = metrics[(metrics.information_lag_months == 1) & (metrics.strategy == "trend")].iloc[0]
+    delayed = metrics[(metrics.information_lag_months == 2) & (metrics.strategy == "trend")].iloc[0]
+    a = pd.DataFrame(alphas).iloc[0]
+    body = f"""# Timing audit and OOS assessment
 
 The implementation has past-only signal, risk and trading rules under the stated monthly endpoint convention. That is not a certificate that the vendor dataset or same-close fills are historically executable.
 
@@ -105,10 +147,15 @@ The source vendor's vintage-adjusted price history and point-in-time instrument 
 Independent research supports the broad trend-following idea, not this exact implementation: [Hurst, Ooi and Pedersen, A Century of Evidence on Trend-Following Investing](https://www.aqr.com/-/media/AQR/Documents/Insights/Journal-Article/AQR-JPM-Fall-2017.pdf). Repeated model selection can inflate backtest evidence: [Bailey et al., The Probability of Backtest Overfitting](https://www.davidhbailey.com/dhbpapers/backtest-prob.pdf).
 
 Reproduce: `python scripts/run_research.py`, `python scripts/audit_timing.py`, and `python -m pytest -q` from the project directory.
-'''
-    (DOCS_DIR / 'LOOKAHEAD_AUDIT.md').write_text(body)
-    print(metrics[['information_lag_months','strategy','mean_ann','vol_ann','max_drawdown']].to_string(index=False))
+"""
+    (DOCS_DIR / "LOOKAHEAD_AUDIT.md").write_text(body)
+    print(
+        metrics[
+            ["information_lag_months", "strategy", "mean_ann", "vol_ann", "max_drawdown"]
+        ].to_string(index=False)
+    )
     print(evidence)
 
 
-if __name__=='__main__':main()
+if __name__ == "__main__":
+    main()
