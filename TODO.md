@@ -11,14 +11,15 @@ Baseline TSMOM (Moskowitz-Ooi-Pedersen 2012): 12-month sign signal, 1-month hold
   - [x] `load_daily_prices` from `data/raw/futures_underlying/*.csv`: Close panel; fail fast on unsorted/duplicate dates, non-positive Close -> verified 62 files; ER, ES, SC, EN have no monthly column (cleaning step); CN spans 1978-01-03 to 2014-12-31
   - [x] Paths and file names in `src/config/`
   - [x] Tests in `tests/data_loader/` with fixture CSVs
-- [ ] Data cleaning (`src/data_cleaning/`): combine duplicated instruments, exclude low-quality ones
-  - [ ] Explore data: pairwise correlations, observation counts, stale/zero shares, extreme returns; set thresholds in `src/config/`
-  - [ ] `find_low_quality` then `exclude` (exclude first so bad series cannot contaminate combined ones)
-  - [ ] `find_duplicate_groups` by correlation over overlapping months (with minimum overlap)
-  - [ ] `combine`: equal-weighted average per group, NaN-aware; keep group-to-members mapping
-  - [ ] Apply the same exclusions and groups to the daily panel and the asset map (fail fast if members disagree on asset class)
-  - [ ] `CleaningReport` (excluded IDs with reason, merged groups) saved to `data/processed/`
-  - [ ] Tests in `tests/data_cleaning/`, including idempotence
+- [x] Data cleaning (`src/data_cleaning/`): combine duplicated instruments, exclude low-quality ones
+  - [x] Explore data: pairwise correlations, observation counts, stale/zero shares, extreme returns; set thresholds in `src/config/`
+  - [x] `find_low_quality` then `exclude` (exclude first so bad series cannot contaminate combined ones)
+  - [x] `find_duplicate_groups` by correlation over overlapping months (with minimum overlap)
+  - [x] `combine`: equal-weighted average per group, NaN-aware; keep group-to-members mapping
+  - [x] Apply the same exclusions and groups to the daily panel and the asset map (fail fast if members disagree on asset class)
+  - [x] `CleaningReport` (excluded IDs with reason, merged groups) saved to `data/processed/`
+  - [x] Tests in `tests/data_cleaning/`, including idempotence
+  - Result on real data: nothing excluded at thresholds (60 obs, 10% zeros, |ret| 1.0); one group merged, YM+ZD (corr 0.99997, threshold 0.99) -> ZD; panel (552, 57), asset map 65 rows. Next-highest pair CA/XU is 0.977, so not merged
 - [ ] Alpha model: first forecast signal
   - [ ] `TrendSignal`: sign of trailing 12-month compounded return, using data through month-end t only
   - [ ] Signal interface `forecast(returns) -> DataFrame`; lookback in `src/config/`
@@ -44,6 +45,16 @@ Baseline TSMOM (Moskowitz-Ooi-Pedersen 2012): 12-month sign signal, 1-month hold
 - [ ] Feedback loop
   - [ ] Baseline: report realized vs. target volatility from backtest output
   - [ ] Parameter recalibration: later
+
+- [x] Incorporate `qps-baseline/` (risk-controlled 12-month trend vs STATIC): backtest/risk code in `src/backtest/` and `src/risk_model/`, audits and reports in `scripts/`, tests by component, config in `config/`, docs in `docs/`, outputs in `reports/qps_baseline/`. Moved as-is (excluded from ruff, see `pyproject.toml`)
+- [ ] Reconcile qps data construction with `data_loader`/`data_cleaning`
+  - [ ] `construct_returns`, `strategy_inputs`, `review_endpoints` read raw files directly; route them through `load_monthly_returns`, `load_asset_map`, `load_daily_prices`
+  - [ ] Resolve conflicting treatment: qps excludes YM and EC, `data_cleaning` merges YM+ZD and excludes nothing
+  - [ ] Decide where RL->ER source switch and the March 1997 endpoint override live
+- [ ] Shared strategy abstractions up front so TSMOM baseline and qps strategy coexist
+  - [ ] Interfaces for signal, risk estimate, position sizing and cost model; `engine.weights_and_signals` currently mixes signal, sizing and eligibility
+  - [ ] Port qps strategy and the TSMOM baseline above behind them
+- [ ] Clean up moved qps modules: pass `ruff check` and split by responsibility, then drop the `extend-exclude` list in `pyproject.toml`
 
 # Next steps
 1. Defining the measure of trend:
