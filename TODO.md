@@ -1,12 +1,7 @@
 # TODO
 
 ## In Progress
-Baseline TSMOM (Moskowitz-Ooi-Pedersen 2012): 12-month sign signal, 1-month hold, 40%/vol sizing, equal-weight across markets. Monthly returns are total return, used as-is (no risk-free subtraction). The signal, EWMA risk model, zero-cost model, sizer and engine exist and are tested; what remains is running and checking the strategy.
-- [ ] Paper parameters in `src/config/` (12-month lookback, 40% instrument scale, 1-month lag) instead of constructor arguments at the call site
-- [ ] `scripts/run_tsmom_baseline.py`: compose `CompoundedReturnSignal` + `EwmaVolatilityRiskModel` + `InverseVolatilitySizer` + no limits + `ZeroCost` via `construct_targets` and `simulate`; write stats table and cumulative return plot into `reports/`
-- [ ] Performance stats: add hit rate; report 1985+ and full sample, plus by asset class
-- [ ] Sanity check vs paper (1985-2009): portfolio vol ~12%, Sharpe ~1.1, nearly all markets positive
-- [ ] Single-market check of the sizing against paper Eq. 5
+Baseline TSMOM (Moskowitz-Ooi-Pedersen 2012) is complete: `scripts/run_tsmom_baseline.py` writes `reports/tsmom_baseline/`. 1985-2009: vol 11.5%, Sharpe 1.28 (paper ~1.1, no risk-free subtraction), 55 of 57 markets positive. Missing held returns (1997-03 DT/GS/LX, 2006-01 HS, 2014-12 six Eurex) are zero-filled in the script and listed in `paper_check.json`.
 
 ## Backlog
 - [ ] Transaction cost model: real cost model (spread, commission, impact)

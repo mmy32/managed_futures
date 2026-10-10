@@ -32,3 +32,5 @@ MONTHS_PER_YEAR = 12
 EWMA_CENTER_OF_MASS_DAYS = 60  # Moskowitz-Ooi-Pedersen (2012) Eq. 1
 EWMA_TRADING_DAYS_PER_YEAR = 261  # annualization used in the same equation
 EWMA_MIN_OBSERVATIONS = 60  # daily returns required before an EWMA volatility is used
+
+TSMOM_REPORT_DIR = PROJECT_ROOT / "reports" / "tsmom_baseline"

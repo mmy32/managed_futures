@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 
 from src.alpha_model import AlwaysLongSignal, SumReturnSignal, lagged
-from src.backtest.engine import performance, regression_alpha, simulate
+from src.backtest.engine import performance, regression_alpha, signal_hit_rate, simulate
 from src.models import MarketData
 from src.portfolio_construction import InverseVolatilitySizer
 from src.risk_model import RollingCovarianceRiskModel
@@ -174,6 +174,14 @@ def test_initial_capital_is_in_drawdown_peak():
     r, w = frames([-0.1, 0.02], [1, 1])
     l, _ = simulate(r, w, LinearBpsCost(0))
     assert performance(l)["max_drawdown"] == pytest.approx(-0.1)
+
+
+def test_hit_rates_count_positive_months_and_held_positive_contributions():
+    r, w = frames([0.02, -0.01, 0.03, 0.01], [1, 1, 0, 1])
+    ledger, attribution = simulate(r, w, LinearBpsCost(0))
+    assert performance(ledger)["hit_rate_monthly"] == pytest.approx(0.5)
+    # The flat month is excluded from the per-market rate: 2 of 3 held months paid.
+    assert signal_hit_rate(attribution) == pytest.approx(2 / 3)
 
 
 def test_insolvent_account_is_rejected():

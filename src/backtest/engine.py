@@ -170,11 +170,18 @@ def performance(ledger, risk_free=None):
         "max_drawdown": drawdown.min(),
         "worst_month": r.min(),
         "best_month": r.max(),
+        "hit_rate_monthly": (r > 0).mean(),
         "turnover_ann": ledger.turnover.mean() * 12,
         "mean_cost_ann": ledger.cost.mean() * 12,
         "cost_cash_per_initial_capital": ledger.cost_cash.sum(),
         "avg_gross_exposure": ledger.gross_exposure.mean(),
     }
+
+
+def signal_hit_rate(attribution):
+    """Share of held market-months whose position earned a positive P&L contribution."""
+    held = attribution.ne(0) & attribution.notna()
+    return (attribution.gt(0) & held).to_numpy().sum() / held.to_numpy().sum()
 
 
 def regression_alpha(y, factors, lags):

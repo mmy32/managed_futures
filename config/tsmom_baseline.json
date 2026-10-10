@@ -1,0 +1,11 @@
+{
+  "start": "1976-01",
+  "end": "2014-12",
+  "subsample_start": "1985-01",
+  "paper_end": "2009-12",
+  "signal_months": 12,
+  "information_lag_months": 1,
+  "instrument_volatility_scale": 0.4,
+  "volatility_floor_annual": 0.0,
+  "minimum_instruments": 1
+}
