@@ -8,15 +8,16 @@ from scipy.stats import spearmanr
 from statsmodels.stats.sandwich_covariance import cov_hac
 
 from src.backtest.engine import performance, sharpe_ratio, simulate
+from src.backtest.qps_baseline import build_forecasts, eligibility, portfolio_limits
 from src.backtest.research_statistics import (
     class_attribution,
     class_portfolios,
-    eligibility,
     rank_autocorrelation,
     risk_diagnostics,
     sample_audit,
 )
-from src.risk_model.risk_model import BandPolicy, build_forecasts
+from src.portfolio_construction import BandPolicy
+from src.transaction_cost_model import LinearBpsCost
 from tests.risk_model.test_risk_model import data, settings
 
 
@@ -107,7 +108,7 @@ def test_actual_source_trades_and_liquidation_costs_reconcile_by_class():
     target = r * 0 + [0.5, -0.2]
     source = pd.DataFrame({"A": ["RL", "ER", "ER"], "B": ["B", "B", "B"]}, index=index)
     details = {}
-    ledger, gross = simulate(r, target, 10, source, instrument_details=details)
+    ledger, gross = simulate(r, target, LinearBpsCost(10), source, instrument_details=details)
     # Second month A closes the drifted RL notional and opens the ER target.
     prior = 0.5 * 1.1 / (1 + ledger.net_return.iloc[0])
     assert details["cost"].A.iloc[1] == pytest.approx(0.001 * (prior + 0.5))
@@ -155,8 +156,8 @@ def test_trailing_risk_uses_forecasts_for_same_36_months():
     ledger, _ = simulate(
         r.loc[base["start"] : base["end"]],
         targets["trend"],
-        5,
-        position_policy=BandPolicy(covariance, settings(), 0.1),
+        LinearBpsCost(5),
+        position_policy=BandPolicy(covariance, portfolio_limits(settings()), 0.1),
     )
     timeline, _summary = risk_diagnostics(ledger)
     assert timeline.forecast_rms_36m.iloc[:35].isna().all()

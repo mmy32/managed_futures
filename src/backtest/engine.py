@@ -4,45 +4,13 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
-
-def weights_and_signals(returns, meta, config):
-    lag = config["information_lag_months"]
-    if lag < 1:
-        raise ValueError("Information lag must be at least one month")
-    lookback, risk = config["signal_months"], config["volatility_months"]
-    signal = np.sign(returns.rolling(lookback, min_periods=lookback).sum()).shift(lag)
-    vol = returns.rolling(risk, min_periods=risk).std(ddof=1).mul(np.sqrt(12)).shift(lag)
-    eligible = signal.notna() & vol.notna() & vol.gt(0)
-    for asset in config["exclude_from_strategy"]:
-        if asset in eligible:
-            eligible[asset] = False
-    inverse = (1 / vol.clip(lower=config["volatility_floor_annual"])).where(eligible, 0.0)
-    count = eligible.sum(axis=1)
-    # 40% is an instrument scale, not a portfolio volatility target.
-    magnitude = (
-        inverse.mul(config["instrument_volatility_scale"])
-        .div(count.replace(0, np.nan), axis=0)
-        .fillna(0.0)
-    )
-    magnitude.loc[count < config["minimum_instruments"]] = 0.0
-    trend = magnitude * signal.fillna(0)
-    return {"trend": trend, "static": magnitude, "eligible": eligible, "signal": signal, "vol": vol}
-
-
-def traded_exposure(weights, previous, switched=None):
-    traded = np.abs(weights - previous)
-    extra = 0.0
-    if switched is not None and switched.any():
-        expanded = np.abs(weights[switched]) + np.abs(previous[switched])
-        extra = float((expanded - traded[switched]).sum())
-        traded[switched] = expanded
-    return traded, extra
+from src.transaction_cost_model import CostModel, traded_exposure
 
 
 def simulate(
     returns,
     targets,
-    cost_bps,
+    cost_model: CostModel,
     source=None,
     risk_free=None,
     liquidate=True,
@@ -63,8 +31,6 @@ def simulate(
         raise ValueError("Source schedule must match the return index and column order")
     if not np.isfinite(targets.to_numpy()).all():
         raise ValueError("Nonfinite target exposure")
-    if cost_bps < 0:
-        raise ValueError("Trading costs must be nonnegative")
     if source is not None and position_policy is not None:
         if source_known_at is None:
             raise ValueError("Policy-aware source costs require source_known_at dates")
@@ -74,7 +40,6 @@ def simulate(
             or (known.to_numpy() >= returns.index.to_timestamp().to_numpy()).any()
         ):
             raise ValueError("Source schedule must be known before each return month")
-    rate = cost_bps / 10000
     cash_rates = (
         pd.Series(0.0, index=returns.index)
         if risk_free is None
@@ -99,7 +64,7 @@ def simulate(
         diagnostics = {}
         if position_policy is not None:
             # The policy sees past holdings and current targets, never this month's return.
-            w, diagnostics = position_policy(month, previous.copy(), w.copy(), rate, switched)
+            w, diagnostics = position_policy(month, previous.copy(), w.copy(), cost_model, switched)
             if not np.isfinite(w).all():
                 raise ValueError("Nonfinite executed exposure")
         r = returns.loc[month].to_numpy(dtype=float)
@@ -112,13 +77,12 @@ def simulate(
         r = np.where(np.isfinite(r), r, 0.0)
         traded, source_extra = traded_exposure(w, previous, switched)
         turnover = float(traded.sum())
-        entry_cost = rate * turnover
+        entry_cost = cost_model.cost(traded)
         gross = float(w @ r)
         funding = float(cash_rates.loc[month]) * (1 - entry_cost)
-        terminal_turnover = (
-            float(np.abs(w * (1 + r)).sum()) if liquidate and i == len(returns) - 1 else 0.0
-        )
-        exit_cost = rate * terminal_turnover
+        final_month = liquidate and i == len(returns) - 1
+        terminal_turnover = float(np.abs(w * (1 + r)).sum()) if final_month else 0.0
+        exit_cost = cost_model.cost(np.abs(w * (1 + r))) if final_month else 0.0
         net = gross + funding - entry_cost - exit_cost
         if not np.isfinite(net) or 1 + net <= 0:
             raise ValueError(f"Nonfinite P&L or insolvent proxy account at {month}")
@@ -154,7 +118,7 @@ def simulate(
         terminal_trades = (
             np.abs(w * (1 + r)) if liquidate and i == len(returns) - 1 else np.zeros(len(w))
         )
-        instrument_costs.append(rate * (traded + terminal_trades))
+        instrument_costs.append(cost_model.instrument_cost(traded + terminal_trades))
         holdings.append(w.copy())
         previous = np.zeros(len(w)) if terminal_turnover else w * (1 + r) / (1 + net)
         nav = ending_nav

@@ -13,10 +13,10 @@ import statsmodels
 from research_report import make_charts, write_blocked_report, write_report
 
 from src.backtest.engine import performance, regression_alpha, simulate
+from src.backtest.qps_baseline import build_forecasts, eligibility, portfolio_limits
 from src.backtest.research_statistics import (
     class_attribution,
     class_portfolios,
-    eligibility,
     rank_autocorrelation,
     risk_diagnostics,
     sample_audit,
@@ -33,7 +33,8 @@ from src.config import (
 )
 from src.data_processing.endpoint_sensitivity import apply_endpoint_assumption
 from src.data_processing.strategy_inputs import load_strategy_inputs
-from src.risk_model.risk_model import BandPolicy, build_forecasts
+from src.portfolio_construction import BandPolicy
+from src.transaction_cost_model import LinearBpsCost
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "risk"
@@ -53,12 +54,12 @@ def evaluate(sample, source, known, targets, covariance, settings, out=None):
             for strategy in ["trend", "static"]:
                 name = key(band, cost, strategy)
                 instrument = {}
-                policy = BandPolicy(covariance, settings, band)
+                policy = BandPolicy(covariance, portfolio_limits(settings), band)
                 try:
                     ledger, gross = simulate(
                         sample,
                         targets[strategy],
-                        cost,
+                        LinearBpsCost(cost),
                         source,
                         position_policy=policy,
                         source_known_at=known,

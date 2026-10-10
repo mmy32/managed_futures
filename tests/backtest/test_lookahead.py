@@ -7,8 +7,10 @@ import pandas as pd
 import pytest
 
 from src.backtest.engine import simulate
+from src.backtest.qps_baseline import build_forecasts, portfolio_limits
 from src.data_processing.strategy_inputs import select_source
-from src.risk_model.risk_model import BandPolicy, build_forecasts
+from src.portfolio_construction import BandPolicy
+from src.transaction_cost_model import LinearBpsCost
 
 
 def setup():
@@ -47,11 +49,11 @@ def pipeline(raw, fallback, meta, base, cfg, model="correlated", band=0.1):
     known = pd.Series(pd.to_datetime(schedule.source_known_at).to_numpy(), index=r.index)
     targets, cov, _ = build_forecasts(r, meta, base, cfg, model)
     sample = r.loc[base["start"] : base["end"]]
-    policy = BandPolicy(cov, cfg, band)
+    policy = BandPolicy(cov, portfolio_limits(cfg), band)
     ledger, _ = simulate(
         sample,
         targets["trend"],
-        5,
+        LinearBpsCost(5),
         source.loc[sample.index],
         liquidate=False,
         position_policy=policy,
@@ -114,14 +116,20 @@ def test_policy_cannot_receive_unstamped_or_future_source_information():
     cov = {t: np.array([[0.01]]) for t in idx}
     cfg = setup()[-1]
     with pytest.raises(ValueError, match="source_known_at"):
-        simulate(r, targets, 5, source, position_policy=BandPolicy(cov, cfg, 0.1))
+        simulate(
+            r,
+            targets,
+            LinearBpsCost(5),
+            source,
+            position_policy=BandPolicy(cov, portfolio_limits(cfg), 0.1),
+        )
     with pytest.raises(ValueError, match="known before"):
         simulate(
             r,
             targets,
-            5,
+            LinearBpsCost(5),
             source,
-            position_policy=BandPolicy(cov, cfg, 0.1),
+            position_policy=BandPolicy(cov, portfolio_limits(cfg), 0.1),
             source_known_at=pd.Series(idx.to_timestamp(), index=idx),
         )
 

@@ -5,18 +5,9 @@ import pandas as pd
 import statsmodels.api as sm
 from scipy.stats import t as student_t
 
-from src.backtest.engine import performance, sharpe_ratio, weights_and_signals
+from src.backtest.engine import performance, sharpe_ratio
 
 CLASS_NAMES = {"COMM": "Commodities", "EQ": "Equities", "FI": "Fixed income", "FX": "Currencies"}
-
-
-def eligibility(returns, meta, base, settings):
-    config = dict(
-        base,
-        volatility_months=settings["volatility_months"],
-        volatility_floor_annual=settings["volatility_floor_annual"],
-    )
-    return weights_and_signals(returns, meta, config)["eligible"]
 
 
 def sample_audit(returns, eligible, base):

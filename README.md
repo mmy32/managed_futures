@@ -12,8 +12,11 @@ The strategy is compared with an always-long **STATIC** portfolio using the same
 
 | Path | Contents |
 |---|---|
-| `src/backtest/` | `engine.py` (signals, simulation, performance), `research_statistics.py` (class series, rank/HAC diagnostics, risk attribution) |
-| `src/risk_model/risk_model.py` | Trailing covariance, risk forecasts, trading bands, exposure limits |
+| `src/alpha_model/` | `Signal` interface: sum-of-returns, compounded-return and always-long signals |
+| `src/risk_model/` | `RiskModel` interface: rolling covariance (qps) and EWMA daily volatility (paper); `portfolio_risk` |
+| `src/portfolio_construction/` | Inverse-volatility sizing, gross and risk limits, no-trade bands, execution policy, `construct_targets` |
+| `src/transaction_cost_model/` | `CostModel` interface: `LinearBpsCost`, `ZeroCost` |
+| `src/backtest/` | `engine.py` (simulation, performance), `qps_baseline.py` (config to objects), `research_statistics.py` |
 | `src/data_processing/` | Endpoint mapping, RL/ER source selection, March 1997 endpoint sensitivity |
 | `src/data_loader/`, `src/data_cleaning/`, `src/config/` | Raw-data loaders, cleaning, and path/threshold settings |
 | `config/` | QPS strategy, risk, and endpoint-assumption settings (JSON) |

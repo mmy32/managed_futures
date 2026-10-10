@@ -4,18 +4,21 @@ The code tests one fixed 12-month trend strategy against matching always-long ST
 
 ## Calculation sequence
 
-`load data → compute signal → estimate risk → size positions → apply bands and limits → simulate → summarize → format report`
+`load data → compute signal → estimate risk → size positions → bound by limits → apply bands → simulate → summarize → format report`
 
 | Step | File / main function | What it does |
 |---|---|---|
 | Run | `run_research.py` | Validates, runs the pipeline and exports HTML |
 | Construct | `construct_returns.py` / `assemble` | Reproduces supplied monthly returns; logs documented endpoint corrections separately |
 | Select sources | `strategy_inputs.py` / `load_strategy_inputs` | Loads returns and applies the prior-only RL/ER source schedule |
-| Signal and eligibility | `backtest.py` / `weights_and_signals` | Uses prior 12-month returns and complete prior risk history |
-| Risk and sizing | `risk_model.py` / `build_forecasts` | Estimates lagged covariance and reduces targets to risk/exposure limits |
-| Execute | `risk_model.py` / `BandPolicy` | Uses carried holdings, applies bands and enforces limits after costs |
-| Account | `backtest.py` / `simulate` | Records actual trades, costs, instrument contributions and NAV; missing held returns fail |
-| Summarize | `research_statistics.py` | Builds class series, rank/HAC diagnostics, risk attribution and descriptive stability blocks |
+| Signal | `alpha_model/signals.py` / `Signal` | Direction in {-1, 0, +1} from returns through month t; `SumReturnSignal` (qps), `CompoundedReturnSignal` (paper), `AlwaysLongSignal` (STATIC) |
+| Risk estimate | `risk_model/` / `RiskModel` | Lagged volatility and covariance; `RollingCovarianceRiskModel` (qps), `EwmaVolatilityRiskModel` (paper, daily prices) |
+| Size and bound | `portfolio_construction/` / `construct_targets` | `InverseVolatilitySizer` sizes eligible markets; `bounded_target` applies the gross cap and risk ceiling |
+| Execute | `portfolio_construction/policy.py` / `BandPolicy` | Uses carried holdings, applies bands and enforces limits after costs |
+| Costs | `transaction_cost_model/` / `CostModel` | `LinearBpsCost` (qps) or `ZeroCost` (paper gross returns) |
+| Account | `backtest/engine.py` / `simulate` | Takes targets, a cost model and an execution policy; records actual trades, costs, instrument contributions and NAV; missing held returns fail |
+| Compose | `backtest/qps_baseline.py` / `build_forecasts` | Turns `config/*.json` into the qps objects above |
+| Summarize | `backtest/research_statistics.py` | Builds class series, rank/HAC diagnostics, risk attribution and descriptive stability blocks |
 | Present | `research_report.py`, `export_report.py` | Formats results and embeds figures in offline HTML |
 
 The exact strategy settings live in `config/baseline_config.json` and `config/risk_config.json`. The separate endpoint assumption lives in `config/endpoint_sensitivity.json`; `endpoint_sensitivity.py` changes only eight declared missing cells in an in-memory copy.

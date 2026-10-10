@@ -4,7 +4,32 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.backtest.engine import performance, regression_alpha, simulate, weights_and_signals
+from src.alpha_model import AlwaysLongSignal, SumReturnSignal, lagged
+from src.backtest.engine import performance, regression_alpha, simulate
+from src.models import MarketData
+from src.portfolio_construction import InverseVolatilitySizer
+from src.risk_model import RollingCovarianceRiskModel
+from src.transaction_cost_model import LinearBpsCost
+
+
+def weights_and_signals(returns, meta, config):
+    """Compose the qps pieces the way the pipeline does; returns weights and their inputs."""
+    lag = config["information_lag_months"]
+    risk = RollingCovarianceRiskModel(
+        config["volatility_months"], lag, config["volatility_floor_annual"], 0.5
+    )
+    sizer = InverseVolatilitySizer(
+        config["instrument_volatility_scale"],
+        config["volatility_floor_annual"],
+        config["minimum_instruments"],
+        config["exclude_from_strategy"],
+    )
+    vol = risk.volatility(MarketData(returns, meta))
+    signal = lagged(SumReturnSignal(config["signal_months"]).forecast(returns), lag)
+    always_long = lagged(AlwaysLongSignal(config["signal_months"]).forecast(returns), lag)
+    trend, eligible = sizer.weights(signal, vol)
+    static, _ = sizer.weights(always_long, vol)
+    return {"trend": trend, "static": static, "eligible": eligible, "signal": signal, "vol": vol}
 
 
 def frames(values, targets):
@@ -89,15 +114,15 @@ def test_zero_volatility_ineligible():
 def test_missing_held_return_fails_instead_of_filling():
     r, w = frames([0.1, np.nan], [0.5, 0.5])
     with pytest.raises(ValueError, match="Missing held return"):
-        simulate(r, w, 0)
+        simulate(r, w, LinearBpsCost(0))
     w.iloc[1] = 0
-    ledger, _ = simulate(r, w, 0)
+    ledger, _ = simulate(r, w, LinearBpsCost(0))
     assert ledger.net_return.iloc[1] == 0
 
 
 def test_entry_drift_rebalance_and_terminal_costs():
     r, w = frames([0.1, -0.05], [0.5, 0.5])
-    l, a = simulate(r, w, 10)
+    l, a = simulate(r, w, LinearBpsCost(10))
     first_net = 0.5 * 0.1 - 0.001 * 0.5
     carried = 0.5 * 1.1 / (1 + first_net)
     second_trade = abs(0.5 - carried)
@@ -112,7 +137,7 @@ def test_entry_drift_rebalance_and_terminal_costs():
 
 def test_short_and_flip_accounting():
     r, w = frames([0.1, 0.2], [-0.5, 0.5])
-    l, _ = simulate(r, w, 0, liquidate=False)
+    l, _ = simulate(r, w, LinearBpsCost(0), liquidate=False)
     assert l.net_return.iloc[0] == pytest.approx(-0.05)
     assert l.net_return.iloc[1] == pytest.approx(0.1)
     assert l.rebalance_turnover.iloc[1] == pytest.approx(0.5 + 0.55 / 0.95)
@@ -121,18 +146,18 @@ def test_short_and_flip_accounting():
 def test_source_switch_requires_close_and_open_even_with_no_net_trade():
     r, w = frames([0, 0], [0.5, 0.5])
     source = pd.DataFrame(["RL", "ER"], index=r.index, columns=r.columns)
-    l, _ = simulate(r, w, 0, source, liquidate=False)
+    l, _ = simulate(r, w, LinearBpsCost(0), source, liquidate=False)
     assert l.rebalance_turnover.iloc[1] == 1
     assert l.source_switch_extra_turnover.iloc[1] == 1
     same = pd.DataFrame(["RL", "RL"], index=r.index, columns=r.columns)
-    ordinary, _ = simulate(r, w, 0, same, liquidate=False)
+    ordinary, _ = simulate(r, w, LinearBpsCost(0), same, liquidate=False)
     assert ordinary.rebalance_turnover.iloc[1] == 0
 
 
 def test_rf_on_collateral_after_entry_cost_not_on_gross_exposure():
     r, w = frames([0.01], [2.0])
     rf = pd.Series([0.002], index=r.index)
-    l, _ = simulate(r, w, 5, risk_free=rf, liquidate=False)
+    l, _ = simulate(r, w, LinearBpsCost(5), risk_free=rf, liquidate=False)
     assert l.collateral_income.iloc[0] == pytest.approx(0.002 * (1 - 0.001))
     assert l.net_return.iloc[0] == pytest.approx(0.02 + 0.002 * (1 - 0.001) - 0.001)
 
@@ -140,21 +165,21 @@ def test_rf_on_collateral_after_entry_cost_not_on_gross_exposure():
 def test_flat_account_earns_rf_exactly_once():
     r, w = frames([np.nan, np.nan], [0, 0])
     rf = pd.Series([0.01, 0.01], index=r.index)
-    l, _ = simulate(r, w, 10, risk_free=rf)
+    l, _ = simulate(r, w, LinearBpsCost(10), risk_free=rf)
     np.testing.assert_allclose(l.net_return, rf)
     assert l.cost.sum() == 0
 
 
 def test_initial_capital_is_in_drawdown_peak():
     r, w = frames([-0.1, 0.02], [1, 1])
-    l, _ = simulate(r, w, 0)
+    l, _ = simulate(r, w, LinearBpsCost(0))
     assert performance(l)["max_drawdown"] == pytest.approx(-0.1)
 
 
 def test_insolvent_account_is_rejected():
     r, w = frames([-0.6], [2])
     with pytest.raises(ValueError, match="insolvent"):
-        simulate(r, w, 0)
+        simulate(r, w, LinearBpsCost(0))
 
 
 def test_known_regression_intercept_and_slope():

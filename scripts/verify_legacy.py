@@ -7,9 +7,11 @@ import numpy as np
 import pandas as pd
 
 from src.backtest.engine import simulate
+from src.backtest.qps_baseline import build_forecasts, portfolio_limits
 from src.config import ASSET_MAP_PATH, PROJECT_ROOT, QPS_OUTPUT_DIR
 from src.data_processing.strategy_inputs import load_strategy_inputs
-from src.risk_model.risk_model import BandPolicy, build_forecasts
+from src.portfolio_construction import BandPolicy
+from src.transaction_cost_model import LinearBpsCost
 
 ROOT = PROJECT_ROOT
 
@@ -29,9 +31,9 @@ def main():
                 ledger, _ = simulate(
                     sample,
                     targets[strategy],
-                    cost,
+                    LinearBpsCost(cost),
                     source.loc[sample.index],
-                    position_policy=BandPolicy(covariance, settings, band),
+                    position_policy=BandPolicy(covariance, portfolio_limits(settings), band),
                     source_known_at=known.loc[sample.index],
                 )
                 path = (

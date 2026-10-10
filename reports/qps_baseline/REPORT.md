@@ -167,6 +167,6 @@ Three priorities:
 
 These improvements are proposed future work.
 
-**Validation:** 86 tests pass; the preserved 2000–2014 refactor replay matches all 12 archived runs. [Code guide](../../docs/CODE_GUIDE.md) · [Methods](../../docs/RISK_METHODS.md) · [Validation](../../docs/VALIDATION.md) · [15-minute presentation guide](../../docs/MIDTERM_GUIDE.md).
+**Validation:** 105 tests pass; the preserved 2000–2014 refactor replay matches all 12 archived runs. [Code guide](../../docs/CODE_GUIDE.md) · [Methods](../../docs/RISK_METHODS.md) · [Validation](../../docs/VALIDATION.md) · [15-minute presentation guide](../../docs/MIDTERM_GUIDE.md).
 
 Reproduce: `python scripts/run_research.py --endpoint-sensitivity`. The standalone HTML embeds all five figures.

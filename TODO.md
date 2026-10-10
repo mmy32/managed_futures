@@ -52,10 +52,11 @@ Baseline TSMOM (Moskowitz-Ooi-Pedersen 2012): 12-month sign signal, 1-month hold
   - [x] Decision: the qps strategy follows Anay's treatment: YM and EC excluded, RL->ER source switch, March 1997 endpoint as a labeled sensitivity. `data_cleaning` still merges YM+ZD for the TSMOM path
   - [ ] `strategy_inputs`, `run_risk_research`, `audit_daily`, `verify_legacy` still read raw CSVs directly
   - [ ] Verify the March 1997 endpoint against the real exchange calendar
-- [ ] Shared strategy abstractions up front so TSMOM baseline and qps strategy coexist
-  - [ ] Interfaces for signal, risk estimate, position sizing and cost model; `engine.weights_and_signals` currently mixes signal, sizing and eligibility
-  - [ ] Port qps strategy and the TSMOM baseline above behind them
-- [ ] Clean up moved qps modules: pass `ruff check` and split by responsibility, then drop the `extend-exclude` list in `pyproject.toml`
+- [x] Shared strategy abstractions: `Signal`, `RiskModel`, `CostModel` interfaces; sizing, limits, bands and `BandPolicy` in `portfolio_construction`; `construct_targets` and `simulate` take them as arguments. qps results reproduce bit for bit
+  - [x] Second implementations: `CompoundedReturnSignal`, `EwmaVolatilityRiskModel` (checked against a loop implementation), `ZeroCost`
+  - [ ] Baseline TSMOM run: compose compounded signal + EWMA risk + `ZeroCost` with no limits, add `scripts/run_tsmom_baseline.py`, compare against the paper
+  - [ ] EWMA covariance is diagonal; add correlations only if a limit-bearing strategy needs them
+- [ ] Split the remaining long qps modules by responsibility (`engine.py` performance functions, `research_statistics.py`, report scripts); ruff is already clean
 
 # Next steps
 1. Defining the measure of trend:

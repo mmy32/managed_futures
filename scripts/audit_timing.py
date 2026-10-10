@@ -8,9 +8,11 @@ import numpy as np
 import pandas as pd
 
 from src.backtest.engine import performance, regression_alpha, simulate
+from src.backtest.qps_baseline import build_forecasts, portfolio_limits
 from src.config import ASSET_MAP_PATH, CONFIG_DIR, DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR
 from src.data_processing.strategy_inputs import load_strategy_inputs
-from src.risk_model.risk_model import BandPolicy, build_forecasts
+from src.portfolio_construction import BandPolicy
+from src.transaction_cost_model import LinearBpsCost
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "timing_audit"
@@ -35,9 +37,9 @@ def main():
             ledger, _ = simulate(
                 sample,
                 target[name],
-                5,
+                LinearBpsCost(5),
                 source.loc[sample.index],
-                position_policy=BandPolicy(cov, settings, 0.1),
+                position_policy=BandPolicy(cov, portfolio_limits(settings), 0.1),
                 source_known_at=known.loc[sample.index],
             )
             ledger.to_csv(OUT / f"lag{lag}_{name}_ledger.csv")
