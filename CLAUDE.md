@@ -1,47 +1,29 @@
 # CLAUDE.md
 
-Project-level instructions. These extend the global rules in `~/.claude/CLAUDE.md` (think before coding, simplicity first, surgical changes, goal-driven execution), which still apply.
+Project-level instructions. Extends global rules in `~/.claude/CLAUDE.md` (think first, simplicity first, surgical changes, goal-driven execution).
 
 ## Project Layout
 
-Model components under `src/`: `alpha_model` (forecasts), `risk_model` (risk measurement and control), `transaction_cost_model`, `portfolio_construction`, `backtest`, `feedback_loop`. Data lives in `data/` (gitignored; `data/raw/` is immutable). Scripts in `scripts/` build reports; generated results go to `reports/`. See `README.md`.
+- `src/`: Core pipeline components (`alpha_model`, `risk_model`, `transaction_cost_model`, `portfolio_construction`, `backtest`, `feedback_loop`).
+- `data/`: Gitignored. **`data/raw/` is strictly immutable.**
+- `scripts/`: Reporting and execution scripts.
+- `reports/`: Generated results and visual outputs.
+- `config/*.json`: Strategy & risk parameters (accessed via `src.config.CONFIG_DIR`).
 
-## Design Principles
+## Engineering Guidelines
 
-Apply these principles in all application code under `src/`.
+- **Surgical & YAGNI:** Make minimal, targeted modifications. Do not build speculative abstractions or add unneeded configuration parameters. Edit existing modules directly rather than adding wrapper layers.
+- **Dependency Injection:** Pass models, parameters, and data handles via constructors or arguments to keep pipeline stages unit-testable.
+- **Fail Fast:** Validate data schema, shapes, and date ranges at pipeline boundaries; raise explicit errors immediately.
+- **Zero Magic Numbers:** Externalize thresholds and paths to `src/config/` or `config/*.json`.
+- **Data Immutability:** Never mutate input DataFrames or arrays in-place; return transformed copies.
+- **Clean Interfaces:** Prefer composition over inheritance. Keep classes focused on one task (forecast, risk measure, execution).
 
-### Single Responsibility
-Every module, class, and function does exactly one thing. If you cannot describe its purpose in one sentence without "and", split it.
-
-### Don't Repeat Yourself (DRY)
-Extract shared logic into a single source of truth. If the same pattern appears in two places, refactor it into a reusable function or module. Duplicated code is duplicated bugs.
-
-### Dependency Inversion
-Depend on abstractions, not concrete implementations. Pass dependencies in (constructor, function argument) rather than hardcoding them. This makes testing trivial — swap a real DB client for a mock by injecting a different object.
-
-### Fail Fast
-Validate inputs at boundaries. Raise errors immediately on invalid state instead of silently propagating bad data downstream. The earlier a bug surfaces, the cheaper it is to fix.
-
-### Configuration over Hardcoding
-No magic numbers, hardcoded paths, or inline credentials. Externalize settings to `src/config/` (paths, thresholds), environment variables, or the repo-root `config/*.json` files (strategy and risk parameters, read via `src.config.CONFIG_DIR`). One place to change a value, not twenty.
-
-### YAGNI (You Aren't Gonna Need It)
-Do not build for hypothetical future requirements. Write the code you need today. Speculative abstractions are tech debt with no offsetting value.
-
-### Immutability by Default
-Prefer immutable data structures. Mutate explicitly and locally. In data pipelines, accidental in-place mutation causes subtle, hard-to-trace bugs.
-
-### Encapsulation
-Hide internal state. Expose behavior through public methods. Keep fields private; provide access only where needed.
-
-### Abstraction
-Expose only what consumers need. Hide implementation complexity behind clear interfaces. A caller should not need to understand internals to use a class.
-
-### Inheritance
-Use inheritance for genuine "is-a" relationships. Prefer composition over inheritance when the relationship is "has-a" or "uses-a". Avoid deep inheritance hierarchies (≤ 2 levels unless strongly justified).
-
-### Polymorphism
-Program to interfaces, not implementations. Use method overriding and duck typing (or generics) so components are interchangeable without conditionals checking concrete types.
+- **SRP:** Split any function over ~40 lines or any class doing both data fetching/parsing and mathematical computation.
+- **OCP:** Add new alpha/risk signals by registering a new class against the base protocol/interface, without modifying existing model code.
+- **LSP:** Never override a base class method with `pass`, `raise NotImplementedError`, or a different return type.
+- **ISP:** Keep interfaces minimal (<4 public methods). Never force a model to implement execution hooks if it only computes scores.
+- **DIP:** No direct instantiation of IO or DB clients inside calculation classes; pass data or protocols into `__init__`.
 
 ## Verifier Commands
 
