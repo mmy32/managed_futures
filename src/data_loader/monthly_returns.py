@@ -27,3 +27,13 @@ def load_monthly_returns(path: Path = MONTHLY_RETURNS_PATH) -> pd.DataFrame:
     if empty:
         raise ValueError(f"{path}: columns with no data: {empty}")
     return returns
+
+
+def load_monthly_return_tokens(path: Path = MONTHLY_RETURNS_PATH) -> pd.DataFrame:
+    """Return the stored decimal strings, indexed like load_monthly_returns().
+
+    Their digits set comparison tolerances; use load_monthly_returns() for values.
+    """
+    tokens = pd.read_csv(path, index_col=0, dtype=str)
+    tokens.index = pd.DatetimeIndex(pd.to_datetime(tokens.index, format=MONTHLY_DATE_FORMAT))
+    return tokens

@@ -13,12 +13,12 @@ import pandas as pd
 from matplotlib.ticker import PercentFormatter
 
 from src.config import (
-    ASSET_MAP_PATH,
     DOCS_DIR,
     LECTURE_BENCHMARK_PATH,
     PROJECT_ROOT,
     QPS_OUTPUT_DIR,
 )
+from src.data_loader import load_asset_map
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "eda"
@@ -71,7 +71,7 @@ def figure(name):
 
 # Returns are decimals already: do not apply pct_change, forward-fill, or winsorize.
 r = monthly(pd.read_csv(QPS_OUTPUT_DIR / "construction/monthly_returns_research.csv", index_col=0))
-meta = pd.read_csv(ASSET_MAP_PATH).set_index("ID")
+meta = load_asset_map()
 assert meta.index.is_unique and r.columns.is_unique
 assert r.columns.isin(meta.index).all() and r.notna().any().all()
 bench = monthly(pd.read_excel(LECTURE_BENCHMARK_PATH, index_col=0))

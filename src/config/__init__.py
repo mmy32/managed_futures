@@ -12,6 +12,7 @@ FUTURES_UNDERLYING_DIR = RAW_DATA_DIR / "futures_underlying"
 MONTHLY_DATE_FORMAT = "%m/%d/%Y"
 ASSET_CLASSES = frozenset({"COMM", "EQ", "FI", "FX"})
 PRICE_COLUMN = "Close"
+DAILY_BAR_FIELDS = ["Open", "High", "Low", "Close", "Volume", "OpenInterest"]
 
 PROCESSED_DATA_DIR = PROJECT_ROOT / "data" / "processed"
 CLEANING_REPORT_PATH = PROCESSED_DATA_DIR / "cleaning_report.json"
@@ -21,6 +22,10 @@ MAX_ZERO_SHARE = 0.10  # max share of exactly-zero monthly returns
 MAX_ABS_RETURN = 1.0  # max |monthly return|; larger is treated as a data error
 DUPLICATE_CORRELATION = 0.99  # min correlation to treat two markets as one instrument
 DUPLICATE_MIN_OVERLAP = 36  # months both markets must share to compare them
+EXCLUDED_MARKETS = {  # market ID -> reason; dropped before quality checks and duplicate merging
+    "YM": "Duplicate Dow exposure; retain older ZD series.",
+    "EC": "Instrument identity/classification unresolved; omit rather than assign an unverified class.",
+}
 
 CONFIG_DIR = PROJECT_ROOT / "config"
 DOCS_DIR = PROJECT_ROOT / "docs"

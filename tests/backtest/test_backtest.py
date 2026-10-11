@@ -5,7 +5,8 @@ import pandas as pd
 import pytest
 
 from src.alpha_model import AlwaysLongSignal, SumReturnSignal, lagged
-from src.backtest.engine import performance, regression_alpha, signal_hit_rate, simulate
+from src.backtest.engine import simulate
+from src.backtest.performance import performance, regression_alpha, signal_hit_rate
 from src.models import MarketData
 from src.portfolio_construction import InverseVolatilitySizer
 from src.risk_model import RollingCovarianceRiskModel

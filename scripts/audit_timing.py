@@ -7,9 +7,11 @@ import json
 import numpy as np
 import pandas as pd
 
-from src.backtest.engine import performance, regression_alpha, simulate
+from src.backtest.engine import simulate
+from src.backtest.performance import performance, regression_alpha
 from src.backtest.qps_baseline import build_forecasts, portfolio_limits
-from src.config import ASSET_MAP_PATH, CONFIG_DIR, DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR
+from src.config import CONFIG_DIR, DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR
+from src.data_loader import load_asset_map
 from src.data_processing.strategy_inputs import load_strategy_inputs
 from src.portfolio_construction import BandPolicy
 from src.transaction_cost_model import LinearBpsCost
@@ -24,7 +26,7 @@ def main():
     base = json.loads((ROOT / settings["base_config"]).read_text())
     returns, source, known, schedule = load_strategy_inputs(settings, write=True)
     sample = returns.loc[base["start"] : base["end"]]
-    meta = pd.read_csv(ASSET_MAP_PATH).set_index("ID")
+    meta = load_asset_map()
     rows = []
     series = {}
     alphas = []

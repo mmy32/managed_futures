@@ -7,8 +7,8 @@ from decimal import Decimal
 import numpy as np
 import pandas as pd
 
-from src.config import MONTHLY_RETURNS_PATH, PROJECT_ROOT, QPS_OUTPUT_DIR, RAW_DATA_DIR
-from src.data_loader import load_daily_prices, load_monthly_returns
+from src.config import PROJECT_ROOT, QPS_OUTPUT_DIR, RAW_DATA_DIR
+from src.data_loader import load_daily_prices, load_monthly_return_tokens, load_monthly_returns
 from src.data_processing.endpoints import close_frames, endpoints
 
 ROOT = PROJECT_ROOT
@@ -81,7 +81,7 @@ def main():
     raw, supplied = read_inputs()
     replica, _provenance, _ = assemble(raw, supplied.index, supplied.columns)
     # Loaders return floats; the stored decimal strings set the comparison tolerance.
-    tokens = pd.read_csv(MONTHLY_RETURNS_PATH, index_col=0, dtype=str)
+    tokens = load_monthly_return_tokens()
     tokens.index = supplied.index
     assert replica.notna().equals(supplied.notna())
     rows = []

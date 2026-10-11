@@ -3,8 +3,9 @@
 import numpy as np
 import pandas as pd
 
-from src.config import FUTURES_UNDERLYING_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR
-from src.data_processing.endpoints import endpoints
+from src.config import PROJECT_ROOT, QPS_OUTPUT_DIR
+from src.data_loader import load_daily_prices
+from src.data_processing.endpoints import close_frames, endpoints
 
 ROOT = PROJECT_ROOT
 
@@ -46,9 +47,9 @@ def load_strategy_inputs(settings, write=False):
     returns = pd.read_csv(QPS_OUTPUT_DIR / "construction/monthly_returns_research.csv", index_col=0)
     returns.index = pd.PeriodIndex(returns.index, freq="M")
     independent = {}
+    prices = close_frames(load_daily_prices())
     for name in ["RL", "ER"]:
-        raw = pd.read_csv(FUTURES_UNDERLYING_DIR / f"{name}.csv", index_col=0, parse_dates=True)
-        closes = endpoints(raw, returns.index).endpoint_close
+        closes = endpoints(prices[name], returns.index).endpoint_close
         independent[name] = closes / closes.shift(1) - 1
     rule = settings.get("source_selection", {})
     selected, chosen, schedule = select_source(

@@ -7,7 +7,8 @@ import numpy as np
 import pandas as pd
 
 from src.alpha_model import CompoundedReturnSignal
-from src.backtest.engine import performance, signal_hit_rate, simulate
+from src.backtest.engine import simulate
+from src.backtest.performance import performance, signal_hit_rate
 from src.config import CONFIG_DIR, TSMOM_REPORT_DIR
 from src.data_cleaning import clean
 from src.data_loader import load_asset_map, load_daily_prices, load_monthly_returns

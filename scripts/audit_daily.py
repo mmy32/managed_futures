@@ -18,10 +18,10 @@ from src.config import (
     PROJECT_ROOT,
     QPS_OUTPUT_DIR,
 )
+from src.data_loader import load_asset_map, load_daily_bars, load_monthly_returns
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "daily_audit"
-FIELDS = ["Open", "High", "Low", "Close", "Volume", "OpenInterest"]
 ABS_MOVE = 0.10
 ROBUST_Z = 10
 MIN_STALE_OBS = 4
@@ -48,9 +48,9 @@ def main():
     paths = sorted((FUTURES_UNDERLYING_DIR).glob("*.csv"))
     source_paths = paths + [MONTHLY_RETURNS_PATH, ASSET_MAP_PATH]
     before = {str(p.relative_to(ROOT)): digest(p) for p in source_paths}
-    returns = pd.read_csv(MONTHLY_RETURNS_PATH, index_col=0)
-    returns.index = pd.to_datetime(returns.index).to_period("M")
-    meta = pd.read_csv(ASSET_MAP_PATH).set_index("ID")
+    returns = load_monthly_returns()
+    returns.index = returns.index.to_period("M")
+    meta = load_asset_map()
     # Audit the original supplied returns independently of corrected EDA outputs.
     mad = returns.sub(returns.median()).abs().median().replace(0, np.nan)
     monthly_z = returns.sub(returns.median()).div(1.4826 * mad)
@@ -77,14 +77,7 @@ def main():
     data, moves, endpoints = {}, {}, {}
     inventories, issues, extremes, gaps, stale = [], [], [], [], []
     missing_weekdays = []
-    for path in paths:
-        asset = path.stem
-        d = pd.read_csv(path, index_col=0)
-        assert list(d.columns) == FIELDS, path
-        d.index = pd.to_datetime(d.index, errors="raise")
-        assert d.index.is_unique and d.index.is_monotonic_increasing, path
-        d = d.apply(pd.to_numeric, errors="raise")
-        assert d.notna().all().all() and np.isfinite(d.to_numpy()).all(), path
+    for asset, d in load_daily_bars().items():
         data[asset] = d
         close = d.Close
         r = close.pct_change(fill_method=None)

@@ -8,7 +8,8 @@ import pandas as pd
 
 from src.backtest.engine import simulate
 from src.backtest.qps_baseline import build_forecasts, portfolio_limits
-from src.config import ASSET_MAP_PATH, PROJECT_ROOT, QPS_OUTPUT_DIR
+from src.config import PROJECT_ROOT, QPS_OUTPUT_DIR
+from src.data_loader import load_asset_map
 from src.data_processing.strategy_inputs import load_strategy_inputs
 from src.portfolio_construction import BandPolicy
 from src.transaction_cost_model import LinearBpsCost
@@ -21,7 +22,7 @@ def main():
     base = json.loads((archive / "baseline_config.json").read_text())
     settings = json.loads((archive / "risk_config.json").read_text())
     returns, source, known, _ = load_strategy_inputs(settings)
-    meta = pd.read_csv(ASSET_MAP_PATH).set_index("ID")
+    meta = load_asset_map()
     targets, covariance, _ = build_forecasts(returns, meta, base, settings)
     sample = returns.loc[base["start"] : base["end"]]
     comparisons = []

@@ -1,4 +1,4 @@
-"""Presentation formatting only; calculations live in research_statistics/backtest."""
+"""Presentation formatting only; calculations live in src/backtest."""
 
 import hashlib
 import json
@@ -13,7 +13,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import PercentFormatter
 
-from src.backtest.research_statistics import CLASS_NAMES, risk_diagnostics
+from src.backtest.attribution import CLASS_NAMES
+from src.backtest.sample_diagnostics import risk_diagnostics
 from src.config import DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR, QPS_REPORT_DIR
 
 ROOT = PROJECT_ROOT
@@ -167,88 +168,11 @@ def validation_summary():
     return f"{record['passed']} tests pass" if current else "Validation record needs refreshing"
 
 
-def write_report(
-    metrics,
-    alphas,
-    class_stats,
-    autocorr,
-    attribution,
-    audit,
-    settings,
-    base,
-    out=OUT,
-    report_path=QPS_REPORT_DIR / "REPORT.md",
-    assumption=None,
-    stability=None,
-):
-    """A concise report; calculation details and audit evidence remain linked appendices."""
-    main = metrics[(metrics.band == 0.1) & (metrics.cost_bps == 5)].set_index("strategy")
-    alpha = alphas[(alphas.band == 0.1) & (alphas.cost_bps == 5) & (alphas.hac_lags == 6)].iloc[0]
-    trend = main.loc["trend"]
-    no_band = metrics[
-        (metrics.band == 0) & (metrics.cost_bps == 5) & metrics.strategy.eq("trend")
-    ].iloc[0]
-    coverage = [
-        [r.name, r.instruments, f"{r.instrument_observations:,}", r.months, r.first_month]
-        for r in class_stats.itertuples(index=False)
-    ]
-    stats = [
-        [
-            r.name,
-            f"{r.mean_monthly:.2%}",
-            f"{r.std_monthly:.2%}",
-            f"{r.mean_ann:.2%}",
-            f"{r.vol_ann:.2%}",
-            f"{r.sharpe:.2f}",
-        ]
-        for r in class_stats.itertuples(index=False)
-    ]
-    results = []
-    for label, field, format_spec in [
-        ("Annual mean", "mean_ann", ".2%"),
-        ("CAGR", "cagr", ".2%"),
-        ("Annual volatility", "vol_ann", ".2%"),
-        ("Net Sharpe", "sharpe", ".2f"),
-        ("Maximum drawdown", "max_drawdown", ".2%"),
-        ("Annual turnover / capital", "turnover_ann", ".2f"),
-        ("Annual direct cost drag", "mean_cost_ann", ".3%"),
-    ]:
-        results.append(
-            [label] + [format(main.loc[s, field], format_spec) for s in ["trend", "static"]]
-        )
-    costs = [
-        [r.strategy.upper(), f"{r.cost_bps:g}", f"{r.cagr:.2%}", f"{r.sharpe:.2f}"]
-        for r in metrics[metrics.band.eq(0.1)].itertuples(index=False)
-    ]
-    risk = [
-        [
-            s.upper(),
-            f"{r.avg_gross_exposure:.2f}×",
-            f"{r.rms_forecast_vol:.2%}",
-            f"{r.realized_predicted_ratio:.2f}",
-        ]
-        for s, r in main.iterrows()
-    ]
-    classes = [
-        [
-            CLASS_NAMES[r.asset_class],
-            f"{r.net_mean_ann:.2%}",
-            f"{r.contribution_vol_ann:.2%}",
-            f"{r.avg_gross_exposure:.2f}×",
-            f"{r.avg_forecast_vol_contribution:.2%}",
-        ]
-        for r in attribution["trend"].itertuples(index=False)
-    ]
-    uncertainty = []
-    for group, name in CLASS_NAMES.items():
-        q = autocorr[autocorr.asset_class.eq(group)]
-        uncertainty.append(
-            [
-                name,
-                f"{q.matched_months.min()}–{q.matched_months.max()}",
-                f"{int(q.p_approx.lt(0.05).sum())}/12",
-            ]
-        )
+def _main_metrics(metrics):
+    return metrics[(metrics.band == 0.1) & (metrics.cost_bps == 5)].set_index("strategy")
+
+
+def _opening(assumption):
     assumption_note = (
         "**All results are conditional on an unverified endpoint assumption:** March 27, 1997 is used as "
         "the March endpoint for DT, GS, LX and SS, restoring eight March/April returns. "
@@ -257,28 +181,7 @@ def write_report(
         if assumption is not None
         else ""
     )
-    stability_text = ""
-    if stability is not None:
-        periods = stability[
-            stability.period.isin(["1976–1984", "1985–1994", "1995–2004", "2005–2014"])
-        ]
-        block_rows = []
-        for period in periods.period.drop_duplicates():
-            pair = periods[periods.period.eq(period)].set_index("strategy")
-            block_rows.append(
-                [
-                    period,
-                    f"{pair.loc['trend', 'mean_ann']:.2%}",
-                    f"{pair.loc['static', 'mean_ann']:.2%}",
-                    f"{pair.loc['trend', 'sharpe']:.2f}",
-                    f"{pair.loc['static', 'sharpe']:.2f}",
-                ]
-            )
-        stability_text = "\n" + table(
-            ["Period", "Trend mean", "STATIC mean", "Trend Sharpe", "STATIC Sharpe"], block_rows
-        )
-        stability_text += "\n\nThese are descriptive blocks of the existing trading path, not new holdouts. Recent mean returns are weaker; the full-period advantage is not uniform. [Block and crisis diagnostics](output/risk/stability.csv).\n"
-    report = f"""# Managed futures: 15-minute midterm report
+    return f"""# Managed futures: 15-minute midterm report
 
 {assumption_note}
 
@@ -299,7 +202,11 @@ def write_report(
 
 **Answer:** trend improves full-period risk-adjusted performance versus matching STATIC in this conditional historical study. Recent performance is more modest. The result supports further research; data provenance, execution and risk calibration still need work.
 
-## 2. Data — 1.5 min
+"""
+
+
+def _data_section(audit):
+    return f"""## 2. Data — 1.5 min
 
 | Item | Definition |
 |---|---|
@@ -315,7 +222,26 @@ January 1976 has {audit["eligible_at_start"]} eligible instruments, below the mi
 
 **Point to make:** the requested dates are retained, including the flat January month. All displayed results use the explicit endpoint assumption stated above.
 
-## 3. Asset classes — 2 min
+"""
+
+
+def _class_section(class_stats):
+    coverage = [
+        [r.name, r.instruments, f"{r.instrument_observations:,}", r.months, r.first_month]
+        for r in class_stats.itertuples(index=False)
+    ]
+    stats = [
+        [
+            r.name,
+            f"{r.mean_monthly:.2%}",
+            f"{r.std_monthly:.2%}",
+            f"{r.mean_ann:.2%}",
+            f"{r.vol_ann:.2%}",
+            f"{r.sharpe:.2f}",
+        ]
+        for r in class_stats.itertuples(index=False)
+    ]
+    return f"""## 3. Asset classes — 2 min
 
 Each class return equally weights instruments eligible before the month. Statistics are calculated from the class portfolio series. Empty classes remain missing; an unavailable eligible constituent makes the whole class return missing.
 
@@ -329,7 +255,21 @@ Annual mean = 12 × monthly mean; annual volatility = √12 × sample monthly SD
 
 **Takeaway:** fixed income has the highest descriptive Sharpe, followed by equities; currencies are weakest. Differing history and eligibility prevent a direct replication of the lecture's class statistics.
 
-## 4. Autocorrelation — 1.5 min
+"""
+
+
+def _autocorrelation_section(autocorr):
+    uncertainty = []
+    for group, name in CLASS_NAMES.items():
+        q = autocorr[autocorr.asset_class.eq(group)]
+        uncertainty.append(
+            [
+                name,
+                f"{q.matched_months.min()}–{q.matched_months.max()}",
+                f"{int(q.p_approx.lt(0.05).sum())}/12",
+            ]
+        )
+    return f"""## 4. Autocorrelation — 1.5 min
 
 Spearman rank correlation compares each **class portfolio's monthly return** with its calendar-shifted return at lags 1–12. Missing pairs are removed after shifting. This differs from averaging instrument autocorrelations.
 
@@ -341,7 +281,11 @@ Approximate 95% intervals use standardized-rank regressions with calendar-spaced
 
 **Takeaway:** the class diagnostics provide limited persistence evidence. They do not establish the profitability or optimality of the 12-month signal. [All estimates and intervals](output/risk/autocorrelation.csv).
 
-## 5. Construction — 2 min
+"""
+
+
+def _construction_section():
+    return """## 5. Construction — 2 min
 
 1. **Direction:** sign of the sum of the previous 12 monthly returns; zero means flat.
 2. **Risk:** previous 36 months; 2% annual instrument-volatility floor; correlations shrunk 50% toward zero.
@@ -352,7 +296,58 @@ STATIC is always long with identical eligibility, risk estimates, limits, bands 
 
 **Difference from Lecture 6:** the lecture baseline uses expanding volatility with zero cross-instrument covariance; its later extension targets 11% forecast volatility. Our model uses a fixed 36-month window, shrinkage, a 10% ceiling, gross cap and bands. It scales down but does not scale up to a risk target. This is an enhanced baseline, not a matched lecture replication.
 
-## 6. Results — 3 min
+"""
+
+
+def _stability_text(stability):
+    if stability is None:
+        return ""
+    periods = stability[stability.period.isin(["1976–1984", "1985–1994", "1995–2004", "2005–2014"])]
+    block_rows = []
+    for period in periods.period.drop_duplicates():
+        pair = periods[periods.period.eq(period)].set_index("strategy")
+        block_rows.append(
+            [
+                period,
+                f"{pair.loc['trend', 'mean_ann']:.2%}",
+                f"{pair.loc['static', 'mean_ann']:.2%}",
+                f"{pair.loc['trend', 'sharpe']:.2f}",
+                f"{pair.loc['static', 'sharpe']:.2f}",
+            ]
+        )
+    text = "\n" + table(
+        ["Period", "Trend mean", "STATIC mean", "Trend Sharpe", "STATIC Sharpe"], block_rows
+    )
+    text += "\n\nThese are descriptive blocks of the existing trading path, not new holdouts. Recent mean returns are weaker; the full-period advantage is not uniform. [Block and crisis diagnostics](output/risk/stability.csv).\n"
+    return text
+
+
+def _results_section(metrics, alphas, stability):
+    main = _main_metrics(metrics)
+    alpha = alphas[(alphas.band == 0.1) & (alphas.cost_bps == 5) & (alphas.hac_lags == 6)].iloc[0]
+    trend = main.loc["trend"]
+    no_band = metrics[
+        (metrics.band == 0) & (metrics.cost_bps == 5) & metrics.strategy.eq("trend")
+    ].iloc[0]
+    results = []
+    for label, field, format_spec in [
+        ("Annual mean", "mean_ann", ".2%"),
+        ("CAGR", "cagr", ".2%"),
+        ("Annual volatility", "vol_ann", ".2%"),
+        ("Net Sharpe", "sharpe", ".2f"),
+        ("Maximum drawdown", "max_drawdown", ".2%"),
+        ("Annual turnover / capital", "turnover_ann", ".2f"),
+        ("Annual direct cost drag", "mean_cost_ann", ".3%"),
+    ]:
+        results.append(
+            [label] + [format(main.loc[s, field], format_spec) for s in ["trend", "static"]]
+        )
+    costs = [
+        [r.strategy.upper(), f"{r.cost_bps:g}", f"{r.cagr:.2%}", f"{r.sharpe:.2f}"]
+        for r in metrics[metrics.band.eq(0.1)].itertuples(index=False)
+    ]
+    stability_text = _stability_text(stability)
+    return f"""## 6. Results — 3 min
 
 Net returns; **5 bps per unit of traded exposure**, ±10% bands, RF = 0. Annual mean is arithmetic; CAGR compounds monthly returns.
 
@@ -372,7 +367,31 @@ Costs cover initial entry, actual drift-adjusted trades, RL/ER close/open trades
 
 The ±10% band reduces trend turnover by **{1 - trend.turnover_ann / no_band.turnover_ann:.1%}** and direct annual cost drag by **{(no_band.mean_cost_ann - trend.mean_cost_ann) * 10000:.2f} bps** versus no band. Net annual mean changes by **{(trend.mean_ann - no_band.mean_ann) * 10000:+.2f} bps**. The band saves trading but does not improve every performance measure. [All cost and no-band comparisons](output/risk/comparison.csv).
 
-## 7. Risk — 2.5 min
+"""
+
+
+def _risk_section(metrics, attribution):
+    main = _main_metrics(metrics)
+    risk = [
+        [
+            s.upper(),
+            f"{r.avg_gross_exposure:.2f}×",
+            f"{r.rms_forecast_vol:.2%}",
+            f"{r.realized_predicted_ratio:.2f}",
+        ]
+        for s, r in main.iterrows()
+    ]
+    classes = [
+        [
+            CLASS_NAMES[r.asset_class],
+            f"{r.net_mean_ann:.2%}",
+            f"{r.contribution_vol_ann:.2%}",
+            f"{r.avg_gross_exposure:.2f}×",
+            f"{r.avg_forecast_vol_contribution:.2%}",
+        ]
+        for r in attribution["trend"].itertuples(index=False)
+    ]
+    return f"""## 7. Risk — 2.5 min
 
 {table(["Portfolio", "Average gross exposure", "RMS forecast vol", "Calibration SD"], risk)}
 
@@ -388,7 +407,11 @@ Trend class attribution:
 
 Monthly net class contributions include actual instrument costs and sum to net portfolio return. Annual means and signed Euler forecast-risk contributions add; **class volatilities do not**. Classes have unequal risk allocations, with commodities contributing most of the average forecast risk. [Full attribution](output/risk/trend_class_attribution.csv).
 
-## 8. Limits and improvements — 1.5 min
+"""
+
+
+def _limits_section():
+    return f"""## 8. Limits and improvements — 1.5 min
 
 **Suitable for a midterm:** a clear economic idea, a fair STATIC comparison, transparent costs, and reproducible accounting. **Evidence for future performance is limited:** the sample has been studied repeatedly, the endpoint assumption remains unverified, and execution/roll/FX conventions are idealized. No fresh out-of-sample test or superiority over the lecture is established.
 
@@ -400,10 +423,39 @@ Three priorities:
 
 These improvements are proposed future work.
 
-**Validation:** {validation_summary()}; the preserved 2000–2014 refactor replay matches all 12 archived runs. [Code guide](../../docs/CODE_GUIDE.md) · [Methods](../../docs/RISK_METHODS.md) · [Validation](../../docs/VALIDATION.md) · [15-minute presentation guide](../../docs/MIDTERM_GUIDE.md).
+**Validation:** {validation_summary()}; the preserved 2000–2014 refactor replay matches all 12 archived runs. [Code guide](../../docs/CODE_GUIDE.md) · [Methods](../../docs/RISK_METHODS.md) · [Validation](../../docs/VALIDATION.md).
 
 Reproduce: `python scripts/run_research.py --endpoint-sensitivity`. The standalone HTML embeds all five figures.
 """
+
+
+def write_report(
+    metrics,
+    alphas,
+    class_stats,
+    autocorr,
+    attribution,
+    audit,
+    settings,
+    base,
+    out=OUT,
+    report_path=QPS_REPORT_DIR / "REPORT.md",
+    assumption=None,
+    stability=None,
+):
+    """A concise report; calculation details and audit evidence remain linked appendices."""
+    report = "".join(
+        [
+            _opening(assumption),
+            _data_section(audit),
+            _class_section(class_stats),
+            _autocorrelation_section(autocorr),
+            _construction_section(),
+            _results_section(metrics, alphas, stability),
+            _risk_section(metrics, attribution),
+            _limits_section(),
+        ]
+    )
     report = report.replace("output/risk/", str(out.relative_to(QPS_REPORT_DIR)) + "/")
     report_path.write_text(report)
     if assumption is not None:

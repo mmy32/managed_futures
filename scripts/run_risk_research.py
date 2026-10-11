@@ -12,10 +12,11 @@ import pandas as pd
 import statsmodels
 from research_report import make_charts, write_blocked_report, write_report
 
-from src.backtest.engine import performance, regression_alpha, simulate
+from src.backtest.attribution import class_attribution
+from src.backtest.engine import simulate
+from src.backtest.performance import performance, regression_alpha
 from src.backtest.qps_baseline import build_forecasts, eligibility, portfolio_limits
-from src.backtest.research_statistics import (
-    class_attribution,
+from src.backtest.sample_diagnostics import (
     class_portfolios,
     rank_autocorrelation,
     risk_diagnostics,
@@ -23,15 +24,15 @@ from src.backtest.research_statistics import (
     stability_summary,
 )
 from src.config import (
-    ASSET_MAP_PATH,
     CONFIG_DIR,
-    FUTURES_UNDERLYING_DIR,
     PROJECT_ROOT,
     QPS_OUTPUT_DIR,
     QPS_REPORT_DIR,
     RAW_DATA_DIR,
 )
+from src.data_loader import load_asset_map, load_daily_prices
 from src.data_processing.endpoint_sensitivity import apply_endpoint_assumption
+from src.data_processing.endpoints import close_frames
 from src.data_processing.strategy_inputs import load_strategy_inputs
 from src.portfolio_construction import BandPolicy
 from src.transaction_cost_model import LinearBpsCost
@@ -138,11 +139,12 @@ def archive_previous_outputs(out=OUT, report_names=("REPORT.md", "REPORT.html"))
 def endpoint_candidates(out=OUT):
     """Review-only values, never consumed by the trading data loader."""
     rows = []
+    prices = load_daily_prices()
     for asset in ["DT", "GS", "LX", "SS"]:
-        raw = pd.read_csv(FUTURES_UNDERLYING_DIR / f"{asset}.csv", index_col=0, parse_dates=True)
-        previous = raw.loc["1997-02", "Close"].iloc[-1]
-        endpoint = raw.loc["1997-03-27", "Close"]
-        following = raw.loc["1997-04", "Close"].iloc[-1]
+        close = prices[asset].dropna()
+        previous = close.loc["1997-02"].iloc[-1]
+        endpoint = close.loc["1997-03-27"]
+        following = close.loc["1997-04"].iloc[-1]
         for month, value in [
             ("1997-03", endpoint / previous - 1),
             ("1997-04", following / endpoint - 1),
@@ -240,15 +242,13 @@ def main(endpoint_sensitivity=False):
     assumption = None
     if endpoint_sensitivity:
         assumption = json.loads((CONFIG_DIR / "endpoint_sensitivity.json").read_text())
-        raw = {
-            a: pd.read_csv(FUTURES_UNDERLYING_DIR / f"{a}.csv", index_col=0, parse_dates=True)
-            for a in assumption["instruments"]
-        }
+        prices = close_frames(load_daily_prices())
+        raw = {a: prices[a] for a in assumption["instruments"]}
         returns, changes = apply_endpoint_assumption(returns, raw, assumption)
         changes.to_csv(out / "endpoint_changes.csv", index=False)
         (out / "assumption.json").write_text(json.dumps(assumption, indent=2) + "\n")
     returns.to_csv(out / "returns_used.csv", float_format="%.17g")
-    meta = pd.read_csv(ASSET_MAP_PATH).set_index("ID")
+    meta = load_asset_map()
     sample = returns.loc[base["start"] : base["end"]]
     eligible = eligibility(returns, meta, base, settings)
     audit = audit_data(returns, source, known, schedule, eligible, base, settings, out)

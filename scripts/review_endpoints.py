@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 from src.config import FUTURES_UNDERLYING_DIR, MONTHLY_RETURNS_PATH, PROJECT_ROOT, QPS_OUTPUT_DIR
-from src.data_loader import load_daily_prices, load_monthly_returns
+from src.data_loader import load_daily_prices, load_monthly_return_tokens, load_monthly_returns
 from src.data_processing.endpoints import close_frames, endpoints
 
 ROOT = PROJECT_ROOT
@@ -78,7 +78,7 @@ def main():
     raw = close_frames(load_daily_prices())
     supplied = load_monthly_returns()
     # Loaders return floats; the stored decimal strings are kept as audit evidence.
-    saved_tokens = pd.read_csv(MONTHLY_RETURNS_PATH, index_col=0, dtype=str)
+    saved_tokens = load_monthly_return_tokens()
     labels = supplied.index
     supplied.index = labels.to_period("M")
     saved_tokens.index = supplied.index

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
+from src.config import EXCLUDED_MARKETS
 from src.data_cleaning.combine import combine, combine_prices
 from src.data_cleaning.duplicates import find_duplicate_groups
 from src.data_cleaning.quality import exclude, find_low_quality
@@ -33,14 +34,20 @@ def _merge_asset_map(
 
 
 def clean(
-    returns: pd.DataFrame, prices: pd.DataFrame, asset_map: pd.DataFrame
+    returns: pd.DataFrame,
+    prices: pd.DataFrame,
+    asset_map: pd.DataFrame,
+    forced_exclusions: dict[str, str] = EXCLUDED_MARKETS,
 ) -> CleanedData:
-    """Exclude low-quality markets, then merge duplicates, across all three inputs.
+    """Exclude configured and low-quality markets, then merge duplicates, across all inputs.
 
     Exclusion runs first so bad series cannot contaminate combined ones. Groups and
     exclusions are decided on monthly returns and applied to prices and asset map.
+    Forced exclusions are dropped before the quality and duplicate checks.
     """
-    excluded = find_low_quality(returns)
+    forced = {m: why for m, why in forced_exclusions.items() if m in returns.columns}
+    low_quality = find_low_quality(exclude(returns, set(forced)))
+    excluded = {**forced, **low_quality}
     kept = exclude(returns, set(excluded))
     groups = find_duplicate_groups(kept)
     cleaned_returns, mapping = combine(kept, groups)

@@ -105,3 +105,10 @@ def test_report_save_roundtrip(returns, asset_map, tmp_path):
     result.report.save(path)
     saved = json.loads(path.read_text())
     assert saved["merged"] == {"A": ["A", "B"]}
+
+
+def test_forced_exclusions_are_dropped_before_duplicate_merging(returns, asset_map):
+    result = clean(returns, returns, asset_map, forced_exclusions={"B": "configured"})
+    assert result.report.excluded["B"] == "configured"
+    assert result.report.merged == {}
+    assert list(result.returns.columns) == ["A", "C"]

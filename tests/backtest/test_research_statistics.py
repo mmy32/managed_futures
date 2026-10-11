@@ -7,10 +7,11 @@ import statsmodels.api as sm
 from scipy.stats import spearmanr
 from statsmodels.stats.sandwich_covariance import cov_hac
 
-from src.backtest.engine import performance, sharpe_ratio, simulate
+from src.backtest.attribution import class_attribution
+from src.backtest.engine import simulate
+from src.backtest.performance import performance, sharpe_ratio
 from src.backtest.qps_baseline import build_forecasts, eligibility, portfolio_limits
-from src.backtest.research_statistics import (
-    class_attribution,
+from src.backtest.sample_diagnostics import (
     class_portfolios,
     rank_autocorrelation,
     risk_diagnostics,

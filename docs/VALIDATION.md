@@ -40,13 +40,13 @@ Pandas compatibility: audit tables now explicitly drop missing values after `sta
 
 `python scripts/run_research.py --endpoint-sensitivity` succeeds, while the primary run continues to record status 2 independently. The separate [report](../reports/qps_baseline/ENDPOINT_SENSITIVITY.md) and [HTML](../reports/qps_baseline/ENDPOINT_SENSITIVITY.html) present conditional results. Five new tests verify the narrow eight-cell overlay, input immutability, refusal to overwrite observed returns, exact-date pricing without fallback, and isolation from future raw-price changes. The original 12-run replay still agrees to approximately 4e-15.
 
-The scenario keeps all 468 months, with January 1976 flat, and completes trend/STATIC × two bands × three costs. Class net contributions, instrument costs, Euler risk contributions and linked cumulative P&L reconcile; after-cost exposure and forecast-risk caps hold. Source input hashes remain unchanged. [Independent saved-output checks](../reports/qps_baseline/output/endpoint_sensitivity/data_validation.json) record reconciliation errors and scenario isolation.
+The scenario keeps all 468 months, with January 1976 flat, and completes trend/STATIC × two bands × three costs. Class net contributions, instrument costs, Euler risk contributions and linked cumulative P&L reconcile; after-cost exposure and forecast-risk caps hold. Source input hashes remain unchanged.
 
 The evidence note distinguishes public-holiday corroboration from unverified venue closure. The assumption has not been promoted into the preserved primary dataset. The five conditional figures are visually reviewed and the HTML is checked for embedded images and resolving local report links; no browser-level layout check is claimed.
 
 ## Midterm readability review
 
-Lecture 6 slides 40–44 were reviewed as assignment reference material. The main conditional summary now follows the requested data, class statistics, autocorrelation, construction, results/benchmark, risk and improvements sequence. README and the preserved-policy status report are shortened; `CODE_GUIDE.md` summarizes architecture and `MIDTERM_GUIDE.md` provides a 15-minute walkthrough and a balanced strength assessment.
+Lecture 6 slides 40–44 were reviewed as assignment reference material. The main conditional summary now follows the requested data, class statistics, autocorrelation, construction, results/benchmark, risk and improvements sequence. README and the preserved-policy status report are shortened; `CODE_GUIDE.md` summarizes architecture.
 
 The additional stability table summarizes the existing ledger in four calendar blocks plus 2008 and an exclusion of 2008. It reuses the tested performance functions and does not change signals, positions, costs or model parameters. Block drawdowns reset their peak at block start; they do not restart the trading account or charge artificial liquidation. The noncontiguous exclusion reports mean/SD/Sharpe only, without a hypothetical CAGR or drawdown. None of these inspected historical blocks is an out-of-sample test.
 
