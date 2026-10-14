@@ -174,127 +174,100 @@ def _main_metrics(metrics):
 
 def _opening(assumption):
     assumption_note = (
-        "**All results are conditional on an unverified endpoint assumption:** March 27, 1997 is used as "
-        "the March endpoint for DT, GS, LX and SS, restoring eight March/April returns. "
-        "[Exact changes](output/endpoint_sensitivity/endpoint_changes.csv) · "
-        "[Evidence note](../../docs/ENDPOINT_DECISION.md) · [Preserved-policy status](../../docs/DATA_STATUS.md)."
+        "**Data qualification:** results use an unverified March 1997 endpoint assumption "
+        "for DT, GS, LX and SS, restoring eight March/April returns. The preserved-policy "
+        "run stops on missing held returns. [Evidence](../../docs/ENDPOINT_DECISION.md) · "
+        "[Data status](../../docs/DATA_STATUS.md)."
         if assumption is not None
         else ""
     )
-    return f"""# Managed futures: 15-minute midterm report
+    return f"""# Managed futures: risk-controlled trend
+
+**Research question:** does following 12-month trends add value over staying long when both portfolios use the same risk controls and trading costs?
+
+**Key finding:** trend improves full-sample return, Sharpe and drawdown versus the always-long benchmark. The advantage is smaller in the most recent decade, and risk forecasts understate realized fluctuations.
 
 {assumption_note}
-
-| Section | Time | Show | Point to make |
-| :--- | ---: | :--- | :--- |
-| Question and answer | 1 min | Opening takeaway | Does trend direction add value under the same controls? |
-| Data | 1.5 min | Coverage chart | 1976–2014; January is flat; results use one explicit endpoint assumption |
-| Asset classes | 2 min | Statistics and cumulative chart | Equal-weight prior-eligible class portfolios; unequal histories matter |
-| Autocorrelation | 1.5 min | Rank-correlation chart | Persistence evidence is limited and exploratory |
-| Construction | 2 min | Four-step strategy description | Direction, risk sizing, limits, then bands; explain STATIC |
-| Results | 3 min | Main comparison and drawdowns | Full-period improvement; recent performance is more modest; costs matter |
-| Risk | 2.5 min | Rolling risk and class attribution | Forecasts underpredict fluctuations; commodities dominate average forecast risk |
-| Limits and improvements | 1.5 min | Three priorities | Verify data/execution, improve risk calibration, then test unexamined history |
-
-## 1. Question and answer — 1 min
-
-**Question:** does following 12-month trends add value over an always-long portfolio under the same controls?
-
-**Answer:** trend improves full-period risk-adjusted performance versus matching STATIC in this conditional historical study. Recent performance is more modest. The result supports further research; data provenance, execution and risk calibration still need work.
 
 """
 
 
 def _data_section(audit):
-    return f"""## 2. Data — 1.5 min
+    return f"""## 1. Data description
 
 | Item | Definition |
 |---|---|
-| Evaluation | January 1976–December 2014; 468 monthly observations |
-| Inputs | Monthly returns, daily futures prices and an instrument/class map |
-| Universe | 58 retained columns; YM duplicate and EC unresolved identity excluded |
-| Timing | Prior 12-month signal and 36-month risk windows; earlier data initialize the model |
-| Source selection | RL/ER is one exposure; switch to ER in {audit["source_switch_month"]} using history known through t−2 |
+| Sample | January 1976–December 2014; 468 months |
+| Inputs | Monthly returns, daily futures prices and a market/class map |
+| Universe | {audit["retained_columns"]} retained series across commodities, equities, fixed income and currencies |
+| Preparation | Remove duplicate exposures and exclude YM/EC; apply audited endpoint rules |
+| Information | Prior observations only for signals, risk estimates and RL/ER source selection |
 
-January 1976 has {audit["eligible_at_start"]} eligible instruments, below the minimum of {audit["minimum_required"]}; that month is flat. Trading starts in {audit["first_investable_month"]}. Missing held returns fail explicitly. The original eight calendar-supported return corrections are retained.
+January 1976 has {audit["eligible_at_start"]} eligible instruments, below the required {audit["minimum_required"]}, so it remains flat. Trading starts in {audit["first_investable_month"]}; earlier data initialize the estimation windows.
 
-![Eligible instruments](output/risk/eligible_counts.png)
+![Eligible instruments by asset class](output/risk/eligible_counts.png)
 
-**Point to make:** the requested dates are retained, including the flat January month. All displayed results use the explicit endpoint assumption stated above.
+**Takeaway:** the opportunity set grows over time; all requested months are retained, including the initial flat month.
 
 """
 
 
 def _class_section(class_stats):
-    coverage = [
-        [r.name, r.instruments, f"{r.instrument_observations:,}", r.months, r.first_month]
-        for r in class_stats.itertuples(index=False)
-    ]
     stats = [
         [
             r.name,
-            f"{r.mean_monthly:.2%}",
-            f"{r.std_monthly:.2%}",
+            r.instruments,
+            r.months,
             f"{r.mean_ann:.2%}",
             f"{r.vol_ann:.2%}",
             f"{r.sharpe:.2f}",
         ]
         for r in class_stats.itertuples(index=False)
     ]
-    return f"""## 3. Asset classes — 2 min
+    return f"""## 2. Summary statistics across asset classes
 
-Each class return equally weights instruments eligible before the month. Statistics are calculated from the class portfolio series. Empty classes remain missing; an unavailable eligible constituent makes the whole class return missing.
+**Method:** each monthly class return equally weights markets eligible before that month. These are unscaled, long-only class returns before trading costs. Compute statistics from each class portfolio, rather than averaging individual-market statistics.
 
-{table(["Class", "Instruments", "Eligible instrument-months", "Portfolio months", "First month"], coverage)}
+{table(["Class", "Markets", "Months", "Annual mean", "Annual volatility", "Sharpe"], stats)}
 
-{table(["Class", "Monthly mean", "Monthly SD", "Annual mean", "Annual vol", "Sharpe"], stats)}
+Annual mean = 12 × monthly mean; annual volatility = √12 × monthly sample SD. Sharpe assumes zero cash return. Histories differ across classes; missing eligible returns are not filled or silently reweighted.
 
-Annual mean = 12 × monthly mean; annual volatility = √12 × sample monthly SD; Sharpe assumes **RF = 0**. Coverage differs across classes, so these available-history estimates are not a fully matched four-class comparison. Compounding starts at each class's first eligible month and stops at an unknown subsequent return.
+![Cumulative long-only class returns](output/risk/class_cumulative.png)
 
-![Compounded class returns](output/risk/class_cumulative.png)
-
-**Takeaway:** fixed income has the highest descriptive Sharpe, followed by equities; currencies are weakest. Differing history and eligibility prevent a direct replication of the lecture's class statistics.
+**Takeaway:** fixed income has the highest descriptive Sharpe and currencies the lowest. Unequal coverage limits direct comparisons across classes.
 
 """
 
 
 def _autocorrelation_section(autocorr):
-    uncertainty = []
+    rows = []
     for group, name in CLASS_NAMES.items():
         q = autocorr[autocorr.asset_class.eq(group)]
-        uncertainty.append(
-            [
-                name,
-                f"{q.matched_months.min()}–{q.matched_months.max()}",
-                f"{int(q.p_approx.lt(0.05).sum())}/12",
-            ]
-        )
-    return f"""## 4. Autocorrelation — 1.5 min
+        rows.append([name, f"{int(q.p_approx.lt(0.05).sum())}/12"])
+    return f"""## 3. Autocorrelation
 
-Spearman rank correlation compares each **class portfolio's monthly return** with its calendar-shifted return at lags 1–12. Missing pairs are removed after shifting. This differs from averaging instrument autocorrelations.
+**Question:** do stronger class returns tend to be followed by stronger returns? Compare each monthly class return with its return 1–12 months earlier using Spearman rank correlation. Calendar gaps are preserved; the chart shows approximate 95% intervals allowing for serial dependence.
 
-![Class autocorrelation](output/risk/autocorrelation.png)
+![Class-return autocorrelation at monthly lags 1–12](output/risk/autocorrelation.png)
 
-{table(["Class", "Matched pairs across lags", "Approximate p < 0.05"], uncertainty)}
+{table(["Class", "Lags with approximate p < 0.05"], rows)}
 
-Approximate 95% intervals use standardized-rank regressions with calendar-spaced Bartlett HAC scores, bandwidth equal to return lag, n/(n−2) correction and t(n−2) critical values. All 48 comparisons are exploratory and unadjusted for multiple testing.
-
-**Takeaway:** the class diagnostics provide limited persistence evidence. They do not establish the profitability or optimality of the 12-month signal. [All estimates and intervals](output/risk/autocorrelation.csv).
+**Takeaway:** evidence of class-level persistence is limited. These 48 exploratory comparisons have no multiple-testing adjustment and do not establish the profitability or optimality of the 12-month trading signal.
 
 """
 
 
 def _construction_section():
-    return """## 5. Construction — 2 min
+    return """## 4. Baseline strategy construction
 
-1. **Direction:** sign of the sum of the previous 12 monthly returns; zero means flat.
-2. **Risk:** previous 36 months; 2% annual instrument-volatility floor; correlations shrunk 50% toward zero.
-3. **Size:** initial magnitude 0.40 / (eligible count × annual instrument volatility); reduce proportionally to a **10% forecast-risk ceiling** and **3× gross cap** after rebalance costs.
-4. **Trade:** use a ±10% relative band; entries, exits and reversals execute immediately. Hard limits override bands.
+1. **Direction:** go long if the previous 12 monthly returns sum to a positive number, short if negative, and flat if zero.
+2. **Risk estimate:** use the previous 36 months of returns, a 2% annual volatility floor, and correlations shrunk 50% toward zero.
+3. **Position size:** start with `0.40 / (eligible markets × annual volatility)`, then reduce positions proportionally to meet a **10% forecast-volatility ceiling** and **3× gross exposure cap**. The 0.40 is a sizing parameter, not a portfolio risk target.
+4. **Execution:** rebalance monthly with ±10% relative trading bands. A 20% target allows an existing same-direction position between 18% and 22%. Entries, exits and reversals execute at target; hard limits override bands.
 
-STATIC is always long with identical eligibility, risk estimates, limits, bands and costs; its own forecast determines scaling. The comparison measures the value of trend direction under matching controls.
+**Benchmark:** STATIC stays long using the same eligibility, risk model, limits, bands and costs. Each portfolio's own forecast risk determines its scaling.
 
-**Difference from Lecture 6:** the lecture baseline uses expanding volatility with zero cross-instrument covariance; its later extension targets 11% forecast volatility. Our model uses a fixed 36-month window, shrinkage, a 10% ceiling, gross cap and bands. It scales down but does not scale up to a risk target. This is an enhanced baseline, not a matched lecture replication.
+**Takeaway:** the comparison isolates the value of trend direction under matching controls. This is a risk-controlled baseline; it scales down to a ceiling rather than scaling up to a volatility target.
 
 """
 
@@ -302,70 +275,53 @@ STATIC is always long with identical eligibility, risk estimates, limits, bands 
 def _stability_text(stability):
     if stability is None:
         return ""
-    periods = stability[stability.period.isin(["1976–1984", "1985–1994", "1995–2004", "2005–2014"])]
-    block_rows = []
-    for period in periods.period.drop_duplicates():
-        pair = periods[periods.period.eq(period)].set_index("strategy")
-        block_rows.append(
-            [
-                period,
-                f"{pair.loc['trend', 'mean_ann']:.2%}",
-                f"{pair.loc['static', 'mean_ann']:.2%}",
-                f"{pair.loc['trend', 'sharpe']:.2f}",
-                f"{pair.loc['static', 'sharpe']:.2f}",
-            ]
-        )
-    text = "\n" + table(
-        ["Period", "Trend mean", "STATIC mean", "Trend Sharpe", "STATIC Sharpe"], block_rows
+    recent = stability[stability.period.eq("2005–2014")].set_index("strategy")
+    trend, static = recent.loc["trend"], recent.loc["static"]
+    return (
+        f"\n**Recent period (2005–2014):** trend CAGR is {trend.cagr:.2%} versus "
+        f"STATIC's {static.cagr:.2%}; Sharpe is {trend.sharpe:.2f} versus "
+        f"{static.sharpe:.2f}. The full-sample return advantage is not uniform. "
+        "This is an inspected historical subsample, not a fresh holdout.\n"
     )
-    text += "\n\nThese are descriptive blocks of the existing trading path, not new holdouts. Recent mean returns are weaker; the full-period advantage is not uniform. [Block and crisis diagnostics](output/risk/stability.csv).\n"
-    return text
 
 
 def _results_section(metrics, alphas, stability):
     main = _main_metrics(metrics)
-    alpha = alphas[(alphas.band == 0.1) & (alphas.cost_bps == 5) & (alphas.hac_lags == 6)].iloc[0]
     trend = main.loc["trend"]
     no_band = metrics[
         (metrics.band == 0) & (metrics.cost_bps == 5) & metrics.strategy.eq("trend")
     ].iloc[0]
     results = []
     for label, field, format_spec in [
-        ("Annual mean", "mean_ann", ".2%"),
-        ("CAGR", "cagr", ".2%"),
-        ("Annual volatility", "vol_ann", ".2%"),
+        ("Annual arithmetic mean", "mean_ann", ".2%"),
+        ("Compounded annual growth (CAGR)", "cagr", ".2%"),
         ("Net Sharpe", "sharpe", ".2f"),
         ("Maximum drawdown", "max_drawdown", ".2%"),
-        ("Annual turnover / capital", "turnover_ann", ".2f"),
-        ("Annual direct cost drag", "mean_cost_ann", ".3%"),
     ]:
         results.append(
             [label] + [format(main.loc[s, field], format_spec) for s in ["trend", "static"]]
         )
-    costs = [
-        [r.strategy.upper(), f"{r.cost_bps:g}", f"{r.cagr:.2%}", f"{r.sharpe:.2f}"]
-        for r in metrics[metrics.band.eq(0.1)].itertuples(index=False)
+    cost_rows = [
+        [f"{r.cost_bps:g}", f"{r.cagr:.2%}", f"{r.sharpe:.2f}"]
+        for r in metrics[metrics.band.eq(0.1) & metrics.strategy.eq("trend")].itertuples(
+            index=False
+        )
     ]
-    stability_text = _stability_text(stability)
-    return f"""## 6. Results — 3 min
+    return f"""## 5. Baseline strategy results
 
-Net returns; **5 bps per unit of traded exposure**, ±10% bands, RF = 0. Annual mean is arithmetic; CAGR compounds monthly returns.
+1976–2014, net of **5 bps per unit of traded exposure**, with ±10% bands and zero cash return. CAGR measures compounded growth; maximum drawdown is the largest peak-to-trough loss.
 
-{table(["Metric", "Trend", "STATIC"], results)}
+{table(["Metric", "TREND", "STATIC"], results)}
 
-Trend/STATIC correlation is **{alpha.correlation:.2f}**. Annualized alpha is **{alpha.alpha_ann:.2%}**, with 95% HAC interval **[{alpha.alpha_ci_low_ann:.2%}, {alpha.alpha_ci_high_ann:.2%}]**. Alpha is 12 × the monthly regression intercept against STATIC, using 6 HAC lags; its interval excludes strategy-selection and data-provenance uncertainty.
+![Compounded net returns and drawdowns](output/risk/performance.png)
 
-![Net returns and drawdowns](output/risk/performance.png)
+**Takeaway:** trend delivers stronger full-sample growth and risk-adjusted performance, with a much smaller historical drawdown. Results are conditional and in sample.
+{_stability_text(stability)}
+**Cost sensitivity — TREND:**
 
-**Takeaway:** trend has higher full-period CAGR and Sharpe, with a much smaller drawdown. The evidence is conditional and in sample.
-{stability_text}
-### Implementation costs
+{table(["Trading cost (bps)", "CAGR", "Sharpe"], cost_rows)}
 
-{table(["Portfolio", "Cost (bps)", "CAGR", "Sharpe"], costs)}
-
-Costs cover initial entry, actual drift-adjusted trades, RL/ER close/open trades and final liquidation. They are illustrative; historical spread, impact and roll costs are unavailable.
-
-The ±10% band reduces trend turnover by **{1 - trend.turnover_ann / no_band.turnover_ann:.1%}** and direct annual cost drag by **{(no_band.mean_cost_ann - trend.mean_cost_ann) * 10000:.2f} bps** versus no band. Net annual mean changes by **{(trend.mean_ann - no_band.mean_ann) * 10000:+.2f} bps**. The band saves trading but does not improve every performance measure. [All cost and no-band comparisons](output/risk/comparison.csv).
+The band reduces turnover by {1 - trend.turnover_ann / no_band.turnover_ann:.1%} versus no band. Costs cover actual trades, including entries, source switches and liquidation; historical spread, impact and roll costs remain unverified.
 
 """
 
@@ -375,8 +331,9 @@ def _risk_section(metrics, attribution):
     risk = [
         [
             s.upper(),
-            f"{r.avg_gross_exposure:.2f}×",
+            f"{r.vol_ann:.2%}",
             f"{r.rms_forecast_vol:.2%}",
+            f"{r.avg_gross_exposure:.2f}×",
             f"{r.realized_predicted_ratio:.2f}",
         ]
         for s, r in main.iterrows()
@@ -385,47 +342,72 @@ def _risk_section(metrics, attribution):
         [
             CLASS_NAMES[r.asset_class],
             f"{r.net_mean_ann:.2%}",
-            f"{r.contribution_vol_ann:.2%}",
-            f"{r.avg_gross_exposure:.2f}×",
             f"{r.avg_forecast_vol_contribution:.2%}",
         ]
         for r in attribution["trend"].itertuples(index=False)
     ]
-    return f"""## 7. Risk — 2.5 min
+    return f"""## 6. Baseline strategy risk characteristics
 
-{table(["Portfolio", "Average gross exposure", "RMS forecast vol", "Calibration SD"], risk)}
+### Full-sample realized risk
 
-Calibration SD measures gross return variability after dividing each return by its preceding forecast monthly volatility; one is ideal. The values above show underprediction. A 10% forecast ceiling is not a realized-volatility or loss guarantee.
+{table(["Portfolio", "Realized net volatility", "RMS forecast volatility", "Average gross exposure", "Calibration ratio"], risk)}
 
-![Risk through time](output/risk/risk.png)
+Realized annual volatility is √12 × the SD of all 468 monthly net returns. RMS summarizes the changing annual gross-risk forecasts. Calibration measures variability after scaling each gross monthly return by its preceding forecast monthly volatility: **1 is ideal; above 1 means risk was underpredicted**.
 
-The risk plot compares trailing 36-month realized gross volatility with RMS forecasts for **the same 36 months**. Exposure limits apply at rebalances; exposure can drift between them.
+### Risk through time
 
-Trend class attribution:
+![Rolling risk, exposure and drawdowns](output/risk/risk.png)
 
-{table(["Class", "Annual net contribution", "Contribution vol", "Average gross exposure", "Average forecast-vol contribution"], classes)}
+The upper panel compares realized **gross** volatility with RMS forecasts over the same trailing 36 months. The other panels show exposure and net drawdowns. Full rolling estimates begin after 36 observations; limits apply at monthly rebalances, and exposures can drift between them.
 
-Monthly net class contributions include actual instrument costs and sum to net portfolio return. Annual means and signed Euler forecast-risk contributions add; **class volatilities do not**. Classes have unequal risk allocations, with commodities contributing most of the average forecast risk. [Full attribution](output/risk/trend_class_attribution.csv).
+### Where risk and returns come from
+
+{table(["Class", "Annual net return contribution", "Average forecast-volatility contribution"], classes)}
+
+Return and forecast-risk contributions add to their respective portfolio totals. Class volatilities do not add, and the strategy does not impose equal risk across classes.
+
+**Takeaway:** forecasts understate realized fluctuations, and commodities contribute most of the average forecast risk. A 10% forecast ceiling is not a realized-volatility cap or a loss guarantee.
 
 """
 
 
 def _limits_section():
-    return f"""## 8. Limits and improvements — 1.5 min
+    return """## 7. Conclusions and next steps
 
-**Suitable for a midterm:** a clear economic idea, a fair STATIC comparison, transparent costs, and reproducible accounting. **Evidence for future performance is limited:** the sample has been studied repeatedly, the endpoint assumption remains unverified, and execution/roll/FX conventions are idealized. No fresh out-of-sample test or superiority over the lecture is established.
+**Conclusion:** following trends improves full-sample performance versus matching STATIC in this conditional study. The recent return advantage is smaller, and risk calibration needs improvement.
 
-Three priorities:
+1. **Verify data and execution:** resolve the March 1997 endpoints and check executable prices, roll conventions and costs.
+2. **Improve risk calibration:** evaluate a more responsive estimator and deliberate class-risk budgets.
+3. **Test new history:** freeze the rules and evaluate an untouched sample before forward paper trading.
 
-1. **Verify data and execution:** resolve venue/vendor endpoints and validate next-session fills, roll/FX conventions and contract accounting.
-2. **Improve risk calibration:** test a more responsive estimator; evaluate true volatility targeting and deliberate class-risk budgets as future extensions.
-3. **Test unexamined history:** freeze the rules, evaluate them on new data, then monitor forward paper trading.
+**Takeaway:** the historical findings justify further testing; they do not establish future performance or superiority over a matched academic baseline.
 
-These improvements are proposed future work.
+"""
 
-**Validation:** {validation_summary()}; the preserved 2000–2014 refactor replay matches all 12 archived runs. [Code guide](../../docs/CODE_GUIDE.md) · [Methods](../../docs/RISK_METHODS.md) · [Validation](../../docs/VALIDATION.md).
 
-Reproduce: `python scripts/run_research.py --endpoint-sensitivity`. The standalone HTML embeds all five figures.
+def _discussion_notes(metrics, alphas, stability, audit):
+    main = _main_metrics(metrics)
+    alpha = alphas[(alphas.band == 0.1) & (alphas.cost_bps == 5) & (alphas.hac_lags == 6)].iloc[0]
+    costs = [
+        [s.upper(), f"{r.turnover_ann:.2f}×", f"{r.mean_cost_ann:.3%}"] for s, r in main.iterrows()
+    ]
+    return f"""<details markdown="1">
+<summary>Discussion notes and supporting evidence</summary>
+
+- **Return comparison:** TREND/STATIC correlation is {alpha.correlation:.2f}. Annualized regression alpha is {alpha.alpha_ann:.2%}, with a 95% HAC interval of [{alpha.alpha_ci_low_ann:.2%}, {alpha.alpha_ci_high_ann:.2%}]. Alpha is 12 × the monthly intercept against STATIC; six HAC lags are used. The interval excludes strategy-selection and data-provenance uncertainty.
+- **Autocorrelation uncertainty:** rank regressions use calendar-spaced Bartlett HAC scores, bandwidth equal to the return lag, n/(n−2) correction and t(n−2) intervals. [All estimates](output/risk/autocorrelation.csv).
+- **Data continuity:** RL/ER is one exposure; the switch to ER in {audit["source_switch_month"]} uses history known through t−2. Class compounding starts at the first eligible month and stops at an unknown subsequent return.
+- **Model scope:** the presentation covers QPS's fixed 36-month risk model, ceiling and bands. The separate academic TSMOM run uses compounded signals, daily EWMA volatility, zero costs and a different missing-return policy; its results are not a matched comparison.
+
+{table(["Portfolio", "Annual turnover / capital", "Annual direct cost drag"], costs)}
+
+**Validation:** {validation_summary()}; the archived 2000–2014 replay matches all 12 saved runs. Validation checks accounting and timing, not vendor accuracy or executable fills.
+
+[Methods](../../docs/RISK_METHODS.md) · [Validation](../../docs/VALIDATION.md) · [Code guide](../../docs/CODE_GUIDE.md) · [All cost scenarios](output/risk/comparison.csv) · [Historical subsamples](output/risk/stability.csv) · [Class attribution](output/risk/trend_class_attribution.csv).
+
+Reproduce: `python scripts/run_research.py --endpoint-sensitivity`. HTML embeds all five figures.
+
+</details>
 """
 
 
@@ -454,6 +436,7 @@ def write_report(
             _results_section(metrics, alphas, stability),
             _risk_section(metrics, attribution),
             _limits_section(),
+            _discussion_notes(metrics, alphas, stability, audit),
         ]
     )
     report = report.replace("output/risk/", str(out.relative_to(QPS_REPORT_DIR)) + "/")

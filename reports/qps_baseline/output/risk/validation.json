@@ -1,5 +1,5 @@
 {
-  "verified_utc": "2026-10-11T01:35:52.558873+00:00",
+  "verified_utc": "2026-10-14T02:39:07.701289+00:00",
   "command": "python scripts/run_research.py --validate",
   "passed": 108,
   "failed": 0,
@@ -10,8 +10,8 @@
     "scripts/cleaning_diagnostics.py": "bcf9dff909413a39635f677fc321d58591a1690bdcf12d7486cc1cd8521a4535",
     "scripts/construct_returns.py": "7fffb86800af877f70918d35a30a893c432deb58f4768022d4160ea8d83e7a88",
     "scripts/eda.py": "ecf86f5c11be0c540adf4407664b0fa21dfc0c7334b568f3471336d8ea9b14d9",
-    "scripts/export_report.py": "61741a71686bf93b5554721cb737d571750c23188b3a3f73487eb0a61e5fa77c",
-    "scripts/research_report.py": "1c0d068be4bd4251575c315ed7ead7f65fc4bc6823b882bdaa5490e2d32b24e3",
+    "scripts/export_report.py": "66a711bf97596db5cc1c6da1b7ac8c2b9d5764660af8283e0abd1ba59debb573",
+    "scripts/research_report.py": "e983028392193432603087d722dd2ab8fad527b889d1dfff448a936802ad6729",
     "scripts/review_endpoints.py": "972140f2f4ee50c82aa4d614dafa80d44742a8445c7b4d0e9a32f5e126e88489",
     "scripts/run_research.py": "e35eda7aabd03b4feb4ff38c8a6d8077eb7a2caf296fced1670bbd6bd42a447b",
     "scripts/run_risk_research.py": "1d01e53c5b118dbfadcff475aeb557f558118449c84c5a6a84c9c5bee5cc83fe",

@@ -12,7 +12,7 @@ from src.config import QPS_REPORT_DIR
 
 def main(report_name="REPORT.md"):
     report = QPS_REPORT_DIR / report_name
-    body = markdown.markdown(report.read_text(), extensions=["tables", "fenced_code"])
+    body = markdown.markdown(report.read_text(), extensions=["tables", "fenced_code", "md_in_html"])
 
     def inline_image(match):
         path = QPS_REPORT_DIR / match.group(1)
@@ -26,17 +26,20 @@ def main(report_name="REPORT.md"):
     )
     title = escape(report.read_text().splitlines()[0].lstrip("#").strip())
     page = (
-        """<!doctype html><html lang="en"><meta charset="utf-8">
+        """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>REPORT_TITLE</title><style>
-body{max-width:1000px;margin:48px auto;padding:0 24px;font:16px/1.6 system-ui,sans-serif;color:#233044}
-h1,h2{line-height:1.2;color:#17395b}h2{margin-top:2em}img{max-width:100%;height:auto}
-table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:9px;border-bottom:1px solid #ddd;text-align:left}
-th{background:#edf3f8}pre{background:#f4f6f8;padding:12px;overflow:auto}a{color:#17648c}
-@media print{body{margin:0;font-size:11px}h2{break-after:avoid}img,tr{break-inside:avoid}}
-</style><body>"""
+body{max-width:1040px;margin:48px auto;padding:0 28px;font:17px/1.6 system-ui,sans-serif;color:#233044}
+h1,h2,h3{line-height:1.25;color:#17395b}h1{font-size:2.1em}h2{margin-top:2.5em;padding-top:1em;border-top:1px solid #dbe3eb;font-size:1.5em}h3{margin-top:1.6em;font-size:1.1em}
+p,li{max-width:90ch}li{margin:8px 0}img{display:block;max-width:100%;height:auto;margin:24px auto}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:20px 0}th,td{padding:11px 12px;border-bottom:1px solid #dbe3eb;text-align:left;vertical-align:top}
+th{background:#edf3f8}tbody tr:nth-child(even){background:#f8fafc}pre{background:#f4f6f8;padding:12px;overflow:auto}a{color:#17648c}
+details{margin-top:40px;padding:18px 22px;border:1px solid #dbe3eb;border-radius:8px;background:#f8fafc}summary{cursor:pointer;font-weight:650;color:#17395b}
+@media(max-width:640px){body{margin:24px auto;padding:0 16px;font-size:16px}h1{font-size:1.8em}table{display:block;overflow-x:auto;font-size:13px}th,td{padding:8px}}
+@media print{body{margin:0;font-size:11px}h2,h3{break-after:avoid}img,tr{break-inside:avoid}details{display:none}}
+</style></head><body><main>"""
         + body
-        + "</body></html>\n"
+        + "</main></body></html>\n"
     )
     page = page.replace("REPORT_TITLE", title)
     report.with_suffix(".html").write_text(page)
