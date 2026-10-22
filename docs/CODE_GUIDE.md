@@ -18,7 +18,7 @@ The code tests one fixed 12-month trend strategy against matching always-long ST
 | Costs | `transaction_cost_model/` / `CostModel` | `LinearBpsCost` (qps) or `ZeroCost` (paper gross returns) |
 | Account | `backtest/engine.py` / `simulate` | Takes targets, a cost model and an execution policy; records actual trades, costs, instrument contributions and NAV; missing held returns fail |
 | Compose | `backtest/qps_baseline.py` / `build_forecasts` | Turns `config/*.json` into the qps objects above |
-| Summarize | `backtest/research_statistics.py` | Builds class series, rank/HAC diagnostics, risk attribution and descriptive stability blocks |
+| Summarize | `backtest/sample_diagnostics.py` | Builds class series, rank/HAC diagnostics, risk attribution and descriptive stability blocks |
 | Present | `research_report.py`, `export_report.py` | Formats results and embeds figures in offline HTML |
 
 The exact strategy settings live in `config/baseline_config.json` and `config/risk_config.json`. The separate endpoint assumption lives in `config/endpoint_sensitivity.json`; `endpoint_sensitivity.py` changes only eight declared missing cells in an in-memory copy.

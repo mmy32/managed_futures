@@ -46,7 +46,7 @@ Forecast calibration is `std(gross_return / (forecast_annual / sqrt(12)))`, excl
 
 Monthly limits are not intramonth guarantees. Execution at valuation endpoints, rolled-price percentage-return accounting and vendor data vintages remain unverified. No matched lecture replication or untouched holdout is claimed. Expanding risk estimates and true volatility targeting are future ideas only.
 
-`run_research.py` is the single entry point. `research_statistics.py` owns new calculations; `research_report.py` owns presentation. `backtest.py` remains the shared accounting engine. Missing held returns produce a diagnostic report and CLI status 2, withholding full-period results. Synthetic tests and the archived 2000–2014 replay are recorded separately from current data readiness; see [validation](VALIDATION.md).
+`run_research.py` is the single entry point. `sample_diagnostics.py` owns new calculations; `research_report.py` owns presentation. `backtest/engine.py` remains the shared accounting engine. Missing held returns produce a diagnostic report and CLI status 2, withholding full-period results. Synthetic tests and the archived 2000–2014 replay are recorded separately from current data readiness; see [validation](VALIDATION.md).
 
 ## Isolated endpoint sensitivity
 

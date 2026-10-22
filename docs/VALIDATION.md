@@ -4,7 +4,7 @@ The code changes for the fixed 12-month strategy and extended-period presentatio
 
 ## Completed checks
 
-- **64 automated tests pass.** `output/risk/validation.json` records the test count, timestamp and current script/test/config hashes. Tests cover both successful synthetic execution of all 12 frozen portfolio comparisons and explicit blocking without partial performance publication.
+- **108 automated tests pass.** `output/risk/validation.json` records the test count, timestamp and current script/test/config hashes. Tests cover both successful synthetic execution of all 12 frozen portfolio comparisons and explicit blocking without partial performance publication.
 - **12 original 2000–2014 runs reproduce** (trend/STATIC × no band/10% band × 0/5/10 bps). Every archived ledger column was compared; maximum absolute difference was approximately **4.00e-15**. References and hashes are in `output/legacy_2000_2014/`; the replay record is `output/risk/legacy_reproduction.json`.
 - The full source rebuild audited 62 daily files and 457,155 rows. It reproduced all 20,987 supplied nonmissing monthly returns at stored precision and all 11,029 supplied blanks. The existing eight endpoint-supported research additions remain unchanged. Source hash checks passed.
 - Prior-only signal/risk windows, source choice, future-data mutation and truncated-prefix replay checks pass. Missing held returns still raise explicitly. No current missingness changes current portfolio choices.

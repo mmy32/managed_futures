@@ -24,13 +24,13 @@ Policy-aware source costs now require known-at dates strictly before the holding
 
 ## Performance after the correction
 
-The current baseline result is 9.05% annual arithmetic mean, 9.86% volatility, and -15.82% worst drawdown at 5 bps. Alpha against matching STATIC is 8.57%, with a 95% HAC interval [3.59%, 13.55%]. See the refreshed [brief report](../reports/qps_baseline/REPORT.md).
+The archived 2000–2014 result was 9.05% annual arithmetic mean, 9.86% volatility, and -15.82% worst drawdown at 5 bps, with alpha against matching STATIC of 8.57% (95% HAC interval [3.59%, 13.55%]). The current 1976–2014 result, conditional on the unverified March 1997 endpoint assumption, is 10.84% mean, 10.26% volatility and -15.82% worst drawdown at 5 bps; alpha is 10.11% with a 6-lag HAC interval [7.19%, 13.03%] (`output/endpoint_sensitivity/comparison.csv`, `alpha.csv`). See the [endpoint sensitivity report](../reports/qps_baseline/ENDPOINT_SENSITIVITY.md).
 
-Using one additional full month of signal/risk delay gives **7.28% mean, 9.24% volatility and -15.69% drawdown**. This is a conservative timing sensitivity, not a realistic next-session fill simulation. It does not remove the assumption of executing the monthly rebalance at the valuation endpoint; that remains unverified.
+On the archived 2000–2014 sample, using one additional full month of signal/risk delay gives **7.28% mean, 9.24% volatility and -15.69% drawdown**. This is a conservative timing sensitivity, not a realistic next-session fill simulation. It does not remove the assumption of executing the monthly rebalance at the valuation endpoint; that remains unverified.
 
 ## How promising is it?
 
-Worth further research, but insufficient to predict good OOS performance. Positive results across nearby parameter choices and a simple trend signal are encouraging. However, risk forecasts underestimate realized fluctuations, the trading-band cost saving is modest, execution/funding conventions are idealized, and the 2000–2014 sample has been examined repeatedly. Positive in-sample HAC alpha does not account for all strategy-selection bias and does not guarantee future profits. STATIC is only one benchmark; alpha against it does not establish unique skill relative to other trend strategies.
+Worth further research, but insufficient to predict good OOS performance. Positive results across nearby parameter choices and a simple trend signal are encouraging. However, risk forecasts underestimate realized fluctuations, the trading-band cost saving is modest, execution/funding conventions are idealized, and the 1976–2014 sample (including the 2000–2014 window) has been examined repeatedly. Positive in-sample HAC alpha does not account for all strategy-selection bias and does not guarantee future profits. STATIC is only one benchmark; alpha against it does not establish unique skill relative to other trend strategies.
 
 Subperiods (`timing_audit/subperiods.csv`), including an exclusion of 2008, are descriptive stability checks. **None is a fresh OOS test.** Repartitioning already-inspected years does not make them untouched. The extra-delay comparison is also a sensitivity, not OOS.
 

@@ -45,6 +45,42 @@ def key(band, cost, strategy):
     return f"correlated_band{round(band * 100):02d}_{cost}bps_{strategy}"
 
 
+def held_missing(policy, sample, name):
+    """Holdings at the failing month whose return is missing."""
+    month = max(policy.executed)
+    return [
+        {"run": name, "month": str(month), "instrument": asset, "exposure": exposure}
+        for asset, exposure in zip(sample.columns, policy.executed[month])
+        if abs(exposure) > 1e-14 and pd.isna(sample.loc[month, asset])
+    ]
+
+
+def metric_row(band, cost, strategy, ledger, calibration):
+    return dict(
+        model="correlated",
+        band=band,
+        cost_bps=cost,
+        strategy=strategy,
+        **performance(ledger),
+        **calibration,
+        max_gross_after_cost=ledger.gross_after_cost.max(),
+        max_forecast_after_cost=ledger.forecast_after_cost.max(),
+        gross_breaches=int(ledger.gross_limit_breach.sum()),
+        risk_breaches=int(ledger.risk_limit_breach.sum()),
+    )
+
+
+def alpha_rows(pair, band, cost):
+    """TREND alpha against STATIC at each HAC lag."""
+    rows = []
+    for lag in [3, 6, 12]:
+        alpha, _ = regression_alpha(pair["trend"], pair["static"].to_frame("STATIC"), lag)
+        rows.append(
+            dict(band=band, cost_bps=cost, correlation=pair["trend"].corr(pair["static"]), **alpha)
+        )
+    return rows
+
+
 def evaluate(sample, source, known, targets, covariance, settings, out=None):
     out = OUT if out is None else out
     metrics, alphas, ledgers, details, contributions = [], [], {}, {}, {}
@@ -72,47 +108,16 @@ def evaluate(sample, source, known, targets, covariance, settings, out=None):
                     failures.append(
                         {"strategy": strategy, "band": band, "cost_bps": cost, "error": str(error)}
                     )
-                    month = max(policy.executed)
-                    for asset, exposure in zip(sample.columns, policy.executed[month]):
-                        if abs(exposure) > 1e-14 and pd.isna(sample.loc[month, asset]):
-                            blocked_holdings.append(
-                                {
-                                    "run": name,
-                                    "month": str(month),
-                                    "instrument": asset,
-                                    "exposure": exposure,
-                                }
-                            )
+                    blocked_holdings.extend(held_missing(policy, sample, name))
                     continue
                 ledger.to_csv(out / f"{name}_ledger.csv")
                 ledgers[name], details[name], contributions[name] = ledger, instrument, gross
                 pair[strategy] = ledger.net_return
                 timeline, calibration = risk_diagnostics(ledger)
                 timeline.to_csv(out / f"{name}_risk_through_time.csv")
-                metrics.append(
-                    dict(
-                        model="correlated",
-                        band=band,
-                        cost_bps=cost,
-                        strategy=strategy,
-                        **performance(ledger),
-                        **calibration,
-                        max_gross_after_cost=ledger.gross_after_cost.max(),
-                        max_forecast_after_cost=ledger.forecast_after_cost.max(),
-                        gross_breaches=int(ledger.gross_limit_breach.sum()),
-                        risk_breaches=int(ledger.risk_limit_breach.sum()),
-                    )
-                )
-            for lag in [3, 6, 12] if len(pair) == 2 else []:
-                alpha, _ = regression_alpha(pair["trend"], pair["static"].to_frame("STATIC"), lag)
-                alphas.append(
-                    dict(
-                        band=band,
-                        cost_bps=cost,
-                        correlation=pair["trend"].corr(pair["static"]),
-                        **alpha,
-                    )
-                )
+                metrics.append(metric_row(band, cost, strategy, ledger, calibration))
+            if len(pair) == 2:
+                alphas.extend(alpha_rows(pair, band, cost))
     if failures:
         pd.DataFrame(blocked_holdings).to_csv(out / "blocked_holdings.csv", index=False)
         pd.DataFrame(failures).to_csv(out / "blocked_attempts.csv", index=False)
@@ -226,20 +231,10 @@ def write_manifest(settings, base, original_hashes, out=OUT):
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
 
 
-def main(endpoint_sensitivity=False):
-    out = QPS_OUTPUT_DIR / "endpoint_sensitivity" if endpoint_sensitivity else OUT
-    report_path = QPS_REPORT_DIR / "REPORT.md"
-    out.mkdir(parents=True, exist_ok=True)
-    archive_previous_outputs(out, (report_path.name, report_path.with_suffix(".html").name))
-    settings = json.loads((CONFIG_DIR / "risk_config.json").read_text())
-    base = json.loads((ROOT / settings["base_config"]).read_text())
-    original_hashes = {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
-        for p in RAW_DATA_DIR.rglob("*")
-        if p.is_file()
-    }
+def load_returns(endpoint_sensitivity, out, settings):
+    """Strategy inputs, with the assumed endpoint returns added in sensitivity mode."""
     returns, source, known, schedule = load_strategy_inputs(settings, write=True)
-    assumption = None
+    assumption, changes = None, None
     if endpoint_sensitivity:
         assumption = json.loads((CONFIG_DIR / "endpoint_sensitivity.json").read_text())
         prices = close_frames(load_daily_prices())
@@ -248,16 +243,19 @@ def main(endpoint_sensitivity=False):
         changes.to_csv(out / "endpoint_changes.csv", index=False)
         (out / "assumption.json").write_text(json.dumps(assumption, indent=2) + "\n")
     returns.to_csv(out / "returns_used.csv", float_format="%.17g")
-    meta = load_asset_map()
+    return returns, source, known, schedule, assumption, changes
+
+
+def write_sample_audit(returns, source, known, schedule, eligible, base, settings, out, changes):
+    """Sample audit JSON and the eligible-but-missing returns."""
     sample = returns.loc[base["start"] : base["end"]]
-    eligible = eligibility(returns, meta, base, settings)
     audit = audit_data(returns, source, known, schedule, eligible, base, settings, out)
     audit.update(
         data_scenario="conditional_endpoint_assumption"
-        if endpoint_sensitivity
+        if changes is not None
         else "preserved_policy",
-        assumed_return_additions=len(changes) if endpoint_sensitivity else 0,
-        endpoint_assumption_verified=False if endpoint_sensitivity else None,
+        assumed_return_additions=len(changes) if changes is not None else 0,
+        endpoint_assumption_verified=False if changes is not None else None,
     )
     (out / "sample_audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     missing = eligible.loc[sample.index] & sample.isna()
@@ -269,8 +267,11 @@ def main(endpoint_sensitivity=False):
         ],
         columns=["month", "instrument"],
     ).to_csv(out / "missing_eligible_returns.csv", index=False)
-    if not endpoint_sensitivity:
-        endpoint_candidates(out)
+    return audit
+
+
+def write_class_tables(returns, eligible, meta, sample, out):
+    """Class return statistics and rank autocorrelation."""
     classes, counts, class_stats = class_portfolios(returns, eligible, meta, sample.index)
     classes.to_csv(out / "class_returns.csv")
     counts.assign(total=counts.sum(axis=1)).to_csv(out / "eligible_counts.csv")
@@ -278,53 +279,61 @@ def main(endpoint_sensitivity=False):
     class_stats.to_csv(out / "class_statistics.csv", index=False)
     autocorr = rank_autocorrelation(classes)
     autocorr.to_csv(out / "autocorrelation.csv", index=False)
+    return classes, counts, class_stats, autocorr
+
+
+def write_forecasts(returns, meta, base, settings, out):
     targets, covariance, diagnostics = build_forecasts(returns, meta, base, settings)
     diagnostics.to_csv(out / "correlated_target_diagnostics.csv", index=False)
     for strategy, target in targets.items():
         target.to_csv(out / f"correlated_{strategy}_targets.csv")
-    metrics, alphas, ledgers, details, gross, failures = evaluate(
-        sample,
-        source.loc[sample.index],
-        known.loc[sample.index],
-        targets,
-        covariance,
-        settings,
-        out,
-    )
-    if failures:
-        if endpoint_sensitivity:
-            (out / "run_status.json").write_text(
-                json.dumps({"status": "blocked", "failures": failures}, indent=2) + "\n"
-            )
-            raise ValueError(
-                "Endpoint sensitivity still has missing held returns; see its run_status.json"
-            )
-        make_charts(classes, counts, autocorr, {}, settings, out)
-        primary_failures = [f for f in failures if f["band"] == 0.1 and f["cost_bps"] == 5]
-        write_blocked_report(class_stats, autocorr, audit, primary_failures or failures)
-        write_manifest(settings, base, original_hashes, out)
+    return targets, covariance
+
+
+def write_blocked_run(
+    failures,
+    endpoint_sensitivity,
+    tables,
+    audit,
+    settings,
+    base,
+    original_hashes,
+    out,
+):
+    """Record a run that stops on a missing held return; return the CLI status."""
+    classes, counts, class_stats, autocorr = tables
+    if endpoint_sensitivity:
         (out / "run_status.json").write_text(
-            json.dumps(
-                {
-                    "status": "blocked_missing_held_returns",
-                    "full_period_comparison_published": False,
-                    "sample": audit,
-                    "failures": failures,
-                },
-                indent=2,
-            )
-            + "\n"
+            json.dumps({"status": "blocked", "failures": failures}, indent=2) + "\n"
         )
-        print(
-            "DATA BLOCKER: preserved-policy comparison withheld; docs/DATA_STATUS.md refreshed.",
-            flush=True,
+        raise ValueError(
+            "Endpoint sensitivity still has missing held returns; see its run_status.json"
         )
-        return 2
-    metrics.to_csv(out / "comparison.csv", index=False)
-    alphas.to_csv(out / "alpha.csv", index=False)
-    pd.DataFrame({name: ledger.net_return for name, ledger in ledgers.items()}).to_csv(
-        out / "monthly_returns.csv"
+    make_charts(classes, counts, autocorr, {}, settings, out)
+    primary_failures = [f for f in failures if f["band"] == 0.1 and f["cost_bps"] == 5]
+    write_blocked_report(class_stats, autocorr, audit, primary_failures or failures)
+    write_manifest(settings, base, original_hashes, out)
+    (out / "run_status.json").write_text(
+        json.dumps(
+            {
+                "status": "blocked_missing_held_returns",
+                "full_period_comparison_published": False,
+                "sample": audit,
+                "failures": failures,
+            },
+            indent=2,
+        )
+        + "\n"
     )
+    print(
+        "DATA BLOCKER: preserved-policy comparison withheld; docs/DATA_STATUS.md refreshed.",
+        flush=True,
+    )
+    return 2
+
+
+def write_attribution(ledgers, gross, details, covariance, meta, settings, out):
+    """Primary-run class attribution tables for TREND and STATIC."""
     attribution = {}
     for strategy in ["trend", "static"]:
         name = key(settings["primary_band"], settings["primary_cost_bps"], strategy)
@@ -342,6 +351,54 @@ def main(endpoint_sensitivity=False):
             frame.to_csv(out / f"correlated_{strategy}_{suffix}.csv")
         summary.to_csv(out / f"{strategy}_class_attribution.csv", index=False)
         attribution[strategy] = summary
+    return attribution
+
+
+def main(endpoint_sensitivity=False):
+    out = QPS_OUTPUT_DIR / "endpoint_sensitivity" if endpoint_sensitivity else OUT
+    report_path = QPS_REPORT_DIR / "REPORT.md"
+    out.mkdir(parents=True, exist_ok=True)
+    archive_previous_outputs(out, (report_path.name, report_path.with_suffix(".html").name))
+    settings = json.loads((CONFIG_DIR / "risk_config.json").read_text())
+    base = json.loads((ROOT / settings["base_config"]).read_text())
+    original_hashes = {
+        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in RAW_DATA_DIR.rglob("*")
+        if p.is_file()
+    }
+    returns, source, known, schedule, assumption, changes = load_returns(
+        endpoint_sensitivity, out, settings
+    )
+    meta = load_asset_map()
+    sample = returns.loc[base["start"] : base["end"]]
+    eligible = eligibility(returns, meta, base, settings)
+    audit = write_sample_audit(
+        returns, source, known, schedule, eligible, base, settings, out, changes
+    )
+    if not endpoint_sensitivity:
+        endpoint_candidates(out)
+    tables = write_class_tables(returns, eligible, meta, sample, out)
+    classes, counts, class_stats, autocorr = tables
+    targets, covariance = write_forecasts(returns, meta, base, settings, out)
+    metrics, alphas, ledgers, details, gross, failures = evaluate(
+        sample,
+        source.loc[sample.index],
+        known.loc[sample.index],
+        targets,
+        covariance,
+        settings,
+        out,
+    )
+    if failures:
+        return write_blocked_run(
+            failures, endpoint_sensitivity, tables, audit, settings, base, original_hashes, out
+        )
+    metrics.to_csv(out / "comparison.csv", index=False)
+    alphas.to_csv(out / "alpha.csv", index=False)
+    pd.DataFrame({name: ledger.net_return for name, ledger in ledgers.items()}).to_csv(
+        out / "monthly_returns.csv"
+    )
+    attribution = write_attribution(ledgers, gross, details, covariance, meta, settings, out)
     assert not metrics.gross_breaches.any() and not metrics.risk_breaches.any()
     stability = stability_summary(ledgers)
     stability.to_csv(out / "stability.csv", index=False)

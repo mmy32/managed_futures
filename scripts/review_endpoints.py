@@ -66,23 +66,8 @@ def boundary_checks():
     assert endpoints(terminal, mm, bound_span=False).iloc[-1].endpoint_accepted
 
 
-def main():
-    OUT.mkdir(parents=True, exist_ok=True)
-    files = sorted((FUTURES_UNDERLYING_DIR).glob("*.csv"))
-    source_paths = files + [
-        MONTHLY_RETURNS_PATH,
-        QPS_OUTPUT_DIR / "daily_audit/stale_runs.csv",
-        QPS_OUTPUT_DIR / "daily_audit/calendar_gaps.csv",
-    ]
-    hashes = {str(p.relative_to(ROOT)): sha(p) for p in source_paths}
-    raw = close_frames(load_daily_prices())
-    supplied = load_monthly_returns()
-    # Loaders return floats; the stored decimal strings are kept as audit evidence.
-    saved_tokens = load_monthly_return_tokens()
-    labels = supplied.index
-    supplied.index = labels.to_period("M")
-    saved_tokens.index = supplied.index
-    months = supplied.index
+def compare_rules(raw, supplied, months):
+    """Compare each endpoint rule with the supplied monthly returns."""
     variants = [
         ("calendar_end_3d_bounded", "calendar", 3, True, "calendar"),
         ("weekday_end_1d_bounded", "weekday", 1, True, "calendar"),
@@ -129,7 +114,11 @@ def main():
     picked = next(row for row in variant_rows if row["rule"] == "weekday_end_3d_bounded")
     assert picked["mismatched_values"] == picked["missing_observed"] == picked["extra_values"] == 0
     assert picked["matched_values"] == int(supplied.notna().sum().sum())
+    return picked, selected_e, selected_r, selected
 
+
+def write_endpoint_evidence(supplied, saved_tokens, months, selected, selected_e, selected_r):
+    """Per-cell endpoint evidence, blank classification and RL to ER continuation."""
     evidence, blank_causes, continuation = [], [], []
     for asset in supplied:
         for i, month in enumerate(months):
@@ -205,7 +194,11 @@ def main():
     save(evidence, "endpoint_evidence")
     save(blank_causes, "blank_classification")
     save(continuation, "rl_er_continuation_evidence")
+    return blank_causes, continuation
 
+
+def write_ss_evidence(raw):
+    """Peer-calendar evidence for the SS year-end gaps."""
     gaps = pd.read_csv(
         QPS_OUTPUT_DIR / "daily_audit/calendar_gaps.csv", parse_dates=["previous_date", "next_date"]
     )
@@ -226,6 +219,10 @@ def main():
                 }
             )
     save(ss_evidence, "ss_year_end_peer_evidence")
+
+
+def write_ap_evidence(raw):
+    """Missing July 2014 AP sessions."""
     absent = pd.bdate_range("2014-07-01", "2014-07-31").difference(raw["AP"].index)
     save(
         [
@@ -241,6 +238,9 @@ def main():
         "ap_missing_july_sessions",
     )
 
+
+def write_stale_impact(selected_e, supplied, months):
+    """Endpoints and returns touched by repeated-OHLC runs."""
     stale = pd.read_csv(QPS_OUTPUT_DIR / "daily_audit/stale_runs.csv", parse_dates=["start", "end"])
     stale_evidence = []
     for row in stale.loc[stale.identical_ohlc].itertuples(index=False):
@@ -263,9 +263,10 @@ def main():
             }
         )
     save(stale_evidence, "repeated_ohlc_endpoint_impact")
-    boundary_checks()
-    assert all(sha(ROOT / p) == h for p, h in hashes.items())
-    save([{"path": p, "sha256": h} for p, h in hashes.items()], "source_manifest")
+
+
+def build_summary(picked, supplied, labels, months, continuation, blank_causes):
+    """Headline endpoint-review results."""
     summary = dict(
         **picked,
         cells=supplied.size,
@@ -286,6 +287,37 @@ def main():
         match_tolerance_decimal=TOL,
         caveat="Agreement to stored CSV precision is not proof of original code or vendor data accuracy.",
     )
+    return summary
+
+
+def main():
+    OUT.mkdir(parents=True, exist_ok=True)
+    files = sorted((FUTURES_UNDERLYING_DIR).glob("*.csv"))
+    source_paths = files + [
+        MONTHLY_RETURNS_PATH,
+        QPS_OUTPUT_DIR / "daily_audit/stale_runs.csv",
+        QPS_OUTPUT_DIR / "daily_audit/calendar_gaps.csv",
+    ]
+    hashes = {str(p.relative_to(ROOT)): sha(p) for p in source_paths}
+    raw = close_frames(load_daily_prices())
+    supplied = load_monthly_returns()
+    # Loaders return floats; the stored decimal strings are kept as audit evidence.
+    saved_tokens = load_monthly_return_tokens()
+    labels = supplied.index
+    supplied.index = labels.to_period("M")
+    saved_tokens.index = supplied.index
+    months = supplied.index
+    picked, selected_e, selected_r, selected = compare_rules(raw, supplied, months)
+    blank_causes, continuation = write_endpoint_evidence(
+        supplied, saved_tokens, months, selected, selected_e, selected_r
+    )
+    write_ss_evidence(raw)
+    write_ap_evidence(raw)
+    write_stale_impact(selected_e, supplied, months)
+    boundary_checks()
+    assert all(sha(ROOT / p) == h for p, h in hashes.items())
+    save([{"path": p, "sha256": h} for p, h in hashes.items()], "source_manifest")
+    summary = build_summary(picked, supplied, labels, months, continuation, blank_causes)
     (OUT / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(summary, indent=2))
 

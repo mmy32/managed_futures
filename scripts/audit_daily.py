@@ -43,14 +43,8 @@ def weekday_gap(a, b):
     return pd.bdate_range(a + pd.Timedelta(days=1), b - pd.Timedelta(days=1))
 
 
-def main():
-    OUT.mkdir(parents=True, exist_ok=True)
-    paths = sorted((FUTURES_UNDERLYING_DIR).glob("*.csv"))
-    source_paths = paths + [MONTHLY_RETURNS_PATH, ASSET_MAP_PATH]
-    before = {str(p.relative_to(ROOT)): digest(p) for p in source_paths}
-    returns = load_monthly_returns()
-    returns.index = returns.index.to_period("M")
-    meta = load_asset_map()
+def flag_original_monthly(returns):
+    """Review flags on the originally supplied monthly returns."""
     # Audit the original supplied returns independently of corrected EDA outputs.
     mad = returns.sub(returns.median()).abs().median().replace(0, np.nan)
     monthly_z = returns.sub(returns.median()).div(1.4826 * mad)
@@ -62,6 +56,11 @@ def main():
     flagged.to_csv(OUT / "original_monthly_flags.csv", index=False)
     expected = {(str(month), asset) for month, asset in flags.stack().loc[lambda x: x].index}
     assert expected == set(zip(flagged.month, flagged.ID))
+    return flagged, expected
+
+
+def find_internal_gaps(returns):
+    """Blank monthly returns between an instrument's first and last observation."""
     missing = (
         returns.isna() & returns.notna().cummax() & returns.notna().iloc[::-1].cummax().iloc[::-1]
     )
@@ -73,132 +72,209 @@ def main():
     assert {(str(m), a) for m, a in missing.stack().loc[lambda x: x].index} == set(
         zip(internal.month, internal.ID)
     )
+    return internal
 
+
+def return_stats(close):
+    """Daily close-to-close returns and their robust z-scores."""
+    r = close.pct_change(fill_method=None)
+    median = r.median()
+    mad_r = (r - median).abs().median()
+    z = (r - median) / (1.4826 * mad_r) if mad_r else r * np.nan
+    return r, median, mad_r, z
+
+
+def integrity_flags(d):
+    """OHLC, negative activity and non-positive price flags per bar."""
+    invalid = (
+        (d.High < d.Low)
+        | (d.High < d[["Open", "Close"]].max(axis=1))
+        | (d.Low > d[["Open", "Close"]].min(axis=1))
+    )
+    negative_activity = d.Volume.lt(0) | d.OpenInterest.lt(0)
+    nonpositive = d[["Open", "High", "Low", "Close"]].le(0).any(axis=1)
+    return invalid, negative_activity, nonpositive
+
+
+def issue_rows(asset, d, invalid, negative_activity, nonpositive):
+    """One row per bar with an integrity flag."""
+    issues = []
+    for date in d.index[invalid | negative_activity | nonpositive]:
+        issues.append(
+            dict(
+                ID=asset,
+                date=date,
+                **d.loc[date].to_dict(),
+                ohlc_inconsistent=bool(invalid.loc[date]),
+                negative_activity=bool(negative_activity.loc[date]),
+                nonpositive_price=bool(nonpositive.loc[date]),
+            )
+        )
+    return issues
+
+
+def extreme_rows(asset, d, r, z, is_extreme, invalid):
+    """One row per extreme daily move, with its neighbours."""
+    close = d.Close
+    extremes = []
+    for date in d.index[is_extreme]:
+        i = d.index.get_loc(date)
+        prev = d.index[i - 1]
+        next_date = d.index[i + 1] if i + 1 < len(d) else pd.NaT
+        next_r = r.iloc[i + 1] if i + 1 < len(d) else np.nan
+        net = close.iloc[i + 1] / close.iloc[i - 1] - 1 if i + 1 < len(d) else np.nan
+        extremes.append(
+            dict(
+                ID=asset,
+                date=date,
+                previous_date=prev,
+                calendar_days=(date - prev).days,
+                intervening_weekdays=len(weekday_gap(prev, date)),
+                previous_close=close.iloc[i - 1],
+                **d.loc[date].to_dict(),
+                close_change=r.loc[date],
+                robust_z=z.loc[date],
+                absolute_flag=bool(abs(r.loc[date]) >= ABS_MOVE),
+                robust_flag=bool(abs(z.loc[date]) >= ROBUST_Z),
+                next_date=next_date,
+                next_change=next_r,
+                two_observation_change=net,
+                reversal_candidate=bool(
+                    abs(r.loc[date]) >= ABS_MOVE
+                    and r.loc[date] * next_r < 0
+                    and abs(net) <= 0.2 * abs(r.loc[date])
+                ),
+                ohlc_inconsistent=bool(invalid.loc[date]),
+            )
+        )
+    return extremes
+
+
+def gap_rows(asset, d):
+    """Calendar gaps between successive observations and the weekdays they miss."""
+    close = d.Close
+    gaps, missing_weekdays = [], []
+    for a, b in zip(d.index[:-1], d.index[1:]):
+        # Most intervals are consecutive days or ordinary weekends.
+        if (b - a).days <= 1:
+            continue
+        missing_days = weekday_gap(a, b)
+        if not len(missing_days):
+            continue
+        missing_weekdays.extend((day, asset) for day in missing_days)
+        gaps.append(
+            {
+                "ID": asset,
+                "previous_date": a,
+                "next_date": b,
+                "calendar_days": (b - a).days,
+                "missing_weekdays": len(missing_days),
+                "first_missing_weekday": missing_days[0],
+                "last_missing_weekday": missing_days[-1],
+                "spanning_close_change": close.loc[b] / close.loc[a] - 1,
+                "long_gap": len(missing_days) >= 3,
+            }
+        )
+    return gaps, missing_weekdays
+
+
+def stale_rows(asset, d):
+    """Runs of unchanged closes at least MIN_STALE_OBS long."""
+    close = d.Close
+    stale = []
+    group = close.ne(close.shift()).cumsum()
+    long_groups = group.value_counts().loc[lambda counts: counts >= MIN_STALE_OBS].index
+    for _, block in d.loc[group.isin(long_groups)].groupby(group):
+        same_ohlc = block[["Open", "High", "Low", "Close"]].nunique().eq(1).all()
+        stale.append(
+            {
+                "ID": asset,
+                "start": block.index[0],
+                "end": block.index[-1],
+                "observations": len(block),
+                "unchanged_transitions": len(block) - 1,
+                "calendar_days": (block.index[-1] - block.index[0]).days,
+                "close": block.Close.iloc[0],
+                "zero_volume_rows": int(block.Volume.eq(0).sum()),
+                "positive_volume_rows": int(block.Volume.gt(0).sum()),
+                "identical_ohlc": bool(same_ohlc),
+                "all_flat_bars": bool(block.High.eq(block.Low).all()),
+                "identical_all_fields": bool(block.nunique().eq(1).all()),
+            }
+        )
+    return stale
+
+
+def month_endpoints(d):
+    """Last observed date and close of each calendar month."""
+    e = pd.DataFrame({"date": d.index, "close": d.Close.to_numpy()}, index=d.index.to_period("M"))
+    return e.groupby(level=0).last()
+
+
+def inventory_row(
+    asset, d, meta, r, z, median, mad_r, is_extreme, invalid, negative_activity, nonpositive
+):
+    """Per-instrument row counts and flag totals."""
+    return {
+        "ID": asset,
+        "Name": meta.loc[asset, "Name"],
+        "AssetClass": meta.loc[asset, "AssetClass"],
+        "rows": len(d),
+        "start": d.index.min(),
+        "end": d.index.max(),
+        "weekend_rows": int((d.index.dayofweek >= 5).sum()),
+        "zero_volume_rows": int(d.Volume.eq(0).sum()),
+        "zero_open_interest_rows": int(d.OpenInterest.eq(0).sum()),
+        "unchanged_close_transitions": int(r.eq(0).sum()),
+        "extreme_flags": int(is_extreme.sum()),
+        "absolute_move_flags": int(r.abs().ge(ABS_MOVE).sum()),
+        "robust_move_flags": int(z.abs().ge(ROBUST_Z).sum()),
+        "daily_median": median,
+        "daily_mad": mad_r,
+        "ohlc_inconsistencies": int(invalid.sum()),
+        "negative_activity_rows": int(negative_activity.sum()),
+        "nonpositive_price_rows": int(nonpositive.sum()),
+    }
+
+
+def scan_daily_bars(meta):
+    """Run every per-instrument daily check."""
     data, moves, endpoints = {}, {}, {}
     inventories, issues, extremes, gaps, stale = [], [], [], [], []
     missing_weekdays = []
     for asset, d in load_daily_bars().items():
         data[asset] = d
-        close = d.Close
-        r = close.pct_change(fill_method=None)
+        r, median, mad_r, z = return_stats(d.Close)
         moves[asset] = r
-        median = r.median()
-        mad_r = (r - median).abs().median()
-        z = (r - median) / (1.4826 * mad_r) if mad_r else r * np.nan
-        invalid = (
-            (d.High < d.Low)
-            | (d.High < d[["Open", "Close"]].max(axis=1))
-            | (d.Low > d[["Open", "Close"]].min(axis=1))
-        )
-        negative_activity = d.Volume.lt(0) | d.OpenInterest.lt(0)
-        nonpositive = d[["Open", "High", "Low", "Close"]].le(0).any(axis=1)
-        for date in d.index[invalid | negative_activity | nonpositive]:
-            issues.append(
-                dict(
-                    ID=asset,
-                    date=date,
-                    **d.loc[date].to_dict(),
-                    ohlc_inconsistent=bool(invalid.loc[date]),
-                    negative_activity=bool(negative_activity.loc[date]),
-                    nonpositive_price=bool(nonpositive.loc[date]),
-                )
-            )
+        invalid, negative_activity, nonpositive = integrity_flags(d)
         is_extreme = r.abs().ge(ABS_MOVE) | z.abs().ge(ROBUST_Z)
-        for date in d.index[is_extreme]:
-            i = d.index.get_loc(date)
-            prev = d.index[i - 1]
-            next_date = d.index[i + 1] if i + 1 < len(d) else pd.NaT
-            next_r = r.iloc[i + 1] if i + 1 < len(d) else np.nan
-            net = close.iloc[i + 1] / close.iloc[i - 1] - 1 if i + 1 < len(d) else np.nan
-            extremes.append(
-                dict(
-                    ID=asset,
-                    date=date,
-                    previous_date=prev,
-                    calendar_days=(date - prev).days,
-                    intervening_weekdays=len(weekday_gap(prev, date)),
-                    previous_close=close.iloc[i - 1],
-                    **d.loc[date].to_dict(),
-                    close_change=r.loc[date],
-                    robust_z=z.loc[date],
-                    absolute_flag=bool(abs(r.loc[date]) >= ABS_MOVE),
-                    robust_flag=bool(abs(z.loc[date]) >= ROBUST_Z),
-                    next_date=next_date,
-                    next_change=next_r,
-                    two_observation_change=net,
-                    reversal_candidate=bool(
-                        abs(r.loc[date]) >= ABS_MOVE
-                        and r.loc[date] * next_r < 0
-                        and abs(net) <= 0.2 * abs(r.loc[date])
-                    ),
-                    ohlc_inconsistent=bool(invalid.loc[date]),
-                )
-            )
-        for a, b in zip(d.index[:-1], d.index[1:]):
-            # Most intervals are consecutive days or ordinary weekends.
-            if (b - a).days <= 1:
-                continue
-            missing_days = weekday_gap(a, b)
-            if not len(missing_days):
-                continue
-            missing_weekdays.extend((day, asset) for day in missing_days)
-            gaps.append(
-                {
-                    "ID": asset,
-                    "previous_date": a,
-                    "next_date": b,
-                    "calendar_days": (b - a).days,
-                    "missing_weekdays": len(missing_days),
-                    "first_missing_weekday": missing_days[0],
-                    "last_missing_weekday": missing_days[-1],
-                    "spanning_close_change": close.loc[b] / close.loc[a] - 1,
-                    "long_gap": len(missing_days) >= 3,
-                }
-            )
-        group = close.ne(close.shift()).cumsum()
-        long_groups = group.value_counts().loc[lambda counts: counts >= MIN_STALE_OBS].index
-        for _, block in d.loc[group.isin(long_groups)].groupby(group):
-            same_ohlc = block[["Open", "High", "Low", "Close"]].nunique().eq(1).all()
-            stale.append(
-                {
-                    "ID": asset,
-                    "start": block.index[0],
-                    "end": block.index[-1],
-                    "observations": len(block),
-                    "unchanged_transitions": len(block) - 1,
-                    "calendar_days": (block.index[-1] - block.index[0]).days,
-                    "close": block.Close.iloc[0],
-                    "zero_volume_rows": int(block.Volume.eq(0).sum()),
-                    "positive_volume_rows": int(block.Volume.gt(0).sum()),
-                    "identical_ohlc": bool(same_ohlc),
-                    "all_flat_bars": bool(block.High.eq(block.Low).all()),
-                    "identical_all_fields": bool(block.nunique().eq(1).all()),
-                }
-            )
-        e = pd.DataFrame({"date": d.index, "close": close.to_numpy()}, index=d.index.to_period("M"))
-        endpoints[asset] = e.groupby(level=0).last()
+        issues.extend(issue_rows(asset, d, invalid, negative_activity, nonpositive))
+        extremes.extend(extreme_rows(asset, d, r, z, is_extreme, invalid))
+        asset_gaps, asset_missing = gap_rows(asset, d)
+        gaps.extend(asset_gaps)
+        missing_weekdays.extend(asset_missing)
+        stale.extend(stale_rows(asset, d))
+        endpoints[asset] = month_endpoints(d)
         inventories.append(
-            {
-                "ID": asset,
-                "Name": meta.loc[asset, "Name"],
-                "AssetClass": meta.loc[asset, "AssetClass"],
-                "rows": len(d),
-                "start": d.index.min(),
-                "end": d.index.max(),
-                "weekend_rows": int((d.index.dayofweek >= 5).sum()),
-                "zero_volume_rows": int(d.Volume.eq(0).sum()),
-                "zero_open_interest_rows": int(d.OpenInterest.eq(0).sum()),
-                "unchanged_close_transitions": int(r.eq(0).sum()),
-                "extreme_flags": int(is_extreme.sum()),
-                "absolute_move_flags": int(r.abs().ge(ABS_MOVE).sum()),
-                "robust_move_flags": int(z.abs().ge(ROBUST_Z).sum()),
-                "daily_median": median,
-                "daily_mad": mad_r,
-                "ohlc_inconsistencies": int(invalid.sum()),
-                "negative_activity_rows": int(negative_activity.sum()),
-                "nonpositive_price_rows": int(nonpositive.sum()),
-            }
+            inventory_row(
+                asset,
+                d,
+                meta,
+                r,
+                z,
+                median,
+                mad_r,
+                is_extreme,
+                invalid,
+                negative_activity,
+                nonpositive,
+            )
         )
+    return data, moves, endpoints, inventories, issues, extremes, gaps, stale, missing_weekdays
+
+
+def write_daily_tables(inventories, issues, extremes, gaps, stale):
+    """Save the per-instrument tables."""
     inv = save(inventories, "inventory")
     issue = save(issues, "price_issues")
     extreme = save(
@@ -213,7 +289,11 @@ def main():
         pd.DataFrame(stale).sort_values(["observations", "ID"], ascending=[False, True]),
         "stale_runs",
     )
+    return inv, issue, extreme, gap, st
 
+
+def write_peer_calendar(data, missing_weekdays, gap):
+    """Peer calendar evidence for weekday gaps."""
     # Peer calendar evidence helps distinguish broad closure dates from isolated gaps.
     absent = pd.DataFrame(missing_weekdays, columns=["date", "ID"])
     daily_absence = []
@@ -247,6 +327,11 @@ def main():
             peer.absent_instruments.eq(1).sum()
         )
     save(long_gap_review, "long_gap_review")
+    return absent
+
+
+def write_review_context(data, issue, extreme):
+    """Neighbouring bars around integrity issues and reversal candidates."""
     review_context = []
     review_events = [
         (row.ID, pd.Timestamp(row.date), "OHLC_or_value_issue")
@@ -267,6 +352,9 @@ def main():
         review_context.append(block.reset_index(drop=True))
     save(pd.concat(review_context, ignore_index=True), "price_review_context")
 
+
+def trace_flagged_months(flagged, returns, data, endpoints, moves, extreme, st, gap):
+    """Trace existing monthly flags to the raw daily bars."""
     # Trace only existing monthly flags; do not introduce a reconstruction/merge policy.
     traces, contexts = [], []
     for row in flagged.itertuples(index=False):
@@ -346,7 +434,11 @@ def main():
         contexts.append(context.reset_index(drop=True))
     trace = save(traces, "monthly_outlier_trace")
     save(pd.concat(contexts, ignore_index=True), "monthly_outlier_daily_context")
+    return trace
 
+
+def trace_missing_months(internal, data, endpoints):
+    """Endpoint ages around each internal monthly gap."""
     missing_traces = []
     for row in internal.itertuples(index=False):
         month, asset = pd.Period(row.month, freq="M"), row.ID
@@ -369,6 +461,11 @@ def main():
         )
         missing_traces.append(record)
     missing_trace = save(missing_traces, "monthly_missing_trace")
+    return missing_trace
+
+
+def trace_trailing_months(returns, data):
+    """Instruments whose last supplied month is blank."""
     ending = []
     for asset in returns:
         if pd.isna(returns.iloc[-1][asset]):
@@ -385,12 +482,10 @@ def main():
                 }
             )
     save(ending, "trailing_missing_trace")
-    assert len(trace) == len(flagged) == len(expected)
-    assert len(missing_trace) == len(internal)
-    assert all(digest(ROOT / name) == sha for name, sha in before.items()), (
-        "Source changed during audit"
-    )
-    save([{"path": name, "sha256": sha} for name, sha in before.items()], "source_manifest")
+
+
+def build_summary(paths, inv, extreme, gap, absent, st, trace, missing_trace):
+    """Headline audit counts and thresholds."""
     summary = {
         "files": len(paths),
         "rows": int(inv.rows.sum()),
@@ -428,6 +523,35 @@ def main():
         },
         "source_hashes_unchanged": True,
     }
+    return summary
+
+
+def main():
+    OUT.mkdir(parents=True, exist_ok=True)
+    paths = sorted((FUTURES_UNDERLYING_DIR).glob("*.csv"))
+    source_paths = paths + [MONTHLY_RETURNS_PATH, ASSET_MAP_PATH]
+    before = {str(p.relative_to(ROOT)): digest(p) for p in source_paths}
+    returns = load_monthly_returns()
+    returns.index = returns.index.to_period("M")
+    meta = load_asset_map()
+    flagged, expected = flag_original_monthly(returns)
+    internal = find_internal_gaps(returns)
+    data, moves, endpoints, inventories, issues, extremes, gaps, stale, missing_weekdays = (
+        scan_daily_bars(meta)
+    )
+    inv, issue, extreme, gap, st = write_daily_tables(inventories, issues, extremes, gaps, stale)
+    absent = write_peer_calendar(data, missing_weekdays, gap)
+    write_review_context(data, issue, extreme)
+    trace = trace_flagged_months(flagged, returns, data, endpoints, moves, extreme, st, gap)
+    missing_trace = trace_missing_months(internal, data, endpoints)
+    trace_trailing_months(returns, data)
+    assert len(trace) == len(flagged) == len(expected)
+    assert len(missing_trace) == len(internal)
+    assert all(digest(ROOT / name) == sha for name, sha in before.items()), (
+        "Source changed during audit"
+    )
+    save([{"path": name, "sha256": sha} for name, sha in before.items()], "source_manifest")
+    summary = build_summary(paths, inv, extreme, gap, absent, st, trace, missing_trace)
     (OUT / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(summary, indent=2))
 
