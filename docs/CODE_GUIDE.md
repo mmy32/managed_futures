@@ -11,13 +11,14 @@ The code tests one fixed 12-month trend strategy against matching always-long ST
 | Run | `run_research.py` | Validates, runs the pipeline and exports HTML |
 | Construct | `construct_returns.py` / `assemble` | Reproduces supplied monthly returns; logs documented endpoint corrections separately |
 | Select sources | `strategy_inputs.py` / `load_strategy_inputs` | Loads returns and applies the prior-only RL/ER source schedule |
-| Signal | `alpha_model/signals.py` / `Signal` | Direction in {-1, 0, +1} from returns through month t; `SumReturnSignal` (qps), `CompoundedReturnSignal` (paper), `AlwaysLongSignal` (STATIC), `SkipMonthSignal` (12-1 trend), `AssetClassSignal` (routes each market to its asset class's signal; not yet wired into the qps composition) |
+| Signal | `alpha_model/signals.py` / `Signal` | Direction in {-1, 0, +1} from returns through month t; `SumReturnSignal` (qps), `CompoundedReturnSignal` (paper), `AlwaysLongSignal` (STATIC), `SkipMonthSignal` (12-1 trend), `AssetClassSignal` (routes each market to its asset class's signal), `AlwaysLongLike` (STATIC with the same eligibility as another signal) |
 | Risk estimate | `risk_model/` / `RiskModel` | Lagged volatility and covariance; `RollingCovarianceRiskModel` (qps), `EwmaVolatilityRiskModel` (paper, daily prices) |
 | Size and bound | `portfolio_construction/` / `construct_targets` | `InverseVolatilitySizer` sizes eligible markets; `bounded_target` applies the gross cap and risk ceiling |
 | Execute | `portfolio_construction/policy.py` / `BandPolicy` | Uses carried holdings, applies bands and enforces limits after costs |
 | Costs | `transaction_cost_model/` / `CostModel` | `LinearBpsCost` (qps) or `ZeroCost` (paper gross returns) |
 | Account | `backtest/engine.py` / `simulate` | Takes targets, a cost model and an execution policy; records actual trades, costs, instrument contributions and NAV; missing held returns fail |
 | Compose | `backtest/qps_baseline.py` / `build_forecasts` | Turns `config/*.json` into the qps objects above |
+| Compose (v2) | `backtest/qps_v2.py` / `build_forecasts_v2` | The same composition with the trend signal chosen per asset class from `config/qps_v2.json`; not yet run through the full backtest |
 | Summarize | `backtest/sample_diagnostics.py` | Builds class series, rank/HAC diagnostics, risk attribution and descriptive stability blocks |
 | Present | `research_report.py`, `export_report.py` | Formats results and embeds figures in offline HTML |
 

@@ -3,6 +3,7 @@ import pandas as pd
 import pytest
 
 from src.alpha_model import (
+    AlwaysLongLike,
     AlwaysLongSignal,
     AssetClassSignal,
     CompoundedReturnSignal,
@@ -116,3 +117,12 @@ def test_asset_class_signal_rejects_a_market_without_a_signal():
         AssetClassSignal({"EQ": SumReturnSignal(1)}, pd.Series({"A": "FI"})).forecast(returns)
     with pytest.raises(ValueError, match="A"):
         AssetClassSignal({"EQ": SumReturnSignal(1)}, pd.Series(dtype=object)).forecast(returns)
+
+
+def test_always_long_like_is_one_exactly_where_the_reference_has_a_forecast():
+    returns = monthly([0.1, 0.1, 0.1, np.nan, 0.1, 0.1])
+    reference = SkipMonthSignal(3)  # skips the latest month, so a NaN there still leaves a forecast
+    long_like = AlwaysLongLike(reference).forecast(returns)["A"]
+    known = reference.forecast(returns)["A"].notna()
+    assert long_like.notna().equals(known)
+    assert long_like[known].eq(1).all()

@@ -1,4 +1,5 @@
 from src.alpha_model.signals import (
+    AlwaysLongLike,
     AlwaysLongSignal,
     AssetClassSignal,
     CompoundedReturnSignal,
@@ -9,6 +10,7 @@ from src.alpha_model.signals import (
 )
 
 __all__ = [
+    "AlwaysLongLike",
     "AlwaysLongSignal",
     "AssetClassSignal",
     "CompoundedReturnSignal",

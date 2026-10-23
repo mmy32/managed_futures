@@ -100,6 +100,17 @@ class AlwaysLongSignal:
         return pd.DataFrame(1.0, index=returns.index, columns=returns.columns).where(complete)
 
 
+class AlwaysLongLike:
+    """+1 wherever the reference signal has a forecast: the always-long benchmark with the same eligibility."""
+
+    def __init__(self, reference: Signal):
+        self.reference = reference
+
+    def forecast(self, returns: pd.DataFrame) -> pd.DataFrame:
+        known = self.reference.forecast(returns).notna()
+        return pd.DataFrame(1.0, index=returns.index, columns=returns.columns).where(known)
+
+
 def lagged(forecast: pd.DataFrame, lag: int) -> pd.DataFrame:
     """Value known at month t: the forecast made at the end of month t - lag."""
     if lag < 1:

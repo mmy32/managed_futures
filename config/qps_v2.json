@@ -1,0 +1,9 @@
+{
+  "trend_signal_by_asset_class": {
+    "COMM": {"type": "sum", "lookback": 12},
+    "FI": {"type": "sum", "lookback": 12},
+    "EQ": {"type": "skip_month", "lookback": 12, "skip": 1},
+    "FX": {"type": "sum", "lookback": 3}
+  },
+  "source": "notebooks/trend_measures.ipynb, section 5 and the summary table. In-sample class-portfolio rankings, not validated out of sample: COMM and FI keep the baseline, EQ uses skip-month and FX a 3-month sum by design choice."
+}

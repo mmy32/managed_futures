@@ -51,7 +51,11 @@ def qps_components(base, settings, model="correlated") -> QpsComponents:
 
 def build_forecasts(returns, meta, base, settings, model="correlated"):
     """Return (targets by strategy, covariance by month, diagnostics)."""
-    parts = qps_components(base, settings, model)
+    return forecasts_from(qps_components(base, settings, model), returns, meta, base, model)
+
+
+def forecasts_from(parts: QpsComponents, returns, meta, base, model="correlated"):
+    """Targets for already composed components: the step shared by every qps variant."""
     return construct_targets(
         MarketData(returns, meta),
         parts.signals,
