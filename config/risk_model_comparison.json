@@ -1,0 +1,11 @@
+{
+  "note": "Covariance estimators compared with the 36-month equal-weight window. half_lives are in months; null is equal weights. Several half-lives average their covariances (fast/slow). Shrinkage, floor, limits and band are the risk_config.json values.",
+  "variants": {
+    "equal_36m": [null],
+    "ewma_hl6": [6],
+    "ewma_hl12": [12],
+    "ewma_hl24": [24],
+    "fast_slow_3_equal": [3, null],
+    "fast_slow_6_24": [6, 24]
+  }
+}

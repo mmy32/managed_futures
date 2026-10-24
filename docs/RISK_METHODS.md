@@ -51,3 +51,20 @@ Monthly limits are not intramonth guarantees. Execution at valuation endpoints, 
 ## Isolated endpoint sensitivity
 
 `python scripts/run_research.py --endpoint-sensitivity` additionally evaluates the exact-date overlay in `config/endpoint_sensitivity.json`. It modifies a copy of the strategy return matrix, restoring only eight missing March/April 1997 cells from observed February 28 / March 27 / April 30 closes for DT, GS, LX and SS. It never writes to primary construction inputs. All forecasts and trading paths are recomputed using the same engine. This is an unverified data assumption, not a new strategy or a verified venue-calendar correction. Output snapshots, cost scenarios, class attribution and reports are isolated under `output/endpoint_sensitivity/` and `ENDPOINT_SENSITIVITY.*`. See [evidence and decision](ENDPOINT_DECISION.md).
+
+## Covariance estimator comparison
+
+`python scripts/compare_risk_models.py` re-runs the v2 strategy (endpoint-sensitivity returns, 10% band, 5 bps) with the 36-month window weighted by exponential decay (half-lives in `config/risk_model_comparison.json`), keeping the 0.5 correlation shrinkage, 2% floor and limits. The window and eligibility are unchanged, so only the covariance forecast differs. Results are in-sample on the 1976–2014 calendar.
+
+| Estimator | Trend Sharpe | Max drawdown | Turnover | Trend calibration | Static calibration |
+|---|---|---|---|---|---|
+| Equal weight 36m (current) | 1.071 | −14.5% | 7.4 | 1.27 | 1.41 |
+| EWMA half-life 6m | 1.118 | −16.4% | 7.8 | 1.31 | 1.45 |
+| EWMA half-life 12m | 1.096 | −15.4% | 7.5 | 1.26 | 1.40 |
+| EWMA half-life 24m | 1.083 | −14.6% | 7.4 | 1.26 | 1.40 |
+| Fast/slow (3m, equal) | 1.114 | −14.4% | 7.7 | 1.29 | 1.41 |
+| Fast/slow (6m, 24m) | 1.103 | −15.2% | 7.6 | 1.27 | 1.40 |
+
+Calibration is the std of gross return over forecast volatility (1.0 is calibrated). No estimator moves it: every one leaves trend and STATIC forecasts about 25–45% too low, so the shortfall is not the estimation window. Faster estimators raise trend Sharpe by 0.01–0.05 with slightly higher turnover, but this is a six-way in-sample choice with no significance test, so the 36-month equal-weight window stays.
+
+Diagnostic, not adopted: with the baseline estimator, correlation shrinkage 0.1 instead of 0.5 lowers trend calibration from 1.27 to 1.10 and STATIC from 1.41 to 1.15 (trend Sharpe 1.085). Shrinkage toward zero correlation therefore explains much of the under-forecast. Walk-through and charts: [risk_model_estimators.ipynb](../notebooks/risk_model_estimators.ipynb).

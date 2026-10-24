@@ -21,8 +21,6 @@ Ordered by pipeline stage: data, signal, risk model, construction, costs, backte
 - [ ] Data
   - [ ] Verify the March 1997 endpoint (DT, GS, LX, SS) against the real exchange calendar
   - [ ] Verify vendor identities and executable futures accounting (midterm deck: all full-period results are conditional on the unverified 27 March 1997 endpoint)
-- [ ] Signal: market-level predictive regressions and historical-mean forecasts (pooled significance concern); blended horizons via walk-forward selection with multiple-testing control
-- [ ] Risk model: calibration std is 1.26 (TREND) and 1.41 (STATIC), so forecasts underpredict; test EWMA and fast/slow against the 36-month window, keeping shrinkage
 - [ ] Portfolio construction: commodities carry most forecast risk (4.74 of 8.00 pts); test class risk budgets and contract caps, net of extra costs
 - [ ] Transaction cost model: real cost model (spread, commission, impact); separate commission, spread, impact and roll trades, calibrate from liquidity data, and stress costs (midterm deck: only a flat 0/5/10 bps sensitivity so far)
 - [ ] Backtest comparison and attribution

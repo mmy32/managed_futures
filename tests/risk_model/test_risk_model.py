@@ -3,7 +3,9 @@ import pandas as pd
 import pytest
 
 from src.backtest.qps_baseline import build_forecasts
-from src.risk_model import portfolio_risk
+from src.models import MarketData
+from src.risk_model import RollingCovarianceRiskModel, portfolio_risk
+from src.risk_model.rolling import decay_weights, weighted_covariance
 
 
 def settings():
@@ -112,3 +114,29 @@ def test_volatility_floor_is_used_in_forecast_as_well_as_sizing():
     targets, cov, _ = build_forecasts(r, m, b, settings())
     month = targets["trend"].index[0]
     assert cov[month][0, 0] == pytest.approx(0.02**2)
+
+
+def test_equal_weights_match_sample_covariance():
+    r, _, _ = data()
+    history = r.iloc[:36].to_numpy()
+    weights = decay_weights(36, None)
+    assert np.allclose(weighted_covariance(history, weights), np.cov(history, rowvar=False))
+
+
+def test_shorter_half_life_puts_more_weight_on_recent_months():
+    slow, fast = decay_weights(36, 18), decay_weights(36, 3)
+    assert slow.sum() == pytest.approx(1) and fast.sum() == pytest.approx(1)
+    assert fast[-1] > slow[-1] > slow[0] > fast[0]
+
+
+def test_fast_slow_volatility_lies_between_its_components():
+    r, _, _ = data()
+    r.iloc[-6:] *= 4  # a recent volatility spike
+    vol = {
+        halves: RollingCovarianceRiskModel(36, 1, 0.0, 0.5, half_lives=halves).volatility(
+            MarketData(r, None)
+        )
+        for halves in [(3,), (None,), (3, None)]
+    }
+    last = {key: frame.iloc[-1] for key, frame in vol.items()}
+    assert (last[(3,)] > last[(3, None)]).all() and (last[(3, None)] > last[(None,)]).all()
