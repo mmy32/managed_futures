@@ -4,27 +4,48 @@ Everything except the trend signal is the baseline's: risk model, sizing, limits
 The STATIC benchmark keeps the same eligibility as the trend signal, so the comparison stays matched.
 """
 
+import json
 from dataclasses import replace
+
+import pandas as pd
 
 from src.alpha_model import (
     AlwaysLongLike,
     AssetClassSignal,
+    BlendSignal,
     Signal,
     SkipMonthSignal,
     SumReturnSignal,
 )
-from src.backtest.qps_baseline import QpsComponents, forecasts_from, qps_components
-from src.config import ASSET_CLASSES
+from src.backtest.qps_baseline import (
+    QpsComponents,
+    eligibility_from,
+    forecasts_from,
+    qps_components,
+)
+from src.config import ASSET_CLASSES, CONFIG_DIR
 
 SIGNAL_TYPES = {"sum": SumReturnSignal, "skip_month": SkipMonthSignal}
 
 
+def load_rules() -> dict[str, dict]:
+    """Trend rule per asset class from config/qps_v2.json."""
+    return json.loads((CONFIG_DIR / "qps_v2.json").read_text())["trend_signal_by_asset_class"]
+
+
 def build_signal(rule: dict) -> Signal:
-    """One signal from a rule such as {"type": "skip_month", "lookback": 12, "skip": 1}."""
+    """One signal from a rule such as {"type": "skip_month", "lookback": 12, "skip": 1}.
+
+    A blend takes {"type": "blend", "components": [rule, rule, ...]}.
+    """
     options = dict(rule)
     kind = options.pop("type", None)
+    if kind == "blend":
+        return BlendSignal([build_signal(part) for part in options["components"]])
     if kind not in SIGNAL_TYPES:
-        raise ValueError(f"Unknown signal type {kind!r}; choose from {sorted(SIGNAL_TYPES)}")
+        raise ValueError(
+            f"Unknown signal type {kind!r}; choose from {sorted([*SIGNAL_TYPES, 'blend'])}"
+        )
     return SIGNAL_TYPES[kind](**options)
 
 
@@ -50,3 +71,8 @@ def build_forecasts_v2(returns, meta, base, settings, rules, model="correlated")
     """Return (targets by strategy, covariance by month, diagnostics)."""
     parts = qps_v2_components(base, settings, rules, meta, model)
     return forecasts_from(parts, returns, meta, base, model)
+
+
+def eligibility_v2(returns, meta, base, settings, rules) -> "pd.DataFrame":
+    """Markets with a known per-class trend signal and positive volatility each month."""
+    return eligibility_from(qps_v2_components(base, settings, rules, meta), returns, meta, base)

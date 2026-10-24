@@ -11,7 +11,7 @@ The code tests one fixed 12-month trend strategy against matching always-long ST
 | Run | `run_research.py` | Validates, runs the pipeline and exports HTML |
 | Construct | `construct_returns.py` / `assemble` | Reproduces supplied monthly returns; logs documented endpoint corrections separately |
 | Select sources | `strategy_inputs.py` / `load_strategy_inputs` | Loads returns and applies the prior-only RL/ER source schedule |
-| Signal | `alpha_model/signals.py` / `Signal` | Direction in {-1, 0, +1} from returns through month t; `SumReturnSignal` (qps), `CompoundedReturnSignal` (paper), `AlwaysLongSignal` (STATIC), `SkipMonthSignal` (12-1 trend), `AssetClassSignal` (routes each market to its asset class's signal), `AlwaysLongLike` (STATIC with the same eligibility as another signal) |
+| Signal | `alpha_model/signals.py` / `Signal` | Direction in {-1, 0, +1} from returns through month t; `SumReturnSignal` (qps), `CompoundedReturnSignal` (paper), `AlwaysLongSignal` (STATIC), `SkipMonthSignal` (12-1 trend), `BlendSignal` (equal-weight average of signals), `AssetClassSignal` (routes each market to its asset class's signal), `AlwaysLongLike` (STATIC with the same eligibility as another signal) |
 | Risk estimate | `risk_model/` / `RiskModel` | Lagged volatility and covariance; `RollingCovarianceRiskModel` (qps), `EwmaVolatilityRiskModel` (paper, daily prices) |
 | Size and bound | `portfolio_construction/` / `construct_targets` | `InverseVolatilitySizer` sizes eligible markets; `bounded_target` applies the gross cap and risk ceiling |
 | Execute | `portfolio_construction/policy.py` / `BandPolicy` | Uses carried holdings, applies bands and enforces limits after costs |
@@ -35,6 +35,7 @@ Class net contributions reconcile to monthly net return. Wealth-linked contribut
 ```sh
 python scripts/run_research.py --validate
 python scripts/run_research.py --endpoint-sensitivity
+python scripts/run_research.py --variant baseline --endpoint-sensitivity  # the 12-month baseline instead of v2
 ```
 
 Tests cover past-only decisions, future mutations and prefix replay, missing-return failures, bands, after-cost limits, actual-trade cost allocation, class/NAV reconciliation, rank/HAC calendar handling and funding. The refactor reproduces 12 archived 2000–2014 runs independently of the data sensitivity.

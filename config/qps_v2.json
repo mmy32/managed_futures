@@ -2,8 +2,14 @@
   "trend_signal_by_asset_class": {
     "COMM": {"type": "sum", "lookback": 12},
     "FI": {"type": "sum", "lookback": 12},
-    "EQ": {"type": "skip_month", "lookback": 12, "skip": 1},
-    "FX": {"type": "sum", "lookback": 3}
+    "EQ": {"type": "sum", "lookback": 12},
+    "FX": {
+      "type": "blend",
+      "components": [
+        {"type": "sum", "lookback": 3},
+        {"type": "sum", "lookback": 12}
+      ]
+    }
   },
-  "source": "notebooks/trend_measures.ipynb, section 5 and the summary table. In-sample class-portfolio rankings, not validated out of sample: COMM and FI keep the baseline, EQ uses skip-month and FX a 3-month sum by design choice."
+  "source": "notebooks/trend_measures.ipynb, section 5 and the summary table. In-sample class-portfolio rankings, not validated out of sample. COMM, FI and EQ keep the baseline 12-month sum; FX averages a 3-month and a 12-month sum, a blend that was not itself in the notebook's grid."
 }

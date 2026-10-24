@@ -7,7 +7,7 @@ from html import escape
 
 import markdown
 
-from src.config import QPS_REPORT_DIR
+from src.config import QPS_REPORT_DIR, QPS_VARIANTS
 
 
 def main(report_name="REPORT.md"):
@@ -47,7 +47,6 @@ details{margin-top:40px;padding:18px 22px;border:1px solid #dbe3eb;border-radius
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--report", choices=["REPORT.md", "ENDPOINT_SENSITIVITY.md"], default="REPORT.md"
-    )
+    reports = [name for v in QPS_VARIANTS.values() for name in (v["report"], v["endpoint_report"])]
+    parser.add_argument("--report", choices=reports, default="REPORT.md")
     main(parser.parse_args().report)

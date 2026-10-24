@@ -35,6 +35,7 @@ source .venv/bin/activate
 python -m pip install -e ".[dev]"
 python scripts/run_research.py --validate
 python scripts/run_research.py --endpoint-sensitivity
+python scripts/run_research.py --variant baseline --endpoint-sensitivity  # the 12-month baseline instead of v2
 ```
 
 Validation needs no source data. Research runs require the datasets described in [docs/DATA_INPUTS.md](docs/DATA_INPUTS.md). See the [code guide](docs/CODE_GUIDE.md) for the calculation sequence.

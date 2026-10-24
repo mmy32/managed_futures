@@ -39,3 +39,22 @@ EWMA_TRADING_DAYS_PER_YEAR = 261  # annualization used in the same equation
 EWMA_MIN_OBSERVATIONS = 60  # daily returns required before an EWMA volatility is used
 
 TSMOM_REPORT_DIR = PROJECT_ROOT / "reports" / "tsmom_baseline"
+
+# qps strategy variants: where each writes. "v2" chooses the trend signal per asset class.
+QPS_VARIANTS = {
+    "baseline": {
+        "output": "risk",
+        "endpoint_output": "endpoint_sensitivity",
+        "report": "REPORT.md",
+        "endpoint_report": "ENDPOINT_SENSITIVITY.md",
+        "status": "DATA_STATUS.md",
+    },
+    "v2": {
+        "output": "risk_v2",
+        "endpoint_output": "endpoint_sensitivity_v2",
+        "report": "REPORT_V2.md",
+        "endpoint_report": "ENDPOINT_SENSITIVITY_V2.md",
+        "status": "DATA_STATUS_V2.md",
+    },
+}
+DEFAULT_QPS_VARIANT = "v2"

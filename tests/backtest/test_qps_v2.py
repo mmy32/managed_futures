@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.alpha_model import SkipMonthSignal, SumReturnSignal
-from src.backtest.qps_baseline import build_forecasts
-from src.backtest.qps_v2 import build_forecasts_v2, build_signal, trend_signal
+from src.alpha_model import BlendSignal, SumReturnSignal
+from src.backtest.qps_baseline import build_forecasts, eligibility
+from src.backtest.qps_v2 import build_forecasts_v2, build_signal, eligibility_v2, trend_signal
 from src.config import CONFIG_DIR
 
 CLASSES = ["EQ", "EQ", "FI", "FI", "FX", "FX", "COMM", "COMM"]
@@ -58,8 +58,8 @@ def test_each_market_follows_the_signal_of_its_asset_class():
     returns, meta, _ = data()
     forecast = trend_signal(rules(), meta).forecast(returns)
     by_class = {
-        "EQ": SkipMonthSignal(12, 1),
-        "FX": SumReturnSignal(3),
+        "EQ": SumReturnSignal(12),
+        "FX": BlendSignal([SumReturnSignal(3), SumReturnSignal(12)]),
         "FI": SumReturnSignal(12),
         "COMM": SumReturnSignal(12),
     }
@@ -89,3 +89,24 @@ def test_rules_must_cover_exactly_the_asset_classes():
 def test_unknown_signal_type_is_rejected():
     with pytest.raises(ValueError, match="Unknown signal type"):
         build_signal({"type": "momentum", "lookback": 12})
+
+
+def test_eligibility_matches_the_baseline_when_every_class_uses_the_baseline_rule():
+    returns, meta, base = data()
+    same = {cls: {"type": "sum", "lookback": 12} for cls in ("COMM", "EQ", "FI", "FX")}
+    pd.testing.assert_frame_equal(
+        eligibility_v2(returns, meta, base, RISK_SETTINGS, same),
+        eligibility(returns, meta, base, RISK_SETTINGS),
+    )
+
+
+def test_blend_rule_averages_its_components():
+    returns, _, _ = data()
+    blend = build_signal(
+        {
+            "type": "blend",
+            "components": [{"type": "sum", "lookback": 3}, {"type": "sum", "lookback": 12}],
+        }
+    )
+    expected = (SumReturnSignal(3).forecast(returns) + SumReturnSignal(12).forecast(returns)) / 2
+    pd.testing.assert_frame_equal(blend.forecast(returns), expected)

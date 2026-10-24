@@ -14,12 +14,43 @@ import numpy as np
 from matplotlib.ticker import PercentFormatter
 
 from src.backtest.attribution import CLASS_NAMES
+from src.backtest.qps_v2 import load_rules
 from src.backtest.sample_diagnostics import risk_diagnostics
-from src.config import DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR, QPS_REPORT_DIR
+from src.config import DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR, QPS_REPORT_DIR, QPS_VARIANTS
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "risk"
 COLORS = ["#2676a5", "#ce7c27", "#358574", "#9563a5"]
+
+
+def _rule_text(rule):
+    if rule["type"] == "blend":
+        parts = " and ".join(_rule_text(part) for part in rule["components"])
+        return f"the average of the signs of {parts} (full size when they agree, half size when they differ)"
+    if rule["type"] == "sum":
+        return f"the sum of the previous {rule['lookback']} monthly returns"
+    return (
+        f"the compounded return over the previous {rule['lookback']} months, "
+        f"skipping the latest {rule['skip']}"
+    )
+
+
+def trend_text(variant):
+    """Wording that depends on which trend signal the run used."""
+    if variant == "baseline":
+        return {
+            "label": "Baseline trend",
+            "question": "12-month trends",
+            "direction": "go long if the previous 12 monthly returns sum to a positive number, short if negative, and flat if zero.",
+            "signal": "the 12-month trading signal",
+        }
+    per_class = "; ".join(f"{cls} uses {_rule_text(rule)}" for cls, rule in load_rules().items())
+    return {
+        "label": "Per-class trend",
+        "question": "trends whose signal is chosen for each asset class",
+        "direction": f"go long if the market's signal is positive, short if negative, and flat if zero. The signal depends on the asset class: {per_class}.",
+        "signal": "the per-class trading signals",
+    }
 
 
 def save(fig, name, out):
@@ -33,10 +64,14 @@ def style(axis, percent=False):
         axis.yaxis.set_major_formatter(PercentFormatter(1))
 
 
-def make_charts(classes, counts, autocorr, ledgers, settings, out=OUT):
+def make_charts(
+    classes, counts, autocorr, ledgers, settings, out=OUT, trend_label="Baseline trend"
+):
     plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False})
     conditional = (
-        "Conditional March 1997 endpoint assumption" if out.name == "endpoint_sensitivity" else ""
+        "Conditional March 1997 endpoint assumption"
+        if out.name.startswith("endpoint_sensitivity")
+        else ""
     )
     dates = classes.index.to_timestamp()
     fig, ax = plt.subplots(figsize=(11, 4), layout="constrained")
@@ -104,7 +139,7 @@ def make_charts(classes, counts, autocorr, ledgers, settings, out=OUT):
     if not ledgers:
         return
 
-    names = [("Baseline trend", "trend", COLORS[0]), ("Matching STATIC", "static", COLORS[1])]
+    names = [(trend_label, "trend", COLORS[0]), ("Matching STATIC", "static", COLORS[1])]
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.5), layout="constrained")
     for label, strategy, color in names:
         ledger = ledgers[f"correlated_band10_5bps_{strategy}"]
@@ -172,7 +207,7 @@ def _main_metrics(metrics):
     return metrics[(metrics.band == 0.1) & (metrics.cost_bps == 5)].set_index("strategy")
 
 
-def _opening(assumption):
+def _opening(assumption, trend):
     assumption_note = (
         "**Data qualification:** results use an unverified March 1997 endpoint assumption "
         "for DT, GS, LX and SS, restoring eight March/April returns. The preserved-policy "
@@ -183,7 +218,7 @@ def _opening(assumption):
     )
     return f"""# Managed futures: risk-controlled trend
 
-**Research question:** does following 12-month trends add value over staying long when both portfolios use the same risk controls and trading costs?
+**Research question:** does following {trend["question"]} add value over staying long when both portfolios use the same risk controls and trading costs?
 
 **Key finding:** trend improves full-sample return, Sharpe and drawdown versus the always-long benchmark. The advantage is smaller in the most recent decade, and risk forecasts understate realized fluctuations.
 
@@ -239,7 +274,7 @@ Annual mean = 12 × monthly mean; annual volatility = √12 × monthly sample SD
 """
 
 
-def _autocorrelation_section(autocorr):
+def _autocorrelation_section(autocorr, trend):
     rows = []
     for group, name in CLASS_NAMES.items():
         q = autocorr[autocorr.asset_class.eq(group)]
@@ -252,15 +287,15 @@ def _autocorrelation_section(autocorr):
 
 {table(["Class", "Lags with approximate p < 0.05"], rows)}
 
-**Takeaway:** evidence of class-level persistence is limited. These 48 exploratory comparisons have no multiple-testing adjustment and do not establish the profitability or optimality of the 12-month trading signal.
+**Takeaway:** evidence of class-level persistence is limited. These 48 exploratory comparisons have no multiple-testing adjustment and do not establish the profitability or optimality of {trend["signal"]}.
 
 """
 
 
-def _construction_section():
-    return """## 4. Baseline strategy construction
+def _construction_section(trend):
+    return f"""## 4. Baseline strategy construction
 
-1. **Direction:** go long if the previous 12 monthly returns sum to a positive number, short if negative, and flat if zero.
+1. **Direction:** {trend["direction"]}
 2. **Risk estimate:** use the previous 36 months of returns, a 2% annual volatility floor, and correlations shrunk 50% toward zero.
 3. **Position size:** start with `0.40 / (eligible markets × annual volatility)`, then reduce positions proportionally to meet a **10% forecast-volatility ceiling** and **3× gross exposure cap**. The 0.40 is a sizing parameter, not a portfolio risk target.
 4. **Execution:** rebalance monthly with ±10% relative trading bands. A 20% target allows an existing same-direction position between 18% and 22%. Entries, exits and reversals execute at target; hard limits override bands.
@@ -424,15 +459,17 @@ def write_report(
     report_path=QPS_REPORT_DIR / "REPORT.md",
     assumption=None,
     stability=None,
+    variant="baseline",
 ):
     """A concise report; calculation details and audit evidence remain linked appendices."""
+    trend = trend_text(variant)
     report = "".join(
         [
-            _opening(assumption),
+            _opening(assumption, trend),
             _data_section(audit),
             _class_section(class_stats),
-            _autocorrelation_section(autocorr),
-            _construction_section(),
+            _autocorrelation_section(autocorr, trend),
+            _construction_section(trend),
             _results_section(metrics, alphas, stability),
             _risk_section(metrics, attribution),
             _limits_section(),
@@ -440,10 +477,15 @@ def write_report(
         ]
     )
     report = report.replace("output/risk/", str(out.relative_to(QPS_REPORT_DIR)) + "/")
+    report = report.replace("docs/DATA_STATUS.md", f"docs/{QPS_VARIANTS[variant]['status']}")
+    report = report.replace(
+        "python scripts/run_research.py --endpoint-sensitivity",
+        f"python scripts/run_research.py --variant {variant} --endpoint-sensitivity",
+    )
     report_path.write_text(report)
     if assumption is not None:
         # Keep the earlier filename as a compatible copy of the main presentation.
-        (QPS_REPORT_DIR / "ENDPOINT_SENSITIVITY.md").write_text(report)
+        (QPS_REPORT_DIR / QPS_VARIANTS[variant]["endpoint_report"]).write_text(report)
 
 
 def docs_link(link):
@@ -457,13 +499,14 @@ def docs_link(link):
     return "../" + link
 
 
-def write_blocked_report(class_stats, autocorr, audit, failures):
+def write_blocked_report(class_stats, autocorr, audit, failures, variant="baseline"):
+    names = QPS_VARIANTS[variant]
     rows = [[f["strategy"].upper(), f["error"]] for f in failures]
     report = f"""# Preserved data policy: status and endpoint issue
 
 **The 1976–2014 comparison stops on missing held returns.** The simulator preserves the existing endpoint rules and fails explicitly; full-period portfolio metrics are unavailable under this policy.
 
-For the completed, clearly labeled conditional research, read [ENDPOINT_SENSITIVITY.md](ENDPOINT_SENSITIVITY.md) or [offline HTML](ENDPOINT_SENSITIVITY.html). That report uses March 27 as an unverified March 1997 endpoint for four instruments.
+For the completed, clearly labeled conditional research, read [{names["endpoint_report"]}]({names["endpoint_report"]}) or [offline HTML]({names["endpoint_report"].replace(".md", ".html")}). That report uses March 27 as an unverified March 1997 endpoint for four instruments.
 
 ## What blocks evaluation
 
@@ -487,7 +530,8 @@ The requested 468 months remain January 1976–December 2014. January 1976 has {
 
 Start with [README.md](README.md) for the files to review and share. Detailed data audits remain in `docs/`; raw inputs stay local.
 """
+    report = re.sub(r"output/risk/(?!validation\.json)", f"output/{names['output']}/", report)
     report = re.sub(
         r"\]\(([^)]+)\)", lambda match: "](" + (docs_link(match.group(1))) + ")", report
     )
-    (DOCS_DIR / "DATA_STATUS.md").write_text(report)
+    (DOCS_DIR / names["status"]).write_text(report)

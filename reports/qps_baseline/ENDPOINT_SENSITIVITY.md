@@ -145,10 +145,10 @@ Return and forecast-risk contributions add to their respective portfolio totals.
 | TREND | 6.36× | 0.318% |
 | STATIC | 0.72× | 0.036% |
 
-**Validation:** 108 tests pass; the archived 2000–2014 replay matches all 12 saved runs. Validation checks accounting and timing, not vendor accuracy or executable fills.
+**Validation:** 124 tests pass; the archived 2000–2014 replay matches all 12 saved runs. Validation checks accounting and timing, not vendor accuracy or executable fills.
 
 [Methods](../../docs/RISK_METHODS.md) · [Validation](../../docs/VALIDATION.md) · [Code guide](../../docs/CODE_GUIDE.md) · [All cost scenarios](output/endpoint_sensitivity/comparison.csv) · [Historical subsamples](output/endpoint_sensitivity/stability.csv) · [Class attribution](output/endpoint_sensitivity/trend_class_attribution.csv).
 
-Reproduce: `python scripts/run_research.py --endpoint-sensitivity`. HTML embeds all five figures.
+Reproduce: `python scripts/run_research.py --variant baseline --endpoint-sensitivity`. HTML embeds all five figures.
 
 </details>

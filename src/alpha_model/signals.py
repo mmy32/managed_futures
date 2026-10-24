@@ -1,6 +1,6 @@
 """Trend signals: one interface, interchangeable definitions of the trailing return."""
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from typing import Protocol
 
 import numpy as np
@@ -67,6 +67,21 @@ class SkipMonthSignal:
             .sum()
         )
         return np.sign(window)
+
+
+class BlendSignal:
+    """Equal-weight average of component forecasts, so partial agreement gives a half-size position.
+
+    NaN until every component has a forecast.
+    """
+
+    def __init__(self, signals: Sequence[Signal]):
+        if len(signals) < 2:
+            raise ValueError("A blend needs at least two component signals")
+        self.signals = list(signals)
+
+    def forecast(self, returns: pd.DataFrame) -> pd.DataFrame:
+        return sum(signal.forecast(returns) for signal in self.signals) / len(self.signals)
 
 
 class AssetClassSignal:

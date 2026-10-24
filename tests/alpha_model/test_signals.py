@@ -6,6 +6,7 @@ from src.alpha_model import (
     AlwaysLongLike,
     AlwaysLongSignal,
     AssetClassSignal,
+    BlendSignal,
     CompoundedReturnSignal,
     SkipMonthSignal,
     SumReturnSignal,
@@ -126,3 +127,14 @@ def test_always_long_like_is_one_exactly_where_the_reference_has_a_forecast():
     known = reference.forecast(returns)["A"].notna()
     assert long_like.notna().equals(known)
     assert long_like[known].eq(1).all()
+
+
+def test_blend_averages_signs_and_needs_every_component():
+    returns = monthly([0.05, 0.05, 0.05, -0.02])
+    blend = BlendSignal([SumReturnSignal(1), SumReturnSignal(3)])
+    forecast = blend.forecast(returns)["A"]
+    assert forecast.iloc[2] == 1  # both positive
+    assert forecast.iloc[3] == 0  # one-month sum is -1, three-month sum is +1
+    assert forecast.iloc[:2].isna().all()
+    with pytest.raises(ValueError):
+        BlendSignal([SumReturnSignal(1)])

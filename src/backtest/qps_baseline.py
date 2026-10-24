@@ -71,7 +71,11 @@ def forecasts_from(parts: QpsComponents, returns, meta, base, model="correlated"
 
 def eligibility(returns, meta, base, settings) -> pd.DataFrame:
     """Markets with a known trend signal and positive volatility each month, minus exclusions."""
-    parts = qps_components(base, settings)
+    return eligibility_from(qps_components(base, settings), returns, meta, base)
+
+
+def eligibility_from(parts: QpsComponents, returns, meta, base) -> pd.DataFrame:
+    """Eligibility for already composed components: the step shared by every qps variant."""
     signal = lagged(parts.signals["trend"].forecast(returns), base["information_lag_months"])
     vol = parts.risk_model.volatility(MarketData(returns, meta))
     return parts.sizer.eligibility(signal, vol)
