@@ -1,0 +1,157 @@
+{
+  "construction_max_abs_difference": 0.0,
+  "relative_tolerance": 1e-10,
+  "absolute_tolerance": 1e-12,
+  "checks": [
+    {
+      "variant": "baseline",
+      "file": "comparison.csv",
+      "max_abs_difference": 7.105427357601002e-14
+    },
+    {
+      "variant": "baseline",
+      "file": "alpha.csv",
+      "max_abs_difference": 7.105427357601002e-15
+    },
+    {
+      "variant": "baseline",
+      "file": "returns_used.csv",
+      "max_abs_difference": 0.0
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band00_0bps_static_ledger.csv",
+      "max_abs_difference": 4.440892098500626e-15
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band00_10bps_static_ledger.csv",
+      "max_abs_difference": 4.884981308350689e-15
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band00_5bps_static_ledger.csv",
+      "max_abs_difference": 6.217248937900877e-15
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band10_10bps_trend_ledger.csv",
+      "max_abs_difference": 5.684341886080802e-14
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band10_10bps_static_ledger.csv",
+      "max_abs_difference": 8.881784197001252e-15
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band00_10bps_trend_ledger.csv",
+      "max_abs_difference": 7.105427357601002e-14
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band00_0bps_trend_ledger.csv",
+      "max_abs_difference": 6.394884621840902e-14
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band00_5bps_trend_ledger.csv",
+      "max_abs_difference": 2.842170943040401e-14
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band10_5bps_static_ledger.csv",
+      "max_abs_difference": 4.440892098500626e-15
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band10_0bps_static_ledger.csv",
+      "max_abs_difference": 3.9968028886505635e-15
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band10_5bps_trend_ledger.csv",
+      "max_abs_difference": 3.552713678800501e-14
+    },
+    {
+      "variant": "baseline",
+      "file": "correlated_band10_0bps_trend_ledger.csv",
+      "max_abs_difference": 7.105427357601002e-14
+    },
+    {
+      "variant": "v2",
+      "file": "comparison.csv",
+      "max_abs_difference": 2.2026824808563106e-13
+    },
+    {
+      "variant": "v2",
+      "file": "alpha.csv",
+      "max_abs_difference": 6.217248937900877e-15
+    },
+    {
+      "variant": "v2",
+      "file": "returns_used.csv",
+      "max_abs_difference": 0.0
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band00_0bps_static_ledger.csv",
+      "max_abs_difference": 4.440892098500626e-15
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band00_10bps_static_ledger.csv",
+      "max_abs_difference": 4.884981308350689e-15
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band00_5bps_static_ledger.csv",
+      "max_abs_difference": 6.217248937900877e-15
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band10_10bps_trend_ledger.csv",
+      "max_abs_difference": 9.237055564881302e-14
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band10_10bps_static_ledger.csv",
+      "max_abs_difference": 8.881784197001252e-15
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band00_10bps_trend_ledger.csv",
+      "max_abs_difference": 1.2789769243681803e-13
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band00_0bps_trend_ledger.csv",
+      "max_abs_difference": 1.8474111129762605e-13
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band00_5bps_trend_ledger.csv",
+      "max_abs_difference": 2.2026824808563106e-13
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band10_5bps_static_ledger.csv",
+      "max_abs_difference": 4.440892098500626e-15
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band10_0bps_static_ledger.csv",
+      "max_abs_difference": 3.9968028886505635e-15
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band10_5bps_trend_ledger.csv",
+      "max_abs_difference": 9.237055564881302e-14
+    },
+    {
+      "variant": "v2",
+      "file": "correlated_band10_0bps_trend_ledger.csv",
+      "max_abs_difference": 2.842170943040401e-14
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+instrument,month,proposed_return,assumed_march_endpoint,applied,evidence_status
+DT,1997-03,-0.022984731571170536,1997-03-27,False,Venue closure unverified; research assumption requires explicit selection
+DT,1997-04,0.011930767938161724,1997-03-27,False,Venue closure unverified; research assumption requires explicit selection
+GS,1997-03,-0.02570610666937967,1997-03-27,False,Venue closure unverified; research assumption requires explicit selection
+GS,1997-04,0.01491242125654657,1997-03-27,False,Venue closure unverified; research assumption requires explicit selection
+LX,1997-03,0.0016485854073600148,1997-03-27,False,Venue closure unverified; research assumption requires explicit selection
+LX,1997-04,0.032227236527740954,1997-03-27,False,Venue closure unverified; research assumption requires explicit selection
+SS,1997-03,-0.0014940239043823578,1997-03-27,False,Venue closure unverified; research assumption requires explicit selection
+SS,1997-04,0.001073403447901855,1997-03-27,False,Venue closure unverified; research assumption requires explicit selection

@@ -16,6 +16,7 @@ from matplotlib.ticker import PercentFormatter
 from src.backtest.attribution import CLASS_NAMES
 from src.backtest.qps_v2 import load_rules
 from src.backtest.sample_diagnostics import risk_diagnostics
+from src.backtest.research_spec import primary_key, select_results, validate_research_settings
 from src.config import DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR, QPS_REPORT_DIR, QPS_VARIANTS
 
 ROOT = PROJECT_ROOT
@@ -26,7 +27,7 @@ COLORS = ["#2676a5", "#ce7c27", "#358574", "#9563a5"]
 def _rule_text(rule):
     if rule["type"] == "blend":
         parts = " and ".join(_rule_text(part) for part in rule["components"])
-        return f"the average of the signs of {parts} (full size when they agree, half size when they differ)"
+        return f"the average of the signs of {parts} (full size when both signs agree and are nonzero; flat when they oppose; half size when one sign is zero)"
     if rule["type"] == "sum":
         return f"the sum of the previous {rule['lookback']} monthly returns"
     return (
@@ -142,7 +143,7 @@ def make_charts(
     names = [(trend_label, "trend", COLORS[0]), ("Matching STATIC", "static", COLORS[1])]
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.5), layout="constrained")
     for label, strategy, color in names:
-        ledger = ledgers[f"correlated_band10_5bps_{strategy}"]
+        ledger = ledgers[primary_key(settings, strategy)]
         wealth = ledger.nav_end
         axes[0].plot(dates, wealth - 1, label=label, color=color)
         axes[1].plot(dates, wealth / wealth.cummax().clip(lower=1) - 1, label=label, color=color)
@@ -152,13 +153,14 @@ def make_charts(
         style(ax, True)
     fig.suptitle(
         (conditional + "\n" if conditional else "")
-        + "1976–2014 • 5 bps trading costs • ±10% bands • zero interest"
+        + f"1976–2014 • {settings['primary_cost_bps']:g} bps trading costs "
+        + f"• ±{settings['primary_band'] * 100:g}% bands • zero interest"
     )
     save(fig, "performance", out)
 
     fig, axes = plt.subplots(3, 1, figsize=(11, 10), layout="constrained", sharex=True)
     for label, strategy, color in names:
-        ledger = ledgers[f"correlated_band10_5bps_{strategy}"]
+        ledger = ledgers[primary_key(settings, strategy)]
         timeline, _ = risk_diagnostics(ledger)
         axes[0].plot(
             dates, timeline.realized_gross_vol_36m, label=f"{label}: realized gross", color=color
@@ -203,8 +205,11 @@ def validation_summary():
     return f"{record['passed']} tests pass" if current else "Validation record needs refreshing"
 
 
-def _main_metrics(metrics):
-    return metrics[(metrics.band == 0.1) & (metrics.cost_bps == 5)].set_index("strategy")
+def _main_metrics(metrics, settings):
+    main = select_results(metrics, settings).set_index("strategy")
+    if set(main.index) != {"trend", "static"}:
+        raise ValueError("Primary metrics require one TREND and one STATIC result")
+    return main
 
 
 def _opening(assumption, trend):
@@ -292,13 +297,13 @@ def _autocorrelation_section(autocorr, trend):
 """
 
 
-def _construction_section(trend):
+def _construction_section(trend, settings):
     return f"""## 4. Baseline strategy construction
 
 1. **Direction:** {trend["direction"]}
 2. **Risk estimate:** use the previous 36 months of returns, a 2% annual volatility floor, and correlations shrunk 50% toward zero.
 3. **Position size:** start with `0.40 / (eligible markets × annual volatility)`, then reduce positions proportionally to meet a **10% forecast-volatility ceiling** and **3× gross exposure cap**. The 0.40 is a sizing parameter, not a portfolio risk target.
-4. **Execution:** rebalance monthly with ±10% relative trading bands. A 20% target allows an existing same-direction position between 18% and 22%. Entries, exits and reversals execute at target; hard limits override bands.
+4. **Execution:** rebalance monthly with ±{settings["primary_band"] * 100:g}% relative trading bands. A 20% target allows an existing same-direction position between {0.2 * (1 - settings["primary_band"]):.1%} and {0.2 * (1 + settings["primary_band"]):.1%}. Entries, exits and reversals execute at target; hard limits override bands.
 
 **Benchmark:** STATIC stays long using the same eligibility, risk model, limits, bands and costs. Each portfolio's own forecast risk determines its scaling.
 
@@ -320,12 +325,10 @@ def _stability_text(stability):
     )
 
 
-def _results_section(metrics, alphas, stability):
-    main = _main_metrics(metrics)
+def _results_section(metrics, alphas, stability, settings):
+    main = _main_metrics(metrics, settings)
     trend = main.loc["trend"]
-    no_band = metrics[
-        (metrics.band == 0) & (metrics.cost_bps == 5) & metrics.strategy.eq("trend")
-    ].iloc[0]
+    no_band = select_results(metrics, settings, band=0, strategy="trend").iloc[0]
     results = []
     for label, field, format_spec in [
         ("Annual arithmetic mean", "mean_ann", ".2%"),
@@ -338,13 +341,14 @@ def _results_section(metrics, alphas, stability):
         )
     cost_rows = [
         [f"{r.cost_bps:g}", f"{r.cagr:.2%}", f"{r.sharpe:.2f}"]
-        for r in metrics[metrics.band.eq(0.1) & metrics.strategy.eq("trend")].itertuples(
+        for cost in settings["cost_scenarios_bps"]
+        for r in select_results(metrics, settings, cost_bps=cost, strategy="trend").itertuples(
             index=False
         )
     ]
     return f"""## 5. Baseline strategy results
 
-1976–2014, net of **5 bps per unit of traded exposure**, with ±10% bands and zero cash return. CAGR measures compounded growth; maximum drawdown is the largest peak-to-trough loss.
+1976–2014, net of **{settings["primary_cost_bps"]:g} bps per unit of one-way traded notional / beginning-period NAV** (no division of turnover by two), with ±{settings["primary_band"] * 100:g}% bands and zero cash return. CAGR measures compounded growth; maximum drawdown is the largest peak-to-trough loss.
 
 {table(["Metric", "TREND", "STATIC"], results)}
 
@@ -361,8 +365,8 @@ The band reduces turnover by {1 - trend.turnover_ann / no_band.turnover_ann:.1%}
 """
 
 
-def _risk_section(metrics, attribution):
-    main = _main_metrics(metrics)
+def _risk_section(metrics, attribution, settings):
+    main = _main_metrics(metrics, settings)
     risk = [
         [
             s.upper(),
@@ -420,9 +424,9 @@ def _limits_section():
 """
 
 
-def _discussion_notes(metrics, alphas, stability, audit):
-    main = _main_metrics(metrics)
-    alpha = alphas[(alphas.band == 0.1) & (alphas.cost_bps == 5) & (alphas.hac_lags == 6)].iloc[0]
+def _discussion_notes(metrics, alphas, stability, audit, settings):
+    main = _main_metrics(metrics, settings)
+    alpha = select_results(alphas, settings, hac_lags=6).iloc[0]
     costs = [
         [s.upper(), f"{r.turnover_ann:.2f}×", f"{r.mean_cost_ann:.3%}"] for s, r in main.iterrows()
     ]
@@ -436,7 +440,7 @@ def _discussion_notes(metrics, alphas, stability, audit):
 
 {table(["Portfolio", "Annual turnover / capital", "Annual direct cost drag"], costs)}
 
-**Validation:** {validation_summary()}; the archived 2000–2014 replay matches all 12 saved runs. Validation checks accounting and timing, not vendor accuracy or executable fills.
+**Validation:** {validation_summary()}; the historical validation record reports a matching 12-run replay for 2000–2014. Validation checks accounting and timing, not vendor accuracy or executable fills.
 
 [Methods](../../docs/RISK_METHODS.md) · [Validation](../../docs/VALIDATION.md) · [Code guide](../../docs/CODE_GUIDE.md) · [All cost scenarios](output/risk/comparison.csv) · [Historical subsamples](output/risk/stability.csv) · [Class attribution](output/risk/trend_class_attribution.csv).
 
@@ -462,6 +466,7 @@ def write_report(
     variant="baseline",
 ):
     """A concise report; calculation details and audit evidence remain linked appendices."""
+    validate_research_settings(settings)
     trend = trend_text(variant)
     report = "".join(
         [
@@ -469,11 +474,11 @@ def write_report(
             _data_section(audit),
             _class_section(class_stats),
             _autocorrelation_section(autocorr, trend),
-            _construction_section(trend),
-            _results_section(metrics, alphas, stability),
-            _risk_section(metrics, attribution),
+            _construction_section(trend, settings),
+            _results_section(metrics, alphas, stability, settings),
+            _risk_section(metrics, attribution, settings),
             _limits_section(),
-            _discussion_notes(metrics, alphas, stability, audit),
+            _discussion_notes(metrics, alphas, stability, audit, settings),
         ]
     )
     report = report.replace("output/risk/", str(out.relative_to(QPS_REPORT_DIR)) + "/")

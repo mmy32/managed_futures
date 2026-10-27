@@ -5,6 +5,9 @@ data/*
 # Secrets
 .env
 
+# macOS Finder metadata
+.DS_Store
+
 # Python
 __pycache__/
 *.pyc

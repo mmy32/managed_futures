@@ -17,6 +17,12 @@ from src.backtest.engine import simulate
 from src.backtest.performance import performance, regression_alpha
 from src.backtest.qps_baseline import build_forecasts, eligibility, portfolio_limits
 from src.backtest.qps_v2 import build_forecasts_v2, eligibility_v2, load_rules
+from src.backtest.research_spec import (
+    primary_key,
+    run_key as key,
+    select_results,
+    validate_research_settings,
+)
 from src.backtest.sample_diagnostics import (
     class_portfolios,
     rank_autocorrelation,
@@ -42,10 +48,6 @@ from src.transaction_cost_model import LinearBpsCost
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "risk"
-
-
-def key(band, cost, strategy):
-    return f"correlated_band{round(band * 100):02d}_{cost}bps_{strategy}"
 
 
 def held_missing(policy, sample, name):
@@ -327,7 +329,11 @@ def write_blocked_run(
             "Endpoint sensitivity still has missing held returns; see its run_status.json"
         )
     make_charts(classes, counts, autocorr, {}, settings, out, trend_text(variant)["label"])
-    primary_failures = [f for f in failures if f["band"] == 0.1 and f["cost_bps"] == 5]
+    primary_failures = [
+        f
+        for f in failures
+        if f["band"] == settings["primary_band"] and f["cost_bps"] == settings["primary_cost_bps"]
+    ]
     write_blocked_report(class_stats, autocorr, audit, primary_failures or failures, variant)
     write_manifest(settings, base, original_hashes, out)
     (out / "run_status.json").write_text(
@@ -353,7 +359,7 @@ def write_attribution(ledgers, gross, details, covariance, meta, settings, out):
     """Primary-run class attribution tables for TREND and STATIC."""
     attribution = {}
     for strategy in ["trend", "static"]:
-        name = key(settings["primary_band"], settings["primary_cost_bps"], strategy)
+        name = primary_key(settings, strategy)
         net, exposure, risk, summary = class_attribution(
             ledgers[name], gross[name], details[name], covariance, meta
         )
@@ -376,9 +382,10 @@ def main(endpoint_sensitivity=False, variant=DEFAULT_QPS_VARIANT):
     build, make_eligibility = strategy_builders(variant)
     out = QPS_OUTPUT_DIR / names["endpoint_output" if endpoint_sensitivity else "output"]
     report_path = QPS_REPORT_DIR / names["report"]
+    settings = json.loads((CONFIG_DIR / "risk_config.json").read_text())
+    validate_research_settings(settings)
     out.mkdir(parents=True, exist_ok=True)
     archive_previous_outputs(out, (report_path.name, report_path.with_suffix(".html").name))
-    settings = json.loads((CONFIG_DIR / "risk_config.json").read_text())
     base = json.loads((ROOT / settings["base_config"]).read_text())
     original_hashes = {
         str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -427,7 +434,7 @@ def main(endpoint_sensitivity=False, variant=DEFAULT_QPS_VARIANT):
     )
     attribution = write_attribution(ledgers, gross, details, covariance, meta, settings, out)
     assert not metrics.gross_breaches.any() and not metrics.risk_breaches.any()
-    stability = stability_summary(ledgers)
+    stability = stability_summary(ledgers, settings)
     stability.to_csv(out / "stability.csv", index=False)
     make_charts(classes, counts, autocorr, ledgers, settings, out, trend_text(variant)["label"])
     write_report(
@@ -460,7 +467,7 @@ def main(endpoint_sensitivity=False, variant=DEFAULT_QPS_VARIANT):
         )
         + "\n"
     )
-    print(metrics[(metrics.band == 0.1) & (metrics.cost_bps == 5)].to_string(index=False))
+    print(select_results(metrics, settings).to_string(index=False))
     return 0
 
 

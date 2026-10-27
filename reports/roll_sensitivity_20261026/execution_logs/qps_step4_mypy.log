@@ -1,0 +1,2 @@
+src/portfolio_construction/targets.py:44: error: Slice index must be an integer, SupportsIndex or None  [misc]
+Found 1 error in 1 file (checked 49 source files)

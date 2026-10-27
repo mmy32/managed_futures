@@ -25,7 +25,13 @@ def bounded_target(weights, covariance, limits: PortfolioLimits):
 
 
 def enforce_limits(
-    proposed, previous, covariance, cost_model: CostModel, switched, limits: PortfolioLimits
+    proposed,
+    previous,
+    covariance,
+    cost_model: CostModel,
+    switched,
+    limits: PortfolioLimits,
+    roll_charge=None,
 ):
     """Largest proportional holding reduction satisfying limits after entry fees."""
     gross = float(np.abs(proposed).sum())
@@ -34,13 +40,16 @@ def enforce_limits(
 
     def used_capital(scale):
         fee = cost_model.cost(traded_exposure(scale * proposed, previous, switched)[0])
+        if roll_charge is not None:
+            fee += roll_charge.cost(scale * proposed, previous, switched)
         return scale * load + fee
 
     if used_capital(0.0) >= 1:
         raise ValueError("Insufficient capital to close positions")
     if used_capital(1.0) <= 1:
         return proposed.copy(), 1.0
-    # Trading costs are piecewise linear; small proportional costs make this monotone.
+    # Under this bound ordinary fees cannot offset the increasing portfolio load.
+    # Scheduled-roll fees are nondecreasing in scale: rate * min(scale*|w|, |prev|).
     if cost_model.cost(np.array([limits.gross_cap])) >= 1:
         raise ValueError("Cost assumption incompatible with proportional limit solver")
     low, high = 0.0, 1.0

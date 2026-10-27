@@ -1,0 +1,24 @@
+{
+  "runs": 36,
+  "all_accounting_and_limits_passed": true,
+  "event_journals_reconciled": true,
+  "class_attribution_reconciled": true,
+  "trade_only_reference_checks": [
+    {
+      "file": "correlated_band10_1bps_trend_ledger.csv",
+      "maximum_absolute_difference": 5.115907697472721e-13
+    },
+    {
+      "file": "correlated_band10_1bps_static_ledger.csv",
+      "maximum_absolute_difference": 2.3092638912203256e-14
+    },
+    {
+      "file": "correlated_band10_2bps_trend_ledger.csv",
+      "maximum_absolute_difference": 2.2737367544323206e-13
+    },
+    {
+      "file": "correlated_band10_2bps_static_ledger.csv",
+      "maximum_absolute_difference": 8.881784197001252e-15
+    }
+  ]
+}

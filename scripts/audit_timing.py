@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from src.backtest.engine import simulate
+from src.backtest.research_spec import validate_research_settings
 from src.backtest.performance import performance, regression_alpha
 from src.backtest.qps_baseline import build_forecasts, portfolio_limits
 from src.config import CONFIG_DIR, DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR
@@ -23,10 +24,12 @@ OUT = QPS_OUTPUT_DIR / "timing_audit"
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     settings = json.loads((CONFIG_DIR / "risk_config.json").read_text())
+    validate_research_settings(settings)
     base = json.loads((ROOT / settings["base_config"]).read_text())
     returns, source, known, schedule = load_strategy_inputs(settings, write=True)
     sample = returns.loc[base["start"] : base["end"]]
     meta = load_asset_map()
+    specification = dict(cost_bps=settings["primary_cost_bps"], band=settings["primary_band"])
     rows = []
     series = {}
     alphas = []
@@ -39,17 +42,26 @@ def main():
             ledger, _ = simulate(
                 sample,
                 target[name],
-                LinearBpsCost(5),
+                LinearBpsCost(settings["primary_cost_bps"]),
                 source.loc[sample.index],
-                position_policy=BandPolicy(cov, portfolio_limits(settings), 0.1),
+                position_policy=BandPolicy(
+                    cov, portfolio_limits(settings), settings["primary_band"]
+                ),
                 source_known_at=known.loc[sample.index],
             )
             ledger.to_csv(OUT / f"lag{lag}_{name}_ledger.csv")
-            rows.append(dict(information_lag_months=lag, strategy=name, **performance(ledger)))
+            rows.append(
+                dict(
+                    information_lag_months=lag,
+                    strategy=name,
+                    **specification,
+                    **performance(ledger),
+                )
+            )
             series[f"lag{lag}_{name}"] = ledger.net_return
             pair[name] = ledger.net_return
         a, _ = regression_alpha(pair["trend"], pair["static"].to_frame("STATIC"), 6)
-        alphas.append(dict(information_lag_months=lag, **a))
+        alphas.append(dict(information_lag_months=lag, **specification, **a))
     metrics = pd.DataFrame(rows)
     metrics.to_csv(OUT / "timing_comparison.csv", index=False)
     pd.DataFrame(alphas).to_csv(OUT / "timing_alpha.csv", index=False)
@@ -132,7 +144,7 @@ Policy-aware source costs now require known-at dates strictly before the holding
 
 ## Performance after the correction
 
-The current baseline result is {primary.mean_ann:.2%} annual arithmetic mean, {primary.vol_ann:.2%} volatility, and {primary.max_drawdown:.2%} worst drawdown at 5 bps. Alpha against matching STATIC is {a.alpha_ann:.2%}, with a 95% HAC interval [{a.alpha_ci_low_ann:.2%}, {a.alpha_ci_high_ann:.2%}]. See the refreshed [brief report](../reports/qps_baseline/REPORT.md).
+The current baseline result is {primary.mean_ann:.2%} annual arithmetic mean, {primary.vol_ann:.2%} volatility, and {primary.max_drawdown:.2%} worst drawdown at {settings["primary_cost_bps"]:g} bps and a {settings["primary_band"] * 100:g}% band. Alpha against matching STATIC is {a.alpha_ann:.2%}, with a 95% HAC interval [{a.alpha_ci_low_ann:.2%}, {a.alpha_ci_high_ann:.2%}]. See the refreshed [brief report](../reports/qps_baseline/REPORT.md).
 
 Using one additional full month of signal/risk delay gives **{delayed.mean_ann:.2%} mean, {delayed.vol_ann:.2%} volatility and {delayed.max_drawdown:.2%} drawdown**. This is a conservative timing sensitivity, not a realistic next-session fill simulation. It does not remove the assumption of executing the monthly rebalance at the valuation endpoint; that remains unverified.
 

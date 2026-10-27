@@ -1,0 +1,120 @@
+notebooks/risk_model_estimators.ipynb:cell 4:11:1: E402 Module level import not at top of cell
+   |
+ 9 | sys.path[:0] = [str(ROOT), str(ROOT / "scripts")]
+10 |
+11 | from compare_risk_models import compare, load_inputs
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+12 | from src.risk_model.rolling import decay_weights
+   |
+
+notebooks/risk_model_estimators.ipynb:cell 4:12:1: E402 Module level import not at top of cell
+   |
+11 | from compare_risk_models import compare, load_inputs
+12 | from src.risk_model.rolling import decay_weights
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+13 |
+14 | import json
+   |
+
+notebooks/risk_model_estimators.ipynb:cell 4:14:1: E402 Module level import not at top of cell
+   |
+12 | from src.risk_model.rolling import decay_weights
+13 |
+14 | import json
+   | ^^^^^^^^^^^ E402
+15 | VARIANTS = json.loads((ROOT / "config" / "risk_model_comparison.json").read_text())["variants"]
+16 | WINDOW = 36
+   |
+
+notebooks/trend_measures.ipynb:cell 30:38:5: E731 Do not assign a `lambda` expression, use a `def`
+   |
+36 |     starts = rng.integers(0, n, size=(BOOT_DRAWS, -(-n // BOOT_BLOCK)))
+37 |     idx = ((starts[:, :, None] + np.arange(BOOT_BLOCK)) % n).reshape(BOOT_DRAWS, -1)[:, :n]
+38 |     sharpe = lambda x: x.mean(axis=1) / x.std(axis=1, ddof=1) * np.sqrt(12)
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E731
+39 |     gain = sharpe(both[idx, 0]) - sharpe(both[idx, 1])
+40 |     lo, hi = np.quantile(gain, [(1 - BOOT_LEVEL) / 2, (1 + BOOT_LEVEL) / 2])
+   |
+   = help: Rewrite `sharpe` as a `def`
+
+tests/backtest/test_backtest.py:126:5: E741 Ambiguous variable name: `l`
+    |
+124 | def test_entry_drift_rebalance_and_terminal_costs():
+125 |     r, w = frames([0.1, -0.05], [0.5, 0.5])
+126 |     l, a = simulate(r, w, LinearBpsCost(10))
+    |     ^ E741
+127 |     first_net = 0.5 * 0.1 - 0.001 * 0.5
+128 |     carried = 0.5 * 1.1 / (1 + first_net)
+    |
+
+tests/backtest/test_backtest.py:141:5: E741 Ambiguous variable name: `l`
+    |
+139 | def test_short_and_flip_accounting():
+140 |     r, w = frames([0.1, 0.2], [-0.5, 0.5])
+141 |     l, _ = simulate(r, w, LinearBpsCost(0), liquidate=False)
+    |     ^ E741
+142 |     assert l.net_return.iloc[0] == pytest.approx(-0.05)
+143 |     assert l.net_return.iloc[1] == pytest.approx(0.1)
+    |
+
+tests/backtest/test_backtest.py:150:5: E741 Ambiguous variable name: `l`
+    |
+148 |     r, w = frames([0, 0], [0.5, 0.5])
+149 |     source = pd.DataFrame(["RL", "ER"], index=r.index, columns=r.columns)
+150 |     l, _ = simulate(r, w, LinearBpsCost(0), source, liquidate=False)
+    |     ^ E741
+151 |     assert l.rebalance_turnover.iloc[1] == 1
+152 |     assert l.source_switch_extra_turnover.iloc[1] == 1
+    |
+
+tests/backtest/test_backtest.py:161:5: E741 Ambiguous variable name: `l`
+    |
+159 |     r, w = frames([0.01], [2.0])
+160 |     rf = pd.Series([0.002], index=r.index)
+161 |     l, _ = simulate(r, w, LinearBpsCost(5), risk_free=rf, liquidate=False)
+    |     ^ E741
+162 |     assert l.collateral_income.iloc[0] == pytest.approx(0.002 * (1 - 0.001))
+163 |     assert l.net_return.iloc[0] == pytest.approx(0.02 + 0.002 * (1 - 0.001) - 0.001)
+    |
+
+tests/backtest/test_backtest.py:169:5: E741 Ambiguous variable name: `l`
+    |
+167 |     r, w = frames([np.nan, np.nan], [0, 0])
+168 |     rf = pd.Series([0.01, 0.01], index=r.index)
+169 |     l, _ = simulate(r, w, LinearBpsCost(10), risk_free=rf)
+    |     ^ E741
+170 |     np.testing.assert_allclose(l.net_return, rf)
+171 |     assert l.cost.sum() == 0
+    |
+
+tests/backtest/test_backtest.py:176:5: E741 Ambiguous variable name: `l`
+    |
+174 | def test_initial_capital_is_in_drawdown_peak():
+175 |     r, w = frames([-0.1, 0.02], [1, 1])
+176 |     l, _ = simulate(r, w, LinearBpsCost(0))
+    |     ^ E741
+177 |     assert performance(l)["max_drawdown"] == pytest.approx(-0.1)
+    |
+
+tests/portfolio_construction/test_bands_limits.py:67:5: E741 Ambiguous variable name: `l`
+   |
+65 |     sample = r.loc[b["start"] : b["end"]]
+66 |     policy = BandPolicy(cov, portfolio_limits(cfg), 0.10)
+67 |     l, _ = simulate(sample, targets["trend"], LinearBpsCost(5), position_policy=policy)
+   |     ^ E741
+68 |     executed = pd.DataFrame.from_dict(policy.executed, orient="index", columns=r.columns)
+69 |     replay, _ = simulate(sample, executed, LinearBpsCost(5))
+   |
+
+tests/portfolio_construction/test_bands_limits.py:82:5: E741 Ambiguous variable name: `l`
+   |
+80 |     cov = {month: np.array([[0.01]]) for month in index}
+81 |     policy = BandPolicy(cov, portfolio_limits(settings()), 0.1)
+82 |     l, _ = simulate(r, t, LinearBpsCost(0), liquidate=False, position_policy=policy)
+   |     ^ E741
+83 |     assert l.rebalance_turnover.iloc[0] == 0.1
+84 |     assert l.rebalance_turnover.iloc[1] == 0
+   |
+
+Found 12 errors.
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

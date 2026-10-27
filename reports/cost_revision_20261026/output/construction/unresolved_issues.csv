@@ -1,0 +1,7 @@
+IDs,dates,unresolved,treatment
+AP,2014-07-04;2014-07-25;2014-07-28;2014-07-29,Missing daily sessions; endpoints valid,Retain monthly ratio; no invented daily prices
+SS,1991-1998 year-end,Unresolved vendor coverage,Retain missing endpoints and resulting monthly gaps
+DT;GS;LX;SS,1997-03;1997-04,Exact historical venue calendar not verified,Do not apply calendar corrections
+FN;DA;UZ,seven repeated-OHLC runs,Vendor prices unverified,Retain values; strategy sensitivity excludes entire affected instruments
+ER,2012-05-28,Consistent with settlement carryforward; vendor field meaning unconfirmed,Retain interior row; no monthly endpoint impact
+ALL,all history,"Lecture 4 p14 confirms already rolled; exact adjustment method, contract multipliers and collateral/FX conversion conventions remain unspecified","Results are price-return proxy research, not certified tradable P&L"

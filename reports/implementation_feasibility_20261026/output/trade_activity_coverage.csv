@@ -1,0 +1,11 @@
+strategy,asset_class,events,event_coverage,notional_coverage,incomplete,zero_mean_volume,stale
+trend,ALL,11788,1.0,1.0,0,0,0
+trend,COMM,7618,1.0,1.0,0,0,0
+trend,EQ,1371,1.0,1.0,0,0,0
+trend,FI,1367,1.0,1.0,0,0,0
+trend,FX,1432,1.0,1.0,0,0,0
+static,ALL,8661,1.0,1.0,0,0,0
+static,COMM,5555,1.0,1.0,0,0,0
+static,EQ,983,1.0,1.0,0,0,0
+static,FI,1026,1.0,1.0,0,0,0
+static,FX,1097,1.0,1.0,0,0,0

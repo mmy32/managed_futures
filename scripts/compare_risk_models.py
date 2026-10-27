@@ -1,7 +1,7 @@
 """Compare covariance estimators (equal-weight 36 months, EWMA, fast/slow) on the v2 strategy.
 
 Uses the endpoint-sensitivity returns (the only full-period run), band and cost from risk_config.json.
-Writes reports/qps_baseline/output/risk_model_comparison/comparison.csv.
+Writes a cost/band-specific subdirectory of reports/qps_baseline/output/risk_model_comparison/.
 """
 
 import json
@@ -11,6 +11,7 @@ import pandas as pd
 from run_risk_research import load_returns
 
 from src.backtest.engine import simulate
+from src.backtest.research_spec import primary_key, validate_research_settings
 from src.backtest.performance import performance
 from src.backtest.qps_baseline import forecasts_from, portfolio_limits
 from src.backtest.qps_v2 import load_rules, qps_v2_components
@@ -60,10 +61,12 @@ def evaluate_strategy(sample, source, known, target, covariance, settings):
 
 def load_inputs():
     """Settings, base config and the endpoint-sensitivity data every comparison shares."""
-    OUT.mkdir(parents=True, exist_ok=True)
     settings = json.loads((CONFIG_DIR / "risk_config.json").read_text())
+    validate_research_settings(settings)
+    out = OUT / primary_key(settings, "v2")
+    out.mkdir(parents=True, exist_ok=True)
     base = json.loads((PROJECT_ROOT / settings["base_config"]).read_text())
-    returns, source, known, *_ = load_returns(True, OUT, settings)
+    returns, source, known, *_ = load_returns(True, out, settings)
     return settings, base, returns, source, known, load_asset_map()
 
 
@@ -71,6 +74,7 @@ def compare(inputs, variants, settings=None):
     """One row per estimator and strategy; `settings` overrides risk_config.json (e.g. shrinkage)."""
     default_settings, base, returns, source, known, meta = inputs
     settings = settings or default_settings
+    validate_research_settings(settings)
     rules = load_rules()
     sample = returns.loc[base["start"] : base["end"]]
     rows = []
@@ -89,14 +93,23 @@ def compare(inputs, variants, settings=None):
                 covariance,
                 settings,
             )
-            rows.append({"estimator": name, "strategy": strategy, **summary})
+            rows.append(
+                {
+                    "estimator": name,
+                    "strategy": strategy,
+                    "band": settings["primary_band"],
+                    "cost_bps": settings["primary_cost_bps"],
+                    **summary,
+                }
+            )
     return pd.DataFrame(rows)
 
 
 def main():
     variants = json.loads((CONFIG_DIR / "risk_model_comparison.json").read_text())["variants"]
-    table = compare(load_inputs(), variants)
-    table.to_csv(OUT / "comparison.csv", index=False)
+    inputs = load_inputs()
+    table = compare(inputs, variants)
+    table.to_csv(OUT / primary_key(inputs[0], "v2") / "comparison.csv", index=False)
     print(table.to_string(index=False))
 
 

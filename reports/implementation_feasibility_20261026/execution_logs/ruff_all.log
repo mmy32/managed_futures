@@ -1,0 +1,1086 @@
+notebooks/risk_model_estimators.ipynb:cell 4:11:1: E402 Module level import not at top of cell
+   |
+ 9 | sys.path[:0] = [str(ROOT), str(ROOT / "scripts")]
+10 |
+11 | from compare_risk_models import compare, load_inputs
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+12 | from src.risk_model.rolling import decay_weights
+   |
+
+notebooks/risk_model_estimators.ipynb:cell 4:12:1: E402 Module level import not at top of cell
+   |
+11 | from compare_risk_models import compare, load_inputs
+12 | from src.risk_model.rolling import decay_weights
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+13 |
+14 | import json
+   |
+
+notebooks/risk_model_estimators.ipynb:cell 4:14:1: E402 Module level import not at top of cell
+   |
+12 | from src.risk_model.rolling import decay_weights
+13 |
+14 | import json
+   | ^^^^^^^^^^^ E402
+15 | VARIANTS = json.loads((ROOT / "config" / "risk_model_comparison.json").read_text())["variants"]
+16 | WINDOW = 36
+   |
+
+notebooks/trend_measures.ipynb:cell 30:38:5: E731 Do not assign a `lambda` expression, use a `def`
+   |
+36 |     starts = rng.integers(0, n, size=(BOOT_DRAWS, -(-n // BOOT_BLOCK)))
+37 |     idx = ((starts[:, :, None] + np.arange(BOOT_BLOCK)) % n).reshape(BOOT_DRAWS, -1)[:, :n]
+38 |     sharpe = lambda x: x.mean(axis=1) / x.std(axis=1, ddof=1) * np.sqrt(12)
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E731
+39 |     gain = sharpe(both[idx, 0]) - sharpe(both[idx, 1])
+40 |     lo, hi = np.quantile(gain, [(1 - BOOT_LEVEL) / 2, (1 + BOOT_LEVEL) / 2])
+   |
+   = help: Rewrite `sharpe` as a `def`
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:1:1: E401 [*] Multiple imports on one line
+  |
+1 | import json,os
+  | ^^^^^^^^^^^^^^ E401
+2 | from pathlib import Path
+3 | import numpy as np
+  |
+  = help: Split imports
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:10:55: E702 Multiple statements on one line (semicolon)
+   |
+ 8 | import matplotlib.pyplot as plt
+ 9 |
+10 | root=Path('/Users/anaybhat/Documents/managed_futures'); report=root/'reports/band_experiment_20261026'; out=report/'output'
+   |                                                       ^ E702
+11 | metrics=pd.read_csv(out/'comparison.csv'); pairs=pd.read_csv(out/'paired_comparison.csv'); ci=pd.read_csv(out/'paired_intervals.csv');…
+12 | joined=pairs.merge(ci.query('block_months == 12'),on='run')
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:10:103: E702 Multiple statements on one line (semicolon)
+   |
+ 8 | import matplotlib.pyplot as plt
+ 9 |
+10 | root=Path('/Users/anaybhat/Documents/managed_futures'); report=root/'reports/band_experiment_20261026'; out=report/'output'
+   |                                                                                                       ^ E702
+11 | metrics=pd.read_csv(out/'comparison.csv'); pairs=pd.read_csv(out/'paired_comparison.csv'); ci=pd.read_csv(out/'paired_intervals.csv');…
+12 | joined=pairs.merge(ci.query('block_months == 12'),on='run')
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:11:42: E702 Multiple statements on one line (semicolon)
+   |
+10 | root=Path('/Users/anaybhat/Documents/managed_futures'); report=root/'reports/band_experiment_20261026'; out=report/'output'
+11 | metrics=pd.read_csv(out/'comparison.csv'); pairs=pd.read_csv(out/'paired_comparison.csv'); ci=pd.read_csv(out/'paired_intervals.csv');…
+   |                                          ^ E702
+12 | joined=pairs.merge(ci.query('block_months == 12'),on='run')
+13 | trend=metrics.query('strategy == "trend" and cost_bps == 2').set_index('band')
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:11:90: E702 Multiple statements on one line (semicolon)
+   |
+10 | root=Path('/Users/anaybhat/Documents/managed_futures'); report=root/'reports/band_experiment_20261026'; out=report/'output'
+11 | metrics=pd.read_csv(out/'comparison.csv'); pairs=pd.read_csv(out/'paired_comparison.csv'); ci=pd.read_csv(out/'paired_intervals.csv');…
+   |                                                                                          ^ E702
+12 | joined=pairs.merge(ci.query('block_months == 12'),on='run')
+13 | trend=metrics.query('strategy == "trend" and cost_bps == 2').set_index('band')
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:11:134: E702 Multiple statements on one line (semicolon)
+   |
+10 | …eports/band_experiment_20261026'; out=report/'output'
+11 | …ed_comparison.csv'); ci=pd.read_csv(out/'paired_intervals.csv'); periods=pd.read_csv(out/'subperiods.csv'); trades=pd.read_csv(out/'t…
+   |                                                                 ^ E702
+12 | …
+13 | …('band')
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:11:177: E702 Multiple statements on one line (semicolon)
+   |
+10 | …t/'output'
+11 | …ired_intervals.csv'); periods=pd.read_csv(out/'subperiods.csv'); trades=pd.read_csv(out/'turnover_breakdown.csv')
+   |                                                                 ^ E702
+12 | …
+13 | …
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:43:40: E702 Multiple statements on one line (semicolon)
+   |
+41 | y=np.arange(len(rows))
+42 | axes[0].errorbar(rows.net_difference_ann*10000,y,xerr=np.vstack([(rows.net_difference_ann-rows.ci_low)*10000,(rows.ci_high-rows.net_di…
+43 | axes[0].axvline(0,color='gray',ls='--');axes[0].set_yticks(y,[f'{r.band:.0%} band · {r.cost_bps:g} bps' for r in rows.itertuples()]);a…
+   |                                        ^ E702
+44 | wide=trades.query('strategy == "trend" and cost_bps == 2').pivot(index='band',columns='category',values='turnover_ann').reindex([0,.05…
+45 | bottom=np.zeros(3)
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:43:133: E702 Multiple statements on one line (semicolon)
+   |
+41 | …
+42 | …s.net_difference_ann-rows.ci_low)*10000,(rows.ci_high-rows.net_difference_ann)*10000]),fmt='o',capsize=4,color='#2676a5')
+43 | …nd:.0%} band · {r.cost_bps:g} bps' for r in rows.itertuples()]);axes[0].set(xlabel='Annual mean improvement vs 10% band (bps of NAV)'…
+   |                                                                 ^ E702
+44 | …x='band',columns='category',values='turnover_ann').reindex([0,.05,.1])
+45 | …
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:43:260: E702 Multiple statements on one line (semicolon)
+   |
+41 | …
+42 | …
+43 | … NAV)',title='Paired mean difference and nominal 95% interval');axes[0].invert_yaxis();axes[0].grid(axis='x',alpha=.2)
+   |                                                                 ^ E702
+44 | …
+45 | …
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:43:283: E702 Multiple statements on one line (semicolon)
+   |
+41 | …
+42 | …
+43 | …an difference and nominal 95% interval');axes[0].invert_yaxis();axes[0].grid(axis='x',alpha=.2)
+   |                                                                 ^ E702
+44 | …
+45 | …
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:47:96: E702 Multiple statements on one line (semicolon)
+   |
+45 | bottom=np.zeros(3)
+46 | for category in ['reversals','resizes','entries','exits','source_switches','terminal_liquidation']:
+47 |  axes[1].bar(np.arange(3),wide[category],bottom=bottom,label=category.replace('_',' ').title());bottom+=wide[category].to_numpy()
+   |                                                                                                ^ E702
+48 | axes[1].set_xticks(np.arange(3),['0%','5%','10%']);axes[1].set(xlabel='Relative band',ylabel='Annual one-way turnover / NAV',title='Mo…
+49 | fig.suptitle('V2 TREND · conditional 1976–2014 history\n20,000 paired circular-block bootstrap draws; 12-month blocks',fontsize=12)
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:48:51: E702 Multiple statements on one line (semicolon)
+   |
+46 | for category in ['reversals','resizes','entries','exits','source_switches','terminal_liquidation']:
+47 |  axes[1].bar(np.arange(3),wide[category],bottom=bottom,label=category.replace('_',' ').title());bottom+=wide[category].to_numpy()
+48 | axes[1].set_xticks(np.arange(3),['0%','5%','10%']);axes[1].set(xlabel='Relative band',ylabel='Annual one-way turnover / NAV',title='Mo…
+   |                                                   ^ E702
+49 | fig.suptitle('V2 TREND · conditional 1976–2014 history\n20,000 paired circular-block bootstrap draws; 12-month blocks',fontsize=12)
+50 | fig.savefig(report/'band_comparison.png',dpi=150);plt.close(fig)
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:48:177: E702 Multiple statements on one line (semicolon)
+   |
+46 | …
+47 | …gory].to_numpy()
+48 | …over / NAV',title='Most turnover comes from reversals · 2 bps');axes[1].legend(fontsize=8,ncol=2);axes[1].grid(axis='y',alpha=.2)
+   |                                                                 ^ E702
+49 | …ocks',fontsize=12)
+50 | …
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:48:211: E702 Multiple statements on one line (semicolon)
+   |
+46 | …
+47 | …
+48 | …omes from reversals · 2 bps');axes[1].legend(fontsize=8,ncol=2);axes[1].grid(axis='y',alpha=.2)
+   |                                                                 ^ E702
+49 | …
+50 | …
+   |
+
+reports/band_experiment_20261026/reproduction/generate_report_record.py:50:50: E702 Multiple statements on one line (semicolon)
+   |
+48 | axes[1].set_xticks(np.arange(3),['0%','5%','10%']);axes[1].set(xlabel='Relative band',ylabel='Annual one-way turnover / NAV',title='Mo…
+49 | fig.suptitle('V2 TREND · conditional 1976–2014 history\n20,000 paired circular-block bootstrap draws; 12-month blocks',fontsize=12)
+50 | fig.savefig(report/'band_comparison.png',dpi=150);plt.close(fig)
+   |                                                  ^ E702
+51 |
+52 | text=f'''# Step 3: trading-band experiment
+   |
+
+reports/band_experiment_20261026/reproduction/package_record.py:1:1: E401 [*] Multiple imports on one line
+  |
+1 | import hashlib,json,os,platform,re,shutil,subprocess,sys,zipfile
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E401
+2 | from datetime import datetime,timezone
+3 | from pathlib import Path
+  |
+  = help: Split imports
+
+reports/band_experiment_20261026/reproduction/package_record.py:1:21: F401 [*] `os` imported but unused
+  |
+1 | import hashlib,json,os,platform,re,shutil,subprocess,sys,zipfile
+  |                     ^^ F401
+2 | from datetime import datetime,timezone
+3 | from pathlib import Path
+  |
+  = help: Remove unused import: `os`
+
+reports/band_experiment_20261026/reproduction/package_record.py:5:1: E401 [*] Multiple imports on one line
+  |
+3 | from pathlib import Path
+4 | from xml.etree import ElementTree
+5 | import numpy as np,pandas as pd,statsmodels
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E401
+6 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/band_experiment_20261026'; reference=root/'reports/cost_revi…
+7 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+  |
+  = help: Split imports
+
+reports/band_experiment_20261026/reproduction/package_record.py:6:55: E702 Multiple statements on one line (semicolon)
+  |
+4 | from xml.etree import ElementTree
+5 | import numpy as np,pandas as pd,statsmodels
+6 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/band_experiment_20261026'; reference=root/'reports/cost_revi…
+  |                                                       ^ E702
+7 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+8 | logs=dest/'execution_logs';logs.mkdir(exist_ok=True)
+  |
+
+reports/band_experiment_20261026/reproduction/package_record.py:6:101: E702 Multiple statements on one line (semicolon)
+  |
+4 | from xml.etree import ElementTree
+5 | import numpy as np,pandas as pd,statsmodels
+6 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/band_experiment_20261026'; reference=root/'reports/cost_revi…
+  |                                                                                                     ^ E702
+7 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+8 | logs=dest/'execution_logs';logs.mkdir(exist_ok=True)
+  |
+
+reports/band_experiment_20261026/reproduction/package_record.py:7:26: E702 Multiple statements on one line (semicolon)
+  |
+5 | import numpy as np,pandas as pd,statsmodels
+6 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/band_experiment_20261026'; reference=root/'reports/cost_rev…
+7 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+  |                          ^ E702
+8 | logs=dest/'execution_logs';logs.mkdir(exist_ok=True)
+9 | for name in ['qps_step3_run.log','qps_step3_pytest.log','qps_step3_pytest.xml','qps_step3_mypy.log']:
+  |
+
+reports/band_experiment_20261026/reproduction/package_record.py:8:27: E702 Multiple statements on one line (semicolon)
+   |
+ 6 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/band_experiment_20261026'; reference=root/'reports/cost_rev…
+ 7 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+ 8 | logs=dest/'execution_logs';logs.mkdir(exist_ok=True)
+   |                           ^ E702
+ 9 | for name in ['qps_step3_run.log','qps_step3_pytest.log','qps_step3_pytest.xml','qps_step3_mypy.log']:
+10 |  shutil.copy2(Path('/private/tmp')/name,logs/name)
+   |
+
+reports/band_experiment_20261026/reproduction/package_record.py:30:21: E702 Multiple statements on one line (semicolon)
+   |
+28 | pd.DataFrame(rows).to_csv(out / "reversal_execution.csv", index=False)
+29 | ''')
+30 | inputs=dest/'inputs';inputs.mkdir(exist_ok=True)
+   |                     ^ E702
+31 | input_files={
+32 |  'returns_used.csv':reference/'output/endpoint_sensitivity_v2/returns_used.csv',
+   |
+
+reports/band_experiment_20261026/reproduction/package_record.py:43:34: E701 Multiple statements on one line (colon)
+   |
+41 | }
+42 | def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+43 | for name,p in input_files.items():shutil.copy2(p,inputs/name)
+   |                                  ^ E701
+44 | source_files=[]
+45 | for folder,pattern in [('src','*.py'),('scripts','*.py'),('tests','*.py'),('config','*.json'),('docs','*.md')]:source_files.extend(sor…
+   |
+
+reports/band_experiment_20261026/reproduction/package_record.py:45:111: E701 Multiple statements on one line (colon)
+   |
+43 | for name,p in input_files.items():shutil.copy2(p,inputs/name)
+44 | source_files=[]
+45 | for folder,pattern in [('src','*.py'),('scripts','*.py'),('tests','*.py'),('config','*.json'),('docs','*.md')]:source_files.extend(sor…
+   |                                                                                                               ^ E701
+46 | source_files += [root/'pyproject.toml',root/'README.md']
+47 | source_hashes={str(p.relative_to(root)):digest(p) for p in source_files}
+   |
+
+reports/band_experiment_20261026/reproduction/package_record.py:49:23: E701 Multiple statements on one line (colon)
+   |
+47 | source_hashes={str(p.relative_to(root)):digest(p) for p in source_files}
+48 | with zipfile.ZipFile(repro/'source_snapshot.zip','w',zipfile.ZIP_DEFLATED) as archive:
+49 |  for p in source_files:archive.write(p,str(p.relative_to(root)))
+   |                       ^ E701
+50 | (repro/'source_hashes.json').write_text(json.dumps(source_hashes,indent=2)+'\n')
+51 | suites=ElementTree.parse(logs/'qps_step3_pytest.xml').getroot().iter('testsuite')
+   |
+
+reports/band_experiment_20261026/reproduction/package_record.py:54:17: E701 Multiple statements on one line (colon)
+   |
+52 | totals={k:0 for k in ['tests','failures','errors','skipped']}
+53 | for suite in suites:
+54 |  for k in totals:totals[k]+=int(suite.attrib.get(k,0))
+   |                 ^ E701
+55 | assert totals['tests']==143 and totals['failures']==totals['errors']==0
+56 | (dest/'test_validation.json').write_text(json.dumps(dict(command='/opt/anaconda3/bin/python -m pytest -q --junitxml=/private/tmp/qps_s…
+   |
+
+reports/band_experiment_20261026/reproduction/package_record.py:58:88: E701 Multiple statements on one line (colon)
+   |
+56 | (dest/'test_validation.json').write_text(json.dumps(dict(command='/opt/anaconda3/bin/python -m pytest -q --junitxml=/private/tmp/qps_s…
+57 | old=json.loads((reference/'provenance.json').read_text())
+58 | for name,expected in json.loads((reference/'ARTIFACT_SHA256.json').read_text()).items():assert digest(reference/name)==expected,name
+   |                                                                                        ^ E701
+59 | for hashes in [old['raw_hashes'],old['preserved_historical_hashes']]:
+60 |  for name,expected in hashes.items():assert digest(root/name)==expected,name
+   |
+
+reports/band_experiment_20261026/reproduction/package_record.py:60:37: E701 Multiple statements on one line (colon)
+   |
+58 | for name,expected in json.loads((reference/'ARTIFACT_SHA256.json').read_text()).items():assert digest(reference/name)==expected,name
+59 | for hashes in [old['raw_hashes'],old['preserved_historical_hashes']]:
+60 |  for name,expected in hashes.items():assert digest(root/name)==expected,name
+   |                                     ^ E701
+61 | assert digest(root/'config/risk_config.json')==json.loads((reference/'reproduction/source_hashes.json').read_text())['config/risk_conf…
+62 | provenance=dict(created_utc=datetime.now(timezone.utc).isoformat(),git_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=roo…
+   |
+
+reports/band_experiment_20261026/reproduction/package_record.py:92:1: E402 Module level import not at top of file
+   |
+90 | ''')
+91 | sys.path[:0]=[str(root),str(root/'scripts')]
+92 | import export_report
+   | ^^^^^^^^^^^^^^^^^^^^ E402
+93 | export_report.QPS_REPORT_DIR=dest
+94 | export_report.main('SUMMARY.md')
+   |
+
+reports/band_experiment_20261026/reproduction/package_record.py:98:104: E701 Multiple statements on one line (colon)
+    |
+ 96 | for p in dest.glob('*.md'):
+ 97 |  for url in re.findall(r'\]\(([^)]+)\)',p.read_text()):
+ 98 |   if not url.startswith(('http:','https:','#','mailto:')) and not (p.parent/url.split('#')[0]).exists():missing.append((p.name,url))
+    |                                                                                                        ^ E701
+ 99 | assert not missing,missing
+100 | assert (dest/'SUMMARY.html').read_text().count('data:image/png;base64,')==1
+    |
+
+reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py:11:1: E402 Module level import not at top of file
+   |
+ 9 | STAGE=Path(STATE['stage'])
+10 | sys.path[:0]=[str(STAGE),str(STAGE/'scripts')]
+11 | from run_risk_research import evaluate, strategy_builders, write_attribution
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+12 | from compare_risk_models import compare, load_inputs
+13 | from src.backtest.research_spec import primary_key
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py:12:1: E402 Module level import not at top of file
+   |
+10 | sys.path[:0]=[str(STAGE),str(STAGE/'scripts')]
+11 | from run_risk_research import evaluate, strategy_builders, write_attribution
+12 | from compare_risk_models import compare, load_inputs
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+13 | from src.backtest.research_spec import primary_key
+14 | from src.config import QPS_OUTPUT_DIR, CONFIG_DIR
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py:13:1: E402 Module level import not at top of file
+   |
+11 | from run_risk_research import evaluate, strategy_builders, write_attribution
+12 | from compare_risk_models import compare, load_inputs
+13 | from src.backtest.research_spec import primary_key
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+14 | from src.config import QPS_OUTPUT_DIR, CONFIG_DIR
+15 | from src.data_loader import load_asset_map
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py:14:1: E402 Module level import not at top of file
+   |
+12 | from compare_risk_models import compare, load_inputs
+13 | from src.backtest.research_spec import primary_key
+14 | from src.config import QPS_OUTPUT_DIR, CONFIG_DIR
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+15 | from src.data_loader import load_asset_map
+16 | from src.data_processing.strategy_inputs import load_strategy_inputs
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py:15:1: E402 Module level import not at top of file
+   |
+13 | from src.backtest.research_spec import primary_key
+14 | from src.config import QPS_OUTPUT_DIR, CONFIG_DIR
+15 | from src.data_loader import load_asset_map
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+16 | from src.data_processing.strategy_inputs import load_strategy_inputs
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py:16:1: E402 Module level import not at top of file
+   |
+14 | from src.config import QPS_OUTPUT_DIR, CONFIG_DIR
+15 | from src.data_loader import load_asset_map
+16 | from src.data_processing.strategy_inputs import load_strategy_inputs
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+17 |
+18 | settings=json.loads((CONFIG_DIR/'risk_config.json').read_text())
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py:22:11: E702 Multiple statements on one line (semicolon)
+   |
+20 | meta=load_asset_map()
+21 | _, source, known, _=load_strategy_inputs(settings)
+22 | classes=[]; comparisons=[]; checks=[]
+   |           ^ E702
+23 | for variant,folder in [('baseline','endpoint_sensitivity'),('v2','endpoint_sensitivity_v2')]:
+24 |     out=QPS_OUTPUT_DIR/folder
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py:22:27: E702 Multiple statements on one line (semicolon)
+   |
+20 | meta=load_asset_map()
+21 | _, source, known, _=load_strategy_inputs(settings)
+22 | classes=[]; comparisons=[]; checks=[]
+   |                           ^ E702
+23 | for variant,folder in [('baseline','endpoint_sensitivity'),('v2','endpoint_sensitivity_v2')]:
+24 |     out=QPS_OUTPUT_DIR/folder
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_package.py:1:1: E401 [*] Multiple imports on one line
+  |
+1 | import hashlib,json,os,re,shutil,zipfile
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E401
+2 | from pathlib import Path
+3 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/cost_revision_20261026'
+  |
+  = help: Split imports
+
+reports/cost_revision_20261026/reproduction/qps_step2_package.py:3:55: E702 Multiple statements on one line (semicolon)
+  |
+1 | import hashlib,json,os,re,shutil,zipfile
+2 | from pathlib import Path
+3 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/cost_revision_20261026'
+  |                                                       ^ E702
+4 | state=json.loads(Path('/private/tmp/qps-cost-revision-state.json').read_text());stage=Path(state['stage'])
+5 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+  |
+
+reports/cost_revision_20261026/reproduction/qps_step2_package.py:4:80: E702 Multiple statements on one line (semicolon)
+  |
+2 | from pathlib import Path
+3 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/cost_revision_20261026'
+4 | state=json.loads(Path('/private/tmp/qps-cost-revision-state.json').read_text());stage=Path(state['stage'])
+  |                                                                                ^ E702
+5 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+6 | for name in ['qps_step2_run.py','qps_step2_diagnostics.py','qps_step2_refresh.py','qps_step2_publish.py','qps_step2_package.py']:
+  |
+
+reports/cost_revision_20261026/reproduction/qps_step2_package.py:5:26: E702 Multiple statements on one line (semicolon)
+  |
+3 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/cost_revision_20261026'
+4 | state=json.loads(Path('/private/tmp/qps-cost-revision-state.json').read_text());stage=Path(state['stage'])
+5 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+  |                          ^ E702
+6 | for name in ['qps_step2_run.py','qps_step2_diagnostics.py','qps_step2_refresh.py','qps_step2_publish.py','qps_step2_package.py']:
+7 |  shutil.copy2(Path('/private/tmp')/name,repro/name)
+  |
+
+reports/cost_revision_20261026/reproduction/qps_step2_package.py:15:16: E701 Multiple statements on one line (colon)
+   |
+13 | hashes={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+14 | with zipfile.ZipFile(repro/'source_snapshot.zip','w',zipfile.ZIP_DEFLATED) as archive:
+15 |  for p in files:archive.write(p,str(p.relative_to(root)))
+   |                ^ E701
+16 | (repro/'source_hashes.json').write_text(json.dumps(hashes,indent=2)+'\n')
+17 | for p in (dest/'supporting_docs').glob('*.md'):
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_package.py:20:54: E701 Multiple statements on one line (colon)
+   |
+18 |  def relink(match):
+19 |   label,url=match.groups()
+20 |   if url.startswith(('http:','https:','#','mailto:')):return match.group(0)
+   |                                                      ^ E701
+21 |   target=(stage/'docs'/url).resolve()
+22 |   if target.is_relative_to(stage/'reports/qps_baseline'):
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_package.py:24:36: E701 Multiple statements on one line (colon)
+   |
+22 |   if target.is_relative_to(stage/'reports/qps_baseline'):
+23 |    actual=dest/target.relative_to(stage/'reports/qps_baseline')
+24 |   elif target.is_relative_to(stage):actual=root/target.relative_to(stage)
+   |                                    ^ E701
+25 |   else:return match.group(0)
+26 |   return f'[{label}]({os.path.relpath(actual,p.parent)})'
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_package.py:25:7: E701 Multiple statements on one line (colon)
+   |
+23 |    actual=dest/target.relative_to(stage/'reports/qps_baseline')
+24 |   elif target.is_relative_to(stage):actual=root/target.relative_to(stage)
+25 |   else:return match.group(0)
+   |       ^ E701
+26 |   return f'[{label}]({os.path.relpath(actual,p.parent)})'
+27 |  p.write_text(re.sub(r'\[([^\]]+)\]\(([^)]+)\)',relink,p.read_text()))
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_package.py:72:30: E702 Multiple statements on one line (semicolon)
+   |
+70 | # Ensure final report claims match the tested source and figures are embedded for offline use.
+71 | for name in ['REPORT.md','REPORT_V2.md']:
+72 |  text=(dest/name).read_text(); assert '140 tests pass' in text
+   |                              ^ E702
+73 |  assert '**2 bps per unit of one-way' in text
+74 |  assert 'half size when they differ' not in text
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_package.py:82:104: E701 Multiple statements on one line (colon)
+   |
+80 | for p in list(dest.glob('*.md'))+list((dest/'supporting_docs').glob('*.md')):
+81 |  for url in re.findall(r'\]\(([^)]+)\)',p.read_text()):
+82 |   if not url.startswith(('http:','https:','#','mailto:')) and not (p.parent/url.split('#')[0]).exists():missing.append((str(p.relative…
+   |                                                                                                        ^ E701
+83 | print('Missing local links:',missing)
+84 | assert not missing
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_publish.py:1:1: E401 [*] Multiple imports on one line
+  |
+1 | import hashlib,json,shutil,subprocess
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E401
+2 | from datetime import datetime,timezone
+3 | from pathlib import Path
+  |
+  = help: Split imports
+
+reports/cost_revision_20261026/reproduction/qps_step2_publish.py:1:8: F401 [*] `hashlib` imported but unused
+  |
+1 | import hashlib,json,shutil,subprocess
+  |        ^^^^^^^ F401
+2 | from datetime import datetime,timezone
+3 | from pathlib import Path
+  |
+  = help: Remove unused import: `hashlib`
+
+reports/cost_revision_20261026/reproduction/qps_step2_publish.py:7:80: E702 Multiple statements on one line (semicolon)
+  |
+6 | root=Path('/Users/anaybhat/Documents/managed_futures')
+7 | state=json.loads(Path('/private/tmp/qps-cost-revision-state.json').read_text()); stage=Path(state['stage'])
+  |                                                                                ^ E702
+8 | report=stage/'reports/qps_baseline'; source=report/'output'
+9 | dest=root/'reports/cost_revision_20261026'
+  |
+
+reports/cost_revision_20261026/reproduction/qps_step2_publish.py:8:36: E702 Multiple statements on one line (semicolon)
+   |
+ 6 | root=Path('/Users/anaybhat/Documents/managed_futures')
+ 7 | state=json.loads(Path('/private/tmp/qps-cost-revision-state.json').read_text()); stage=Path(state['stage'])
+ 8 | report=stage/'reports/qps_baseline'; source=report/'output'
+   |                                    ^ E702
+ 9 | dest=root/'reports/cost_revision_20261026'
+10 | assert not dest.exists(), 'Do not overwrite an existing cost-revision release'
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_publish.py:18:47: E702 Multiple statements on one line (semicolon)
+   |
+16 | for name in ['cost_comparison.csv','class_cost_comparison.csv','cost_validation.json']:
+17 |  shutil.copy2(source/name,dest/'output'/name)
+18 | model_dest=dest/'output/risk_model_comparison'; model_dest.mkdir()
+   |                                               ^ E702
+19 | shutil.copy2(source/'risk_model_comparison/cost_comparison.csv',model_dest/'cost_comparison.csv')
+20 | shutil.copytree(stage/'execution_logs',dest/'execution_logs')
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_publish.py:21:40: E702 Multiple statements on one line (semicolon)
+   |
+19 | shutil.copy2(source/'risk_model_comparison/cost_comparison.csv',model_dest/'cost_comparison.csv')
+20 | shutil.copytree(stage/'execution_logs',dest/'execution_logs')
+21 | reference=dest/'reference_reproduction';reference.mkdir()
+   |                                        ^ E702
+22 | shutil.copy2(stage/'reference_reproduction/checks.json',reference/'checks.json')
+23 | for variant,folder in [('baseline','endpoint_sensitivity'),('v2','endpoint_sensitivity_v2')]:
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_publish.py:24:21: E702 Multiple statements on one line (semicolon)
+   |
+22 | shutil.copy2(stage/'reference_reproduction/checks.json',reference/'checks.json')
+23 | for variant,folder in [('baseline','endpoint_sensitivity'),('v2','endpoint_sensitivity_v2')]:
+24 |  d=reference/variant; d.mkdir()
+   |                     ^ E702
+25 |  original=root/'reports/qps_baseline/output'/folder
+26 |  for name in ['comparison.csv','alpha.csv','manifest.json']:
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_publish.py:29:79: E701 Multiple statements on one line (colon)
+   |
+27 |   shutil.copy2(stage/'reference_reproduction'/variant/name,d/name)
+28 |   shutil.copy2(original/name,d/f'original_{name}')
+29 |  for p in (stage/'reference_reproduction'/variant).glob('*_5bps_*_ledger.csv'):shutil.copy2(p,d/p.name)
+   |                                                                               ^ E701
+30 |  for name in ['config','base_config']:
+31 |   value=json.loads((original/'manifest.json').read_text())[name]
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_refresh.py:1:1: E401 [*] Multiple imports on one line
+  |
+1 | import json,os,subprocess,sys
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E401
+2 | from pathlib import Path
+3 | import pandas as pd
+  |
+  = help: Split imports
+
+reports/cost_revision_20261026/reproduction/qps_step2_refresh.py:1:13: F401 [*] `os` imported but unused
+  |
+1 | import json,os,subprocess,sys
+  |             ^^ F401
+2 | from pathlib import Path
+3 | import pandas as pd
+  |
+  = help: Remove unused import
+
+reports/cost_revision_20261026/reproduction/qps_step2_refresh.py:1:16: F401 [*] `subprocess` imported but unused
+  |
+1 | import json,os,subprocess,sys
+  |                ^^^^^^^^^^ F401
+2 | from pathlib import Path
+3 | import pandas as pd
+  |
+  = help: Remove unused import
+
+reports/cost_revision_20261026/reproduction/qps_step2_refresh.py:5:27: E702 Multiple statements on one line (semicolon)
+  |
+3 | import pandas as pd
+4 | state=json.loads(Path('/private/tmp/qps-cost-revision-state.json').read_text())
+5 | stage=Path(state['stage']); sys.path[:0]=[str(stage),str(stage/'scripts')]
+  |                           ^ E702
+6 | from src.config import QPS_OUTPUT_DIR, QPS_REPORT_DIR,CONFIG_DIR
+7 | from research_report import write_report
+  |
+
+reports/cost_revision_20261026/reproduction/qps_step2_refresh.py:6:1: E402 Module level import not at top of file
+  |
+4 | state=json.loads(Path('/private/tmp/qps-cost-revision-state.json').read_text())
+5 | stage=Path(state['stage']); sys.path[:0]=[str(stage),str(stage/'scripts')]
+6 | from src.config import QPS_OUTPUT_DIR, QPS_REPORT_DIR,CONFIG_DIR
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+7 | from research_report import write_report
+8 | from run_risk_research import write_manifest
+  |
+
+reports/cost_revision_20261026/reproduction/qps_step2_refresh.py:7:1: E402 Module level import not at top of file
+  |
+5 | stage=Path(state['stage']); sys.path[:0]=[str(stage),str(stage/'scripts')]
+6 | from src.config import QPS_OUTPUT_DIR, QPS_REPORT_DIR,CONFIG_DIR
+7 | from research_report import write_report
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+8 | from run_risk_research import write_manifest
+9 | from export_report import main as export
+  |
+
+reports/cost_revision_20261026/reproduction/qps_step2_refresh.py:8:1: E402 Module level import not at top of file
+   |
+ 6 | from src.config import QPS_OUTPUT_DIR, QPS_REPORT_DIR,CONFIG_DIR
+ 7 | from research_report import write_report
+ 8 | from run_risk_research import write_manifest
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+ 9 | from export_report import main as export
+10 | from run_research import validate
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_refresh.py:9:1: E402 Module level import not at top of file
+   |
+ 7 | from research_report import write_report
+ 8 | from run_risk_research import write_manifest
+ 9 | from export_report import main as export
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+10 | from run_research import validate
+11 | # Record validation against the final report wording as well as the calculation code.
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_refresh.py:10:1: E402 Module level import not at top of file
+   |
+ 8 | from run_risk_research import write_manifest
+ 9 | from export_report import main as export
+10 | from run_research import validate
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E402
+11 | # Record validation against the final report wording as well as the calculation code.
+12 | validate()
+   |
+
+reports/cost_revision_20261026/reproduction/qps_step2_refresh.py:17:2: E731 Do not assign a `lambda` expression, use a `def`
+   |
+15 | for variant,folder,name in [('baseline','endpoint_sensitivity','REPORT.md'),('v2','endpoint_sensitivity_v2','REPORT_V2.md')]:
+16 |  out=QPS_OUTPUT_DIR/folder
+17 |  read=lambda name:pd.read_csv(out/name)
+   |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E731
+18 |  write_report(read('comparison.csv'),read('alpha.csv'),read('class_statistics.csv'),read('autocorrelation.csv'),{s:read(f'{s}_class_at…
+19 |  write_manifest(settings,base,state['raw_hashes'],out)
+   |
+   = help: Rewrite `read` as a `def`
+
+reports/cost_revision_20261026/reproduction/qps_step2_run.py:2:8: F401 [*] `hashlib` imported but unused
+  |
+1 | """Controlled rerun in a disposable copy; original reports are read-only references."""
+2 | import hashlib
+  |        ^^^^^^^ F401
+3 | import json
+4 | import os
+  |
+  = help: Remove unused import: `hashlib`
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:1:1: E401 [*] Multiple imports on one line
+  |
+1 | import json,os
+  | ^^^^^^^^^^^^^^ E401
+2 | from pathlib import Path
+3 | import numpy as np,pandas as pd
+  |
+  = help: Split imports
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:3:1: E401 [*] Multiple imports on one line
+  |
+1 | import json,os
+2 | from pathlib import Path
+3 | import numpy as np,pandas as pd
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E401
+4 | os.environ.setdefault('MPLCONFIGDIR','/private/tmp/qps-step4-matplotlib')
+5 | import matplotlib
+  |
+  = help: Split imports
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:9:55: E702 Multiple statements on one line (semicolon)
+   |
+ 7 | import matplotlib.pyplot as plt
+ 8 | from matplotlib.ticker import PercentFormatter
+ 9 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/roll_sensitivity_20261026'; out=dest/'output'
+   |                                                       ^ E702
+10 | t=pd.read_csv(out/'comparison.csv')
+11 | trend=t.query('strategy == "trend" and trade_bps == 2').set_index(['calendar','roll_bps'])
+   |
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:9:102: E702 Multiple statements on one line (semicolon)
+   |
+ 7 | import matplotlib.pyplot as plt
+ 8 | from matplotlib.ticker import PercentFormatter
+ 9 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/roll_sensitivity_20261026'; out=dest/'output'
+   |                                                                                                      ^ E702
+10 | t=pd.read_csv(out/'comparison.csv')
+11 | trend=t.query('strategy == "trend" and trade_bps == 2').set_index(['calendar','roll_bps'])
+   |
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:24:24: E702 Multiple statements on one line (semicolon)
+   |
+22 | selected=[('trade_only',0),('quarterly_mar',1),('quarterly_mar',2),('monthly',1),('monthly',2)]
+23 | chart=trend.loc[selected]
+24 | x=np.arange(len(chart));names=['Trade only','Quarterly\n1 bp/roll','Quarterly\n2 bps/roll','Monthly\n1 bp/roll','Monthly\n2 bps/roll']
+   |                        ^ E702
+25 | fig,axes=plt.subplots(1,2,figsize=(12,5),layout='constrained')
+26 | axes[0].bar(x,chart.ordinary_cost_ann*10000,label='Ordinary trades',color='#2676a5')
+   |
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:28:105: E702 Multiple statements on one line (semicolon)
+   |
+26 | axes[0].bar(x,chart.ordinary_cost_ann*10000,label='Ordinary trades',color='#2676a5')
+27 | axes[0].bar(x,chart.roll_cost_ann*10000,bottom=chart.ordinary_cost_ann*10000,label='Assumed roll execution',color='#ce7c27')
+28 | axes[0].set(ylabel='Annual booked cost (bps of NAV)',title='Roll frequency can materially change costs');axes[0].legend(fontsize=9)
+   |                                                                                                         ^ E702
+29 | axes[1].bar(x,chart.cagr,color='#2676a5');axes[1].yaxis.set_major_formatter(PercentFormatter(1));axes[1].set(ylabel='Net CAGR',title='…
+30 | for i,r in enumerate(chart.itertuples()):axes[1].text(i,r.cagr+.002,f'{r.cagr:.2%}',ha='center',fontsize=9)
+   |
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:29:42: E702 Multiple statements on one line (semicolon)
+   |
+27 | axes[0].bar(x,chart.roll_cost_ann*10000,bottom=chart.ordinary_cost_ann*10000,label='Assumed roll execution',color='#ce7c27')
+28 | axes[0].set(ylabel='Annual booked cost (bps of NAV)',title='Roll frequency can materially change costs');axes[0].legend(fontsize=9)
+29 | axes[1].bar(x,chart.cagr,color='#2676a5');axes[1].yaxis.set_major_formatter(PercentFormatter(1));axes[1].set(ylabel='Net CAGR',title='…
+   |                                          ^ E702
+30 | for i,r in enumerate(chart.itertuples()):axes[1].text(i,r.cagr+.002,f'{r.cagr:.2%}',ha='center',fontsize=9)
+31 | for ax in axes:ax.set_xticks(x,names);ax.grid(axis='y',alpha=.2)
+   |
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:29:97: E702 Multiple statements on one line (semicolon)
+   |
+27 | axes[0].bar(x,chart.roll_cost_ann*10000,bottom=chart.ordinary_cost_ann*10000,label='Assumed roll execution',color='#ce7c27')
+28 | axes[0].set(ylabel='Annual booked cost (bps of NAV)',title='Roll frequency can materially change costs');axes[0].legend(fontsize=9)
+29 | axes[1].bar(x,chart.cagr,color='#2676a5');axes[1].yaxis.set_major_formatter(PercentFormatter(1));axes[1].set(ylabel='Net CAGR',title='…
+   |                                                                                                 ^ E702
+30 | for i,r in enumerate(chart.itertuples()):axes[1].text(i,r.cagr+.002,f'{r.cagr:.2%}',ha='center',fontsize=9)
+31 | for ax in axes:ax.set_xticks(x,names);ax.grid(axis='y',alpha=.2)
+   |
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:30:41: E701 Multiple statements on one line (colon)
+   |
+28 | axes[0].set(ylabel='Annual booked cost (bps of NAV)',title='Roll frequency can materially change costs');axes[0].legend(fontsize=9)
+29 | axes[1].bar(x,chart.cagr,color='#2676a5');axes[1].yaxis.set_major_formatter(PercentFormatter(1));axes[1].set(ylabel='Net CAGR',title='…
+30 | for i,r in enumerate(chart.itertuples()):axes[1].text(i,r.cagr+.002,f'{r.cagr:.2%}',ha='center',fontsize=9)
+   |                                         ^ E701
+31 | for ax in axes:ax.set_xticks(x,names);ax.grid(axis='y',alpha=.2)
+32 | fig.suptitle('Hypothetical roll sensitivity · V2 TREND · regular trades 2 bps · band 10%\nQuarterly illustration: Mar/Jun/Sep/Dec; rol…
+   |
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:31:15: E701 Multiple statements on one line (colon)
+   |
+29 | axes[1].bar(x,chart.cagr,color='#2676a5');axes[1].yaxis.set_major_formatter(PercentFormatter(1));axes[1].set(ylabel='Net CAGR',title='…
+30 | for i,r in enumerate(chart.itertuples()):axes[1].text(i,r.cagr+.002,f'{r.cagr:.2%}',ha='center',fontsize=9)
+31 | for ax in axes:ax.set_xticks(x,names);ax.grid(axis='y',alpha=.2)
+   |               ^ E701
+32 | fig.suptitle('Hypothetical roll sensitivity · V2 TREND · regular trades 2 bps · band 10%\nQuarterly illustration: Mar/Jun/Sep/Dec; rol…
+33 | fig.savefig(dest/'roll_sensitivity.png',dpi=150);plt.close(fig)
+   |
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:31:38: E702 Multiple statements on one line (semicolon)
+   |
+29 | axes[1].bar(x,chart.cagr,color='#2676a5');axes[1].yaxis.set_major_formatter(PercentFormatter(1));axes[1].set(ylabel='Net CAGR',title='…
+30 | for i,r in enumerate(chart.itertuples()):axes[1].text(i,r.cagr+.002,f'{r.cagr:.2%}',ha='center',fontsize=9)
+31 | for ax in axes:ax.set_xticks(x,names);ax.grid(axis='y',alpha=.2)
+   |                                      ^ E702
+32 | fig.suptitle('Hypothetical roll sensitivity · V2 TREND · regular trades 2 bps · band 10%\nQuarterly illustration: Mar/Jun/Sep/Dec; rol…
+33 | fig.savefig(dest/'roll_sensitivity.png',dpi=150);plt.close(fig)
+   |
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:33:49: E702 Multiple statements on one line (semicolon)
+   |
+31 | for ax in axes:ax.set_xticks(x,names);ax.grid(axis='y',alpha=.2)
+32 | fig.suptitle('Hypothetical roll sensitivity · V2 TREND · regular trades 2 bps · band 10%\nQuarterly illustration: Mar/Jun/Sep/Dec; rol…
+33 | fig.savefig(dest/'roll_sensitivity.png',dpi=150);plt.close(fig)
+   |                                                 ^ E702
+34 | monthly=trend.loc[('monthly',2)];base=trend.loc[('trade_only',0)]
+35 | text=f'''# Step 4: roll-cost audit and conditional sensitivity
+   |
+
+reports/roll_sensitivity_20261026/reproduction/generate_report_record.py:34:33: E702 Multiple statements on one line (semicolon)
+   |
+32 | fig.suptitle('Hypothetical roll sensitivity · V2 TREND · regular trades 2 bps · band 10%\nQuarterly illustration: Mar/Jun/Sep/Dec; rol…
+33 | fig.savefig(dest/'roll_sensitivity.png',dpi=150);plt.close(fig)
+34 | monthly=trend.loc[('monthly',2)];base=trend.loc[('trade_only',0)]
+   |                                 ^ E702
+35 | text=f'''# Step 4: roll-cost audit and conditional sensitivity
+   |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:1:1: E401 [*] Multiple imports on one line
+  |
+1 | import hashlib,json,platform,re,shutil,subprocess,sys,zipfile
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E401
+2 | from datetime import datetime,timezone
+3 | from pathlib import Path
+  |
+  = help: Split imports
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:5:1: E401 [*] Multiple imports on one line
+  |
+3 | from pathlib import Path
+4 | from xml.etree import ElementTree
+5 | import numpy as np,pandas as pd,statsmodels
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E401
+6 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/roll_sensitivity_20261026'; ref=root/'reports/cost_revision_…
+7 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+  |
+  = help: Split imports
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:6:55: E702 Multiple statements on one line (semicolon)
+  |
+4 | from xml.etree import ElementTree
+5 | import numpy as np,pandas as pd,statsmodels
+6 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/roll_sensitivity_20261026'; ref=root/'reports/cost_revision_…
+  |                                                       ^ E702
+7 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+8 | logs=dest/'execution_logs';logs.mkdir(exist_ok=True)
+  |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:6:102: E702 Multiple statements on one line (semicolon)
+  |
+4 | from xml.etree import ElementTree
+5 | import numpy as np,pandas as pd,statsmodels
+6 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/roll_sensitivity_20261026'; ref=root/'reports/cost_revision_…
+  |                                                                                                      ^ E702
+7 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+8 | logs=dest/'execution_logs';logs.mkdir(exist_ok=True)
+  |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:6:145: E702 Multiple statements on one line (semicolon)
+  |
+4 | …
+5 | …
+6 | …sensitivity_20261026'; ref=root/'reports/cost_revision_20261026'; band=root/'reports/band_experiment_20261026'
+  |                                                                  ^ E702
+7 | …
+8 | …
+  |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:7:26: E702 Multiple statements on one line (semicolon)
+  |
+5 | import numpy as np,pandas as pd,statsmodels
+6 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/roll_sensitivity_20261026'; ref=root/'reports/cost_revision…
+7 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+  |                          ^ E702
+8 | logs=dest/'execution_logs';logs.mkdir(exist_ok=True)
+9 | for name in ['qps_step4_run.log','qps_step4_targeted.log','qps_step4_roll_tests.log','qps_step4_pytest.log','qps_step4_pytest.xml','qp…
+  |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:8:27: E702 Multiple statements on one line (semicolon)
+   |
+ 6 | root=Path('/Users/anaybhat/Documents/managed_futures'); dest=root/'reports/roll_sensitivity_20261026'; ref=root/'reports/cost_revision…
+ 7 | repro=dest/'reproduction';repro.mkdir(exist_ok=True)
+ 8 | logs=dest/'execution_logs';logs.mkdir(exist_ok=True)
+   |                           ^ E702
+ 9 | for name in ['qps_step4_run.log','qps_step4_targeted.log','qps_step4_roll_tests.log','qps_step4_pytest.log','qps_step4_pytest.xml','qp…
+10 |  shutil.copy2(Path('/private/tmp')/name,logs/name)
+   |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:15:111: E701 Multiple statements on one line (colon)
+   |
+13 | def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+14 | source=[]
+15 | for folder,pattern in [('src','*.py'),('scripts','*.py'),('tests','*.py'),('config','*.json'),('docs','*.md')]:source.extend(sorted((r…
+   |                                                                                                               ^ E701
+16 | source += [root/'README.md',root/'pyproject.toml',root/'.gitignore']
+17 | hashes={str(p.relative_to(root)):digest(p) for p in source}
+   |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:19:17: E701 Multiple statements on one line (colon)
+   |
+17 | hashes={str(p.relative_to(root)):digest(p) for p in source}
+18 | with zipfile.ZipFile(repro/'source_snapshot.zip','w',zipfile.ZIP_DEFLATED) as archive:
+19 |  for p in source:archive.write(p,str(p.relative_to(root)))
+   |                 ^ E701
+20 | (repro/'source_hashes.json').write_text(json.dumps(hashes,indent=2)+'\n')
+21 | inputs=dest/'inputs';inputs.mkdir(exist_ok=True)
+   |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:21:21: E702 Multiple statements on one line (semicolon)
+   |
+19 |  for p in source:archive.write(p,str(p.relative_to(root)))
+20 | (repro/'source_hashes.json').write_text(json.dumps(hashes,indent=2)+'\n')
+21 | inputs=dest/'inputs';inputs.mkdir(exist_ok=True)
+   |                     ^ E702
+22 | paths={
+23 |  'returns_used.csv':ref/'output/endpoint_sensitivity_v2/returns_used.csv',
+   |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:33:28: E701 Multiple statements on one line (colon)
+   |
+31 |  'endpoint_assumption.json':ref/'output/endpoint_sensitivity_v2/assumption.json',
+32 | }
+33 | for name,p in paths.items():shutil.copy2(p,inputs/name)
+   |                            ^ E701
+34 | suites=ElementTree.parse(logs/'qps_step4_pytest.xml').getroot().iter('testsuite')
+35 | totals={k:0 for k in ['tests','failures','errors','skipped']}
+   |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:37:17: E701 Multiple statements on one line (colon)
+   |
+35 | totals={k:0 for k in ['tests','failures','errors','skipped']}
+36 | for suite in suites:
+37 |  for k in totals:totals[k]+=int(suite.attrib.get(k,0))
+   |                 ^ E701
+38 | assert totals['tests']==167 and totals['failures']==totals['errors']==0
+39 | (dest/'test_validation.json').write_text(json.dumps(dict(command='/opt/anaconda3/bin/python -m pytest -q --junitxml=/private/tmp/qps_s…
+   |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:42:87: E701 Multiple statements on one line (colon)
+   |
+40 | old=json.loads((ref/'provenance.json').read_text())
+41 | for package in [ref,band]:
+42 |  for name,expected in json.loads((package/'ARTIFACT_SHA256.json').read_text()).items():assert digest(package/name)==expected,name
+   |                                                                                       ^ E701
+43 | for collection in [old['raw_hashes'],old['preserved_historical_hashes']]:
+44 |  for name,expected in collection.items():assert digest(root/name)==expected,name
+   |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:44:41: E701 Multiple statements on one line (colon)
+   |
+42 |  for name,expected in json.loads((package/'ARTIFACT_SHA256.json').read_text()).items():assert digest(package/name)==expected,name
+43 | for collection in [old['raw_hashes'],old['preserved_historical_hashes']]:
+44 |  for name,expected in collection.items():assert digest(root/name)==expected,name
+   |                                         ^ E701
+45 | assert digest(root/'config/risk_config.json')==json.loads((band/'reproduction/source_hashes.json').read_text())['config/risk_config.js…
+46 | provenance=dict(created_utc=datetime.now(timezone.utc).isoformat(),git_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=roo…
+   |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:74:1: E402 Module level import not at top of file
+   |
+72 | ''')
+73 | sys.path[:0]=[str(root),str(root/'scripts')]
+74 | import export_report
+   | ^^^^^^^^^^^^^^^^^^^^ E402
+75 | export_report.QPS_REPORT_DIR=dest
+76 | export_report.main('SUMMARY.md')
+   |
+
+reports/roll_sensitivity_20261026/reproduction/package_record.py:80:104: E701 Multiple statements on one line (colon)
+   |
+78 | for p in dest.glob('*.md'):
+79 |  for url in re.findall(r'\]\(([^)]+)\)',p.read_text()):
+80 |   if not url.startswith(('http:','https:','#','mailto:')) and not (p.parent/url.split('#')[0]).exists():missing.append((p.name,url))
+   |                                                                                                        ^ E701
+81 | assert not missing,missing
+82 | assert (dest/'SUMMARY.html').read_text().count('data:image/png;base64,')==1
+   |
+
+tests/backtest/test_backtest.py:126:5: E741 Ambiguous variable name: `l`
+    |
+124 | def test_entry_drift_rebalance_and_terminal_costs():
+125 |     r, w = frames([0.1, -0.05], [0.5, 0.5])
+126 |     l, a = simulate(r, w, LinearBpsCost(10))
+    |     ^ E741
+127 |     first_net = 0.5 * 0.1 - 0.001 * 0.5
+128 |     carried = 0.5 * 1.1 / (1 + first_net)
+    |
+
+tests/backtest/test_backtest.py:141:5: E741 Ambiguous variable name: `l`
+    |
+139 | def test_short_and_flip_accounting():
+140 |     r, w = frames([0.1, 0.2], [-0.5, 0.5])
+141 |     l, _ = simulate(r, w, LinearBpsCost(0), liquidate=False)
+    |     ^ E741
+142 |     assert l.net_return.iloc[0] == pytest.approx(-0.05)
+143 |     assert l.net_return.iloc[1] == pytest.approx(0.1)
+    |
+
+tests/backtest/test_backtest.py:150:5: E741 Ambiguous variable name: `l`
+    |
+148 |     r, w = frames([0, 0], [0.5, 0.5])
+149 |     source = pd.DataFrame(["RL", "ER"], index=r.index, columns=r.columns)
+150 |     l, _ = simulate(r, w, LinearBpsCost(0), source, liquidate=False)
+    |     ^ E741
+151 |     assert l.rebalance_turnover.iloc[1] == 1
+152 |     assert l.source_switch_extra_turnover.iloc[1] == 1
+    |
+
+tests/backtest/test_backtest.py:161:5: E741 Ambiguous variable name: `l`
+    |
+159 |     r, w = frames([0.01], [2.0])
+160 |     rf = pd.Series([0.002], index=r.index)
+161 |     l, _ = simulate(r, w, LinearBpsCost(5), risk_free=rf, liquidate=False)
+    |     ^ E741
+162 |     assert l.collateral_income.iloc[0] == pytest.approx(0.002 * (1 - 0.001))
+163 |     assert l.net_return.iloc[0] == pytest.approx(0.02 + 0.002 * (1 - 0.001) - 0.001)
+    |
+
+tests/backtest/test_backtest.py:169:5: E741 Ambiguous variable name: `l`
+    |
+167 |     r, w = frames([np.nan, np.nan], [0, 0])
+168 |     rf = pd.Series([0.01, 0.01], index=r.index)
+169 |     l, _ = simulate(r, w, LinearBpsCost(10), risk_free=rf)
+    |     ^ E741
+170 |     np.testing.assert_allclose(l.net_return, rf)
+171 |     assert l.cost.sum() == 0
+    |
+
+tests/backtest/test_backtest.py:176:5: E741 Ambiguous variable name: `l`
+    |
+174 | def test_initial_capital_is_in_drawdown_peak():
+175 |     r, w = frames([-0.1, 0.02], [1, 1])
+176 |     l, _ = simulate(r, w, LinearBpsCost(0))
+    |     ^ E741
+177 |     assert performance(l)["max_drawdown"] == pytest.approx(-0.1)
+    |
+
+tests/portfolio_construction/test_bands_limits.py:67:5: E741 Ambiguous variable name: `l`
+   |
+65 |     sample = r.loc[b["start"] : b["end"]]
+66 |     policy = BandPolicy(cov, portfolio_limits(cfg), 0.10)
+67 |     l, _ = simulate(sample, targets["trend"], LinearBpsCost(5), position_policy=policy)
+   |     ^ E741
+68 |     executed = pd.DataFrame.from_dict(policy.executed, orient="index", columns=r.columns)
+69 |     replay, _ = simulate(sample, executed, LinearBpsCost(5))
+   |
+
+tests/portfolio_construction/test_bands_limits.py:82:5: E741 Ambiguous variable name: `l`
+   |
+80 |     cov = {month: np.array([[0.01]]) for month in index}
+81 |     policy = BandPolicy(cov, portfolio_limits(settings()), 0.1)
+82 |     l, _ = simulate(r, t, LinearBpsCost(0), liquidate=False, position_policy=policy)
+   |     ^ E741
+83 |     assert l.rebalance_turnover.iloc[0] == 0.1
+84 |     assert l.rebalance_turnover.iloc[1] == 0
+   |
+
+Found 110 errors.
+[*] 15 fixable with the `--fix` option (2 hidden fixes can be enabled with the `--unsafe-fixes` option).

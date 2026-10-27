@@ -1,0 +1,28 @@
+{
+  "tests": 173,
+  "failures": 0,
+  "errors": 0,
+  "funding_runs": 8,
+  "months_per_run": 180,
+  "all_accounting_and_limit_checks_passed": true,
+  "raw_inputs_unchanged": 65,
+  "primary_config_unchanged": true,
+  "prior_release_checks": {
+    "cost_revision_20261026": {
+      "manifest_sha256": "3c7ff3a89329d89649bee9bdb7ff28c792cfdb7d8f7c43c43e52c50b4f53aba6",
+      "artifacts": 291
+    },
+    "band_experiment_20261026": {
+      "manifest_sha256": "2c0efcc94436c98b6f8ac03d0e000ebefcf0be7bd6d173a3c31c6e76ab946783",
+      "artifacts": 117
+    },
+    "roll_sensitivity_20261026": {
+      "manifest_sha256": "280797b075a5d848c4b1cf16764413f3cda3d292a64224bdb13cfa7f962bda71",
+      "artifacts": 178
+    }
+  },
+  "targeted_ruff": "pass",
+  "active_ruff_existing_findings": 12,
+  "archived_reproduction_ruff_findings": 98,
+  "mypy": "existing targets.py:44 slice-index error"
+}

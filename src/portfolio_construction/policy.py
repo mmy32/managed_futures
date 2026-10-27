@@ -16,7 +16,7 @@ class BandPolicy:
         self.executed: dict = {}
         self.proposed: dict = {}
 
-    def __call__(self, month, previous, target, cost_model, switched):
+    def __call__(self, month, previous, target, cost_model, switched, roll_charge=None):
         matrix = self.covariance[month]
         proposal = band_positions(previous, target, self.band)
         selected, scale = enforce_limits(
@@ -26,9 +26,12 @@ class BandPolicy:
             cost_model,
             switched,
             self.limits,
+            roll_charge=roll_charge,
         )
         trades, _ = traded_exposure(selected, previous, switched)
         fee = cost_model.cost(trades)
+        if roll_charge is not None:
+            fee += roll_charge.cost(selected, previous, switched)
         forecast = portfolio_risk(selected, matrix)
         gross_after_cost = np.abs(selected).sum() / (1 - fee)
         risk_after_cost = forecast / (1 - fee)
@@ -37,6 +40,8 @@ class BandPolicy:
         self.executed[month] = selected.copy()
         self.proposed[month] = proposal.copy()
         proposal_fee = cost_model.cost(traded_exposure(proposal, previous, switched)[0])
+        if roll_charge is not None:
+            proposal_fee += roll_charge.cost(proposal, previous, switched)
         wanted = np.abs(target - previous) > 1e-12
         skipped = wanted & (np.abs(proposal - previous) <= 1e-12)
         return selected, {

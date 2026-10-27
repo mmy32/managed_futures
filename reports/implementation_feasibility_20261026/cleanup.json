@@ -1,0 +1,172 @@
+[
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/__pycache__",
+    "bytes": 156,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/scripts/__pycache__",
+    "bytes": 82437,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/__pycache__",
+    "bytes": 154,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/risk_model/__pycache__",
+    "bytes": 16980,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/config/__pycache__",
+    "bytes": 2258,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/portfolio_construction/__pycache__",
+    "bytes": 17353,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/alpha_model/__pycache__",
+    "bytes": 10835,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/data_processing/__pycache__",
+    "bytes": 10951,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/models/__pycache__",
+    "bytes": 1325,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/transaction_cost_model/__pycache__",
+    "bytes": 9683,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/backtest/__pycache__",
+    "bytes": 62267,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/data_loader/__pycache__",
+    "bytes": 8753,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/data_cleaning/__pycache__",
+    "bytes": 13286,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/risk_model/__pycache__",
+    "bytes": 41241,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/portfolio_construction/__pycache__",
+    "bytes": 29757,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/alpha_model/__pycache__",
+    "bytes": 20936,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/data_processing/__pycache__",
+    "bytes": 15045,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/transaction_cost_model/__pycache__",
+    "bytes": 39099,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/backtest/__pycache__",
+    "bytes": 178305,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/data_loader/__pycache__",
+    "bytes": 15571,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/data_cleaning/__pycache__",
+    "bytes": 24445,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/.pytest_cache",
+    "bytes": 17775,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/.ruff_cache",
+    "bytes": 181762,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/.mypy_cache",
+    "bytes": 35769594,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/private/tmp/qps_step5_cleanup.json",
+    "bytes": 2,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/private/tmp/qps_step5_tests.log",
+    "bytes": 352,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/private/tmp/qps_step5_ruff_active.log",
+    "bytes": 4903,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/private/tmp/qps_step5_mpl",
+    "bytes": 125346,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/private/tmp/qps_step5_targeted.log",
+    "bytes": 98,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/private/tmp/qps_step5_tests.xml",
+    "bytes": 23541,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/private/tmp/qps_step5_ruff_targeted.log",
+    "bytes": 19,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/private/tmp/qps_step5_ruff_all.log",
+    "bytes": 55963,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/private/tmp/qps_step5_mypy.log",
+    "bytes": 161,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  },
+  {
+    "path": "/private/tmp/qps_step5_run.log",
+    "bytes": 264,
+    "reason": "Disposable task scratch/cache; useful logs preserved in execution_logs"
+  }
+]

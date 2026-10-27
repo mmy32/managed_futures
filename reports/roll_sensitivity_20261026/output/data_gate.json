@@ -1,0 +1,34 @@
+{
+  "daily_series": 62,
+  "asset_map_fields": [
+    "ID",
+    "Name",
+    "Ccy",
+    "AssetClass"
+  ],
+  "workbook_fields": {
+    "Sheet1": [
+      "Date",
+      "SG Trend",
+      "Mkt-RF",
+      "SMB",
+      "HML",
+      "Mom",
+      "RMW",
+      "CMA",
+      "RF",
+      "GSCI"
+    ]
+  },
+  "actual_roll_history_supported": false,
+  "assumption_sensitivity_supported": true,
+  "missing": [
+    "dated delivery-contract identities",
+    "expiry/actual roll schedules",
+    "contract multipliers and quote units",
+    "dated currency conversion conventions",
+    "vendor continuous-price adjustment lineage",
+    "execution cost coverage in supplied returns"
+  ],
+  "interpretation": "Underlying IDs and currencies are available, but not a dated contract chain. Repository endpoint notes describe already-rolled inputs without a verified adjustment method. OHLC/volume/OI do not establish roll dates."
+}

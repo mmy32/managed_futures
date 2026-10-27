@@ -1,0 +1,9 @@
+{
+  "step_4_complete": true,
+  "implementation": "assumption_based_roll_sensitivity",
+  "actual_roll_history_supported": false,
+  "production_roll_model_adopted": false,
+  "primary_trade_bps": 2,
+  "primary_band": 0.1,
+  "step_5_started": false
+}

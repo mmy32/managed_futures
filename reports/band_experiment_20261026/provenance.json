@@ -1,0 +1,57 @@
+{
+  "created_utc": "2026-10-27T00:46:30.614811+00:00",
+  "git_head": "3b42f39e5b8168b889f0c1714b1950ef7080c87e",
+  "working_tree_changes": true,
+  "command": "PYTHONPATH=. /opt/anaconda3/bin/python -u scripts/run_band_experiment.py --reference reports/cost_revision_20261026 --output reports/band_experiment_20261026/output",
+  "reference_manifest_sha256": "3c7ff3a89329d89649bee9bdb7ff28c792cfdb7d8f7c43c43e52c50b4f53aba6",
+  "inputs": {
+    "returns_used.csv": {
+      "source": "reports/cost_revision_20261026/output/endpoint_sensitivity_v2/returns_used.csv",
+      "sha256": "5f5a9faeab62e780b08fa2df03d24d3860f8ffcded0d88d503c673294a0df71d"
+    },
+    "strategy_source.csv": {
+      "source": "reports/cost_revision_20261026/output/construction/strategy_source.csv",
+      "sha256": "a0d2ef8335724015b1aef692001f3887cde50c2c1aa413004ad9fe1bca1b16a0"
+    },
+    "strategy_source_known_at.csv": {
+      "source": "reports/cost_revision_20261026/output/construction/strategy_source_known_at.csv",
+      "sha256": "99064dfa54986804d13704c5b86249f9dabe561d2248c59e1a64acf9f264c1cf"
+    },
+    "AssetMapCsv.csv": {
+      "source": "data/raw/AssetMapCsv.csv",
+      "sha256": "d123e85848edd5385c65d2080d8d2b27808c8ef2e3804e65053d8c79c4199fdb"
+    },
+    "baseline_config.json": {
+      "source": "config/baseline_config.json",
+      "sha256": "f660b8b72c6e2be0bd52dd1e2f8660da3c68285fbf6c5c35ed714689dbcfca8c"
+    },
+    "production_risk_config.json": {
+      "source": "config/risk_config.json",
+      "sha256": "74dd5ed97e70ea1f5c624006da7a7ce1a72de946baad7ed279ca610642d80c5e"
+    },
+    "qps_v2.json": {
+      "source": "config/qps_v2.json",
+      "sha256": "85966c8de2edfa3d3d565213619fe37d9fd12bb268f1ca4c6aae34068441cdb1"
+    },
+    "band_experiment.json": {
+      "source": "config/band_experiment.json",
+      "sha256": "eb4522c063d603516c3c1103a5977008c7503b3d9378c71d784572d020780d97"
+    },
+    "endpoint_assumption.json": {
+      "source": "reports/cost_revision_20261026/output/endpoint_sensitivity_v2/assumption.json",
+      "sha256": "53375396a7e1fdddcf77daba7bce441b447b03b80742a18be961a4154121346c"
+    }
+  },
+  "versions": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "pandas": "2.3.3",
+    "statsmodels": "0.14.5"
+  },
+  "production_config_unchanged": true,
+  "raw_files_unchanged": 65,
+  "historical_report_files_unchanged": 241,
+  "step2_artifacts_unchanged": true,
+  "scope": "Step 3 only; frozen v2 inputs, 12 runs, no roll-cost work",
+  "specification_written_utc": "2026-10-27T00:38:47.348496+00:00"
+}

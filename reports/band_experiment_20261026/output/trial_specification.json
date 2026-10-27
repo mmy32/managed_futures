@@ -1,0 +1,45 @@
+{
+  "variant": "v2",
+  "bands": [
+    0.0,
+    0.05,
+    0.1
+  ],
+  "cost_scenarios_bps": [
+    1,
+    2
+  ],
+  "reference_band": 0.1,
+  "primary_bootstrap_block_months": 12,
+  "bootstrap_block_months": [
+    6,
+    12,
+    24
+  ],
+  "bootstrap_draws": 20000,
+  "bootstrap_seed": 20261026,
+  "confidence": 0.95,
+  "comparison_family_size": 8,
+  "minimum_mean_gain_annual": 0.001,
+  "minimum_positive_subperiods": 3,
+  "subperiods": [
+    [
+      "1976",
+      "1984"
+    ],
+    [
+      "1985",
+      "1994"
+    ],
+    [
+      "1995",
+      "2004"
+    ],
+    [
+      "2005",
+      "2014"
+    ]
+  ],
+  "decision_rule": "A TREND candidate must gain at least 10 bps annual arithmetic mean at both costs, have positive Bonferroni-adjusted paired-bootstrap lower bounds at both costs for all three block lengths, and improve at least three of four subperiod means at both costs. Review drawdown, calibration and tracking before any adoption; no automatic promotion from the highest in-sample Sharpe.",
+  "scope": "Freeze the grid and diagnostic rules before computing the new 5% cases. All history and the 0/10% alternatives have already been inspected; this is not a fresh holdout or independent preregistration. No signals, risk settings, regular-roll model or production primary band are changed."
+}
