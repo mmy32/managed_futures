@@ -1,0 +1,9 @@
+{
+  "status": "complete",
+  "accounting_and_limits_passed": true,
+  "reference_hashes_verified": true,
+  "common_risk_matched": true,
+  "source_freeze_verified": true,
+  "independent_validation_complete": false,
+  "elapsed_seconds": 79.33413079200545
+}

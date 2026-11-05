@@ -17,6 +17,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest", "mypy", "ruff"]
 notebook = ["matplotlib", "ipykernel", "nbformat", "nbconvert"]
+pc = ["cvxpy>=1.6,<2"]
 
 [build-system]
 requires = ["setuptools>=68"]

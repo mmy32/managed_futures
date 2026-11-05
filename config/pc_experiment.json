@@ -1,0 +1,31 @@
+{
+  "experiment_id": "lecture9-pc-v1",
+  "upstream_base": "b62d206",
+  "primary_strategy": "Configured class-specific trend signals and rescaled DCC-GARCH risk model from risk_config.json; only the trade policy changes between comparators.",
+  "cost_bps": 1.5,
+  "reference_band": 0.1,
+  "gamma_grid": [5, 10, 20],
+  "primary_information_lag_months": 2,
+  "sensitivity_information_lag_months": 1,
+  "selection_minimum_months": 120,
+  "selection_validation_months": 60,
+  "selection_block_months": 12,
+  "selection_rule": "At each annual decision, rank fixed-gamma shadow portfolios by mean net improvement over bands during the preceding 60 months (five chronological 12-month validation folds). Use only completed months, excluding terminal liquidation. Require at least 120 prior months. Break ties by lower turnover, then lower gamma. Select bands if no positive mean improvement. Carry actual holdings continuously across policy changes.",
+  "solver": {
+    "tolerance": 1e-8,
+    "feasibility_tolerance": 1e-7,
+    "max_iterations": 200
+  },
+  "bootstrap_blocks": [6, 12],
+  "bootstrap_draws": 20000,
+  "bootstrap_seed": 526009,
+  "confidence": 0.95,
+  "comparison_family_size": 5,
+  "runtime_budget_seconds_per_fixed_case": 120,
+  "primary_endpoint": "Annualized paired mean net-return difference: chronological selected-policy portfolio minus configured DCC-GARCH TREND with 10% bands, scored after the first 120 months at information lag 2 and 1.5 bps.",
+  "secondary_checks": ["fixed gamma grid", "full monthly rebalance", "original rolling 12-month trend with primary-selected frozen policy", "lag-1 timing sensitivity", "common ex ante risk replay"],
+  "development_status": "All 1976-2014 history has been inspected. Walk-forward results are development diagnostics, not fresh out-of-sample evidence. No automatic promotion.",
+  "data_scenario": "Conditional on the existing unverified March 1997 endpoint assumption; source history and raw hashes must match the reference release.",
+  "funding": "zero cash income; ordinary trade costs only; no assumed regular roll schedule",
+  "failure_rule": "Record and stop on data, solver, or accounting failure; never drop the month or switch policy silently."
+}

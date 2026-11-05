@@ -1,0 +1,66 @@
+{
+  "base": {
+    "start": "1976-01",
+    "end": "2014-12",
+    "signal_months": 12,
+    "volatility_months": 36,
+    "information_lag_months": 1,
+    "exclude_from_strategy": {
+      "YM": "Duplicate Dow exposure; retain older ZD series.",
+      "EC": "Instrument identity/classification unresolved; omit from strategy rather than assign an unverified class."
+    },
+    "instrument_volatility_scale": 0.4,
+    "minimum_instruments": 10,
+    "hac_lags": [
+      3,
+      6,
+      12
+    ],
+    "primary_hac_lag": 6,
+    "funding": "Primary: zero-interest synthetic futures-price-return proxy. RF-added results are conditional fully collateralized sensitivities, not verified vendor total returns.",
+    "signal": "Sign of the sum of the preceding 12 monthly price returns; scaling that window by the same current positive risk estimate leaves its sign unchanged. Zero means flat.",
+    "execution": "Primary monthly endpoint execution is idealized: history through t-1 determines t exposure at the prior endpoint. A two-month information lag tests one extra full month of execution delay.",
+    "missing_data": "Require complete trailing signal/risk windows. Never select assets using current/future returns. Raise on any nonzero held exposure with missing realized return; do not fill or silently drop P&L months.",
+    "cost_model": "Illustrative linear bps per absolute traded notional divided by beginning-month NAV, including initial entry, drift-adjusted monthly rebalancing, RL-to-ER source transition and final liquidation. No bid/ask, market impact, margin, tax or contract-roll cost history is available.",
+    "volatility_floor_annual": 0.02,
+    "baseline": "12-month trend, trailing correlation-aware risk model, 2% volatility floor, 3x gross cap, 10% forecast risk ceiling, +/-10% trading band; portfolio controls are in config/risk_config.json.",
+    "benchmark": "STATIC: always long, using the same instrument eligibility, risk model, limits, trading band, and costs; its own forecast determines scaling."
+  },
+  "risk": {
+    "base_config": "config/baseline_config.json",
+    "volatility_months": 36,
+    "volatility_floor_annual": 0.02,
+    "portfolio_risk_ceiling": 0.1,
+    "gross_cap": 3.0,
+    "correlation_shrinkage": 0.5,
+    "risk_model": {
+      "type": "rolling"
+    },
+    "models": [
+      "correlated"
+    ],
+    "bands": [
+      0.0,
+      0.1
+    ],
+    "cost_scenarios_bps": [
+      1.5
+    ],
+    "primary_model": "correlated",
+    "primary_band": 0.1,
+    "primary_cost_bps": 1.5,
+    "cost_convention": "Effective aggregate trading-cost proxy in bps per unit of absolute one-way traded notional / beginning-period NAV; turnover is not divided by two. Entries, source close/open trades and terminal liquidation are charged. Regular expiry-roll activity is not yet modeled separately.",
+    "trade_rule": "Existing same-direction positions: retain within relative band, otherwise trade to nearest edge. New entries, zero targets and sign changes execute at target. Hard risk and exposure limits override the band.",
+    "limit_timing": "Monthly decision points, after beginning-of-month trading costs; capital and forecasts can change between rebalances. Proportional reductions only; do not enlarge positions to reach the risk ceiling.",
+    "lecture_source": "ORIE5260 Lecture 5, slides 9, 12\u201316, 26\u201327 and 36 (reference only; not a runtime input)",
+    "source_selection": {
+      "minimum_history": 36,
+      "decision_lag_months": 2,
+      "rule": "RL until ER has 36 consecutive observed monthly returns ending at least two months before the holding month, then ER permanently. Never choose source from current realized availability."
+    },
+    "baseline_name": "Risk-controlled 12-month trend with +/-10% trading band",
+    "autocorrelation_hac": "At return lag k, use k Bartlett HAC lags on calendar-spaced scores, with n/(n-2) correction and t(n-2) intervals.",
+    "risk_model_note": "correlation_shrinkage (0.5) is the rolling covariance baseline, kept as the reference; risk_model.correlation_shrinkage is the DCC-GARCH value (notebooks/risk_model_estimators.ipynb: with the rescale the level matters little, 0.05 to 0.1 recommended). rescale: past-only calibration scale, window and minimum in months. Set risk_model to {\"type\": \"rolling\"} for the baseline.",
+    "trend_signal_note": "notebooks/trend_measures.ipynb, section 5 and the summary table. In-sample class-portfolio rankings, not validated out of sample. COMM, FI and EQ keep the baseline 12-month sum; FX averages a 3-month and a 12-month sum, a blend that was not itself in the notebook's grid."
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "status": "failed",
+  "error": "ValueError('Portfolio optimization failed: optimal_inaccurate')"
+}

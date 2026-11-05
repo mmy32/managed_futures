@@ -161,3 +161,18 @@ def test_scaled_model_scales_covariance_but_not_volatility():
     pd.testing.assert_frame_equal(scaled.volatility(data), base.volatility(data))
     with pytest.raises(ValueError):
         ScaledRiskModel(base, scale * 0)
+
+
+def test_dcc_annual_refit_respects_lag_two_in_january():
+    """December cannot enter January's parameters when the declared cutoff is November."""
+    data = monthly_data(months=90)
+    daily = daily_frame(list(data.returns.columns), start="1999-01-01", end="2005-12-31")
+    months = pd.PeriodIndex(["2005-01"], freq="M")
+    wanted = pd.DataFrame(True, index=months, columns=data.returns.columns)
+    model = DccGarchRiskModel(daily, data.meta.AssetClass, 36, 2, 0.02, 0.1)
+    original = model._forecast_all(months, wanted)[months[0]]
+    changed = daily.copy()
+    changed.loc["2004-12-01":] = changed.loc["2004-12-01":] * 4 + 0.01
+    other = DccGarchRiskModel(changed, data.meta.AssetClass, 36, 2, 0.02, 0.1)
+    altered = other._forecast_all(months, wanted)[months[0]]
+    pd.testing.assert_frame_equal(original, altered)
