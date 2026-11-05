@@ -9,10 +9,15 @@ import pandas as pd
 
 from src.backtest.engine import simulate
 from src.backtest.performance import performance, regression_alpha
-from src.backtest.qps_baseline import build_forecasts, portfolio_limits
+from src.backtest.qps_baseline import (
+    configured_components,
+    forecasts_from,
+    portfolio_limits,
+    rescaled_components,
+)
 from src.config import CONFIG_DIR, DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR
 from src.data_loader import load_asset_map
-from src.data_processing.strategy_inputs import load_strategy_inputs
+from src.data_processing.strategy_inputs import load_daily_returns, load_strategy_inputs
 from src.portfolio_construction import BandPolicy
 from src.transaction_cost_model import LinearBpsCost
 
@@ -27,13 +32,27 @@ def main():
     returns, source, known, schedule = load_strategy_inputs(settings, write=True)
     sample = returns.loc[base["start"] : base["end"]]
     meta = load_asset_map()
+    daily = (
+        load_daily_returns(returns.columns)
+        if settings.get("risk_model", {}).get("type") == "dcc_garch"
+        else None
+    )
     rows = []
     series = {}
     alphas = []
     for lag in [1, 2]:
         cfg = copy.deepcopy(base)
         cfg["information_lag_months"] = lag
-        target, cov, _diag = build_forecasts(returns, meta, cfg, settings, "correlated")
+        parts = rescaled_components(
+            configured_components(cfg, settings, meta, daily=daily),
+            returns,
+            meta,
+            cfg,
+            settings,
+            source,
+            known,
+        )
+        target, cov, _diag = forecasts_from(parts, returns, meta, cfg)
         pair = {}
         for name in ["trend", "static"]:
             ledger, _ = simulate(

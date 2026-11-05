@@ -5,15 +5,13 @@ Writes reports/qps_baseline/output/risk_model_comparison/comparison.csv.
 """
 
 import json
-from dataclasses import replace
 
 import pandas as pd
 from run_risk_research import load_returns
 
 from src.backtest.engine import simulate
 from src.backtest.performance import performance
-from src.backtest.qps_baseline import forecasts_from, portfolio_limits
-from src.backtest.qps_v2 import load_rules, qps_v2_components
+from src.backtest.qps_baseline import forecasts_from, portfolio_limits, qps_components
 from src.backtest.sample_diagnostics import risk_diagnostics
 from src.config import CONFIG_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR
 from src.data_loader import load_asset_map
@@ -71,14 +69,10 @@ def compare(inputs, variants, settings=None):
     """One row per estimator and strategy; `settings` overrides risk_config.json (e.g. shrinkage)."""
     default_settings, base, returns, source, known, meta = inputs
     settings = settings or default_settings
-    rules = load_rules()
     sample = returns.loc[base["start"] : base["end"]]
     rows = []
     for name, half_lives in variants.items():
-        parts = replace(
-            qps_v2_components(base, settings, rules, meta),
-            risk_model=risk_model(settings, base, half_lives),
-        )
+        parts = qps_components(base, settings, meta, risk_model(settings, base, half_lives))
         targets, covariance, _ = forecasts_from(parts, returns, meta, base)
         for strategy, target in targets.items():
             summary = evaluate_strategy(

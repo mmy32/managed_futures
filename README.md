@@ -14,9 +14,9 @@ The strategy is compared with an always-long **STATIC** portfolio using the same
 |---|---|
 | `src/alpha_model/` | `Signal` interface: sum-of-returns, compounded-return and always-long signals |
 | `src/risk_model/` | `RiskModel` interface: rolling covariance (qps) and EWMA daily volatility (paper); `portfolio_risk` |
-| `src/portfolio_construction/` | Inverse-volatility sizing, gross and risk limits, no-trade bands, execution policy, `construct_targets` |
+| `src/portfolio_construction/` | `hold/` inverse-volatility sizing; `scale/` gross cap and risk ceiling; `trade/` no-trade band, executed limits, execution policy; `construct_targets` |
 | `src/transaction_cost_model/` | `CostModel` interface: `LinearBpsCost`, `ZeroCost` |
-| `src/backtest/` | `engine.py` (simulation, performance), `qps_baseline.py` (config to objects), `qps_v2.py` (per-asset-class trend signal), `sample_diagnostics.py` |
+| `src/backtest/` | `engine.py` (simulation, performance), `qps_baseline.py` (config to objects: trend signal per asset class, risk model, rescale), `sample_diagnostics.py` |
 | `src/data_processing/` | Endpoint mapping, RL/ER source selection, March 1997 endpoint sensitivity |
 | `src/data_loader/`, `src/data_cleaning/`, `src/config/` | Raw-data loaders, cleaning, and path/threshold settings |
 | `config/` | QPS strategy, risk, and endpoint-assumption settings (JSON) |
@@ -35,7 +35,6 @@ source .venv/bin/activate
 python -m pip install -e ".[dev]"
 python scripts/run_research.py --validate
 python scripts/run_research.py --endpoint-sensitivity
-python scripts/run_research.py --variant baseline --endpoint-sensitivity  # the 12-month baseline instead of v2
 ```
 
 Validation needs no source data. Research runs require the datasets described in [docs/DATA_INPUTS.md](docs/DATA_INPUTS.md). See the [code guide](docs/CODE_GUIDE.md) for the calculation sequence.

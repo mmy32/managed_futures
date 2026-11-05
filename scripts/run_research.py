@@ -11,14 +11,13 @@ from datetime import UTC, datetime
 from src.config import (
     ASSET_MAP_PATH,
     CONFIG_DIR,
-    DEFAULT_QPS_VARIANT,
     FUTURES_UNDERLYING_DIR,
     LECTURE_BENCHMARK_PATH,
     MONTHLY_RETURNS_PATH,
     PROJECT_ROOT,
     QPS_OUTPUT_DIR,
     QPS_REPORT_DIR,
-    QPS_VARIANTS,
+    QPS_RUN_NAMES,
 )
 
 ROOT = PROJECT_ROOT
@@ -88,15 +87,8 @@ def main():
         action="store_true",
         help="Also evaluate a separate, unverified March 1997 endpoint assumption",
     )
-    parser.add_argument(
-        "--variant",
-        choices=sorted(QPS_VARIANTS),
-        default=DEFAULT_QPS_VARIANT,
-        help="qps strategy to run: baseline (12-month trend) or v2 (trend signal per asset class)",
-    )
     args = parser.parse_args()
-    names = QPS_VARIANTS[args.variant]
-    variant_args = ["--variant", args.variant]
+    names = QPS_RUN_NAMES
     if not args.validate:
         required = [
             MONTHLY_RETURNS_PATH,
@@ -120,13 +112,13 @@ def main():
         run_script("eda.py")
     if (QPS_OUTPUT_DIR / "legacy_2000_2014/manifest.json").exists():
         run_script("verify_legacy.py")
-    result = run_script("run_risk_research.py", allow_data_blocker=True, arguments=variant_args)
-    if result == 0 and args.variant == "baseline":  # audit_timing replays the baseline only
+    result = run_script("run_risk_research.py", allow_data_blocker=True)
+    if result == 0:
         run_script("audit_timing.py")
     if (QPS_REPORT_DIR / names["report"]).exists():
         run_script("export_report.py", arguments=["--report", names["report"]])
     if args.endpoint_sensitivity:
-        run_script("run_risk_research.py", arguments=["--endpoint-sensitivity", *variant_args])
+        run_script("run_risk_research.py", arguments=["--endpoint-sensitivity"])
         run_script("export_report.py", arguments=["--report", names["report"]])
         run_script("export_report.py", arguments=["--report", names["endpoint_report"]])
         print(

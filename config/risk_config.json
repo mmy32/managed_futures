@@ -5,6 +5,41 @@
   "portfolio_risk_ceiling": 0.1,
   "gross_cap": 3.0,
   "correlation_shrinkage": 0.5,
+  "risk_model": {
+    "type": "dcc_garch",
+    "correlation_shrinkage": 0.1,
+    "rescale": {
+      "window": 60,
+      "minimum": 24
+    }
+  },
+  "trend_signal_by_asset_class": {
+    "COMM": {
+      "type": "sum",
+      "lookback": 12
+    },
+    "FI": {
+      "type": "sum",
+      "lookback": 12
+    },
+    "EQ": {
+      "type": "sum",
+      "lookback": 12
+    },
+    "FX": {
+      "type": "blend",
+      "components": [
+        {
+          "type": "sum",
+          "lookback": 3
+        },
+        {
+          "type": "sum",
+          "lookback": 12
+        }
+      ]
+    }
+  },
   "models": [
     "correlated"
   ],
@@ -22,12 +57,14 @@
   "primary_cost_bps": 5,
   "trade_rule": "Existing same-direction positions: retain within relative band, otherwise trade to nearest edge. New entries, zero targets and sign changes execute at target. Hard risk and exposure limits override the band.",
   "limit_timing": "Monthly decision points, after beginning-of-month trading costs; capital and forecasts can change between rebalances. Proportional reductions only; do not enlarge positions to reach the risk ceiling.",
-  "lecture_source": "ORIE5260 Lecture 5, slides 9, 12\u201316, 26\u201327 and 36 (reference only; not a runtime input)",
+  "lecture_source": "ORIE5260 Lecture 5, slides 9, 12–16, 26–27 and 36 (reference only; not a runtime input)",
   "source_selection": {
     "minimum_history": 36,
     "decision_lag_months": 2,
     "rule": "RL until ER has 36 consecutive observed monthly returns ending at least two months before the holding month, then ER permanently. Never choose source from current realized availability."
   },
   "baseline_name": "Risk-controlled 12-month trend with +/-10% trading band",
-  "autocorrelation_hac": "At return lag k, use k Bartlett HAC lags on calendar-spaced scores, with n/(n-2) correction and t(n-2) intervals."
+  "autocorrelation_hac": "At return lag k, use k Bartlett HAC lags on calendar-spaced scores, with n/(n-2) correction and t(n-2) intervals.",
+  "risk_model_note": "correlation_shrinkage (0.5) is the rolling covariance baseline, kept as the reference; risk_model.correlation_shrinkage is the DCC-GARCH value (notebooks/risk_model_estimators.ipynb: with the rescale the level matters little, 0.05 to 0.1 recommended). rescale: past-only calibration scale, window and minimum in months. Set risk_model to {\"type\": \"rolling\"} for the baseline.",
+  "trend_signal_note": "notebooks/trend_measures.ipynb, section 5 and the summary table. In-sample class-portfolio rankings, not validated out of sample. COMM, FI and EQ keep the baseline 12-month sum; FX averages a 3-month and a 12-month sum, a blend that was not itself in the notebook's grid."
 }

@@ -5,22 +5,10 @@ import pandas as pd
 
 from src.alpha_model import Signal, lagged
 from src.models import MarketData
-from src.portfolio_construction.limits import PortfolioLimits, bounded_target
-from src.portfolio_construction.sizing import InverseVolatilitySizer
+from src.portfolio_construction.hold import InverseVolatilitySizer, balance_classes
+from src.portfolio_construction.scale import PortfolioLimits, bounded_target
 from src.risk_model import RiskModel, portfolio_risk
 from src.risk_model.base import check_monthly_calendar
-
-
-def _class_balanced(raw, matrix, labels, active, risk_ceiling):
-    """Scale each asset class to an equal share of the risk ceiling."""
-    classes = sorted(set(labels[np.flatnonzero(active)]))
-    budget = risk_ceiling / np.sqrt(len(classes))
-    for group in classes:
-        chosen = (labels == group) & active
-        standalone = portfolio_risk(np.where(chosen, raw, 0.0), matrix)
-        if standalone > 0:
-            raw[chosen] *= budget / standalone
-    return raw
 
 
 def construct_targets(
@@ -60,7 +48,7 @@ def construct_targets(
         for name, target in targets.items():
             weights = raw[name].loc[month].to_numpy().copy()
             if class_balanced and active.sum() >= sizer.minimum_instruments:
-                weights = _class_balanced(weights, matrix, labels, active, limits.risk_ceiling)
+                weights = balance_classes(weights, matrix, labels, active, limits.risk_ceiling)
             desired = bounded_target(weights, matrix, limits)
             target.loc[month] = desired
             records.append(

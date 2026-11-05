@@ -2,8 +2,9 @@
 
 import numpy as np
 
-from src.portfolio_construction.bands import band_positions
-from src.portfolio_construction.limits import PortfolioLimits, enforce_limits
+from src.portfolio_construction.scale import PortfolioLimits
+from src.portfolio_construction.trade.bands import band_positions
+from src.portfolio_construction.trade.feasibility import enforce_limits
 from src.risk_model import portfolio_risk
 from src.transaction_cost_model import traded_exposure
 

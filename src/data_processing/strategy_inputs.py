@@ -6,6 +6,7 @@ import pandas as pd
 from src.config import PROJECT_ROOT, QPS_OUTPUT_DIR
 from src.data_loader import load_daily_prices
 from src.data_processing.endpoints import close_frames, endpoints
+from src.risk_model import daily_returns
 
 ROOT = PROJECT_ROOT
 
@@ -75,3 +76,8 @@ def load_strategy_inputs(settings, write=False):
         known_at.to_csv(out / "strategy_source_known_at.csv")
         schedule.to_csv(out / "strategy_source_schedule.csv", index=False)
     return returns, source, known_at, schedule
+
+
+def load_daily_returns(markets) -> pd.DataFrame:
+    """Daily returns for `markets`, the input of risk models that estimate from daily data."""
+    return daily_returns(load_daily_prices())[list(markets)]

@@ -14,9 +14,9 @@ import numpy as np
 from matplotlib.ticker import PercentFormatter
 
 from src.backtest.attribution import CLASS_NAMES
-from src.backtest.qps_v2 import load_rules
+from src.backtest.qps_baseline import trend_rules
 from src.backtest.sample_diagnostics import risk_diagnostics
-from src.config import DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR, QPS_REPORT_DIR, QPS_VARIANTS
+from src.config import DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR, QPS_REPORT_DIR, QPS_RUN_NAMES
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "risk"
@@ -35,16 +35,11 @@ def _rule_text(rule):
     )
 
 
-def trend_text(variant):
-    """Wording that depends on which trend signal the run used."""
-    if variant == "baseline":
-        return {
-            "label": "Baseline trend",
-            "question": "12-month trends",
-            "direction": "go long if the previous 12 monthly returns sum to a positive number, short if negative, and flat if zero.",
-            "signal": "the 12-month trading signal",
-        }
-    per_class = "; ".join(f"{cls} uses {_rule_text(rule)}" for cls, rule in load_rules().items())
+def trend_text(base, settings):
+    """Wording for the trend signal configured for each asset class."""
+    per_class = "; ".join(
+        f"{cls} uses {_rule_text(rule)}" for cls, rule in trend_rules(base, settings).items()
+    )
     return {
         "label": "Per-class trend",
         "question": "trends whose signal is chosen for each asset class",
@@ -459,10 +454,9 @@ def write_report(
     report_path=QPS_REPORT_DIR / "REPORT.md",
     assumption=None,
     stability=None,
-    variant="baseline",
 ):
     """A concise report; calculation details and audit evidence remain linked appendices."""
-    trend = trend_text(variant)
+    trend = trend_text(base, settings)
     report = "".join(
         [
             _opening(assumption, trend),
@@ -477,15 +471,11 @@ def write_report(
         ]
     )
     report = report.replace("output/risk/", str(out.relative_to(QPS_REPORT_DIR)) + "/")
-    report = report.replace("docs/DATA_STATUS.md", f"docs/{QPS_VARIANTS[variant]['status']}")
-    report = report.replace(
-        "python scripts/run_research.py --endpoint-sensitivity",
-        f"python scripts/run_research.py --variant {variant} --endpoint-sensitivity",
-    )
+    report = report.replace("docs/DATA_STATUS.md", f"docs/{QPS_RUN_NAMES['status']}")
     report_path.write_text(report)
     if assumption is not None:
         # Keep the earlier filename as a compatible copy of the main presentation.
-        (QPS_REPORT_DIR / QPS_VARIANTS[variant]["endpoint_report"]).write_text(report)
+        (QPS_REPORT_DIR / QPS_RUN_NAMES["endpoint_report"]).write_text(report)
 
 
 def docs_link(link):
@@ -499,8 +489,8 @@ def docs_link(link):
     return "../" + link
 
 
-def write_blocked_report(class_stats, autocorr, audit, failures, variant="baseline"):
-    names = QPS_VARIANTS[variant]
+def write_blocked_report(class_stats, autocorr, audit, failures):
+    names = QPS_RUN_NAMES
     rows = [[f["strategy"].upper(), f["error"]] for f in failures]
     report = f"""# Preserved data policy: status and endpoint issue
 

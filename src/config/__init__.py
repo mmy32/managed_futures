@@ -40,21 +40,11 @@ EWMA_MIN_OBSERVATIONS = 60  # daily returns required before an EWMA volatility i
 
 TSMOM_REPORT_DIR = PROJECT_ROOT / "reports" / "tsmom_baseline"
 
-# qps strategy variants: where each writes. "v2" chooses the trend signal per asset class.
-QPS_VARIANTS = {
-    "baseline": {
-        "output": "risk",
-        "endpoint_output": "endpoint_sensitivity",
-        "report": "REPORT.md",
-        "endpoint_report": "ENDPOINT_SENSITIVITY.md",
-        "status": "DATA_STATUS.md",
-    },
-    "v2": {
-        "output": "risk_v2",
-        "endpoint_output": "endpoint_sensitivity_v2",
-        "report": "REPORT_V2.md",
-        "endpoint_report": "ENDPOINT_SENSITIVITY_V2.md",
-        "status": "DATA_STATUS_V2.md",
-    },
+# qps run outputs: where the strategy configured in config/risk_config.json writes.
+QPS_RUN_NAMES = {
+    "output": "risk",
+    "endpoint_output": "endpoint_sensitivity",
+    "report": "REPORT.md",
+    "endpoint_report": "ENDPOINT_SENSITIVITY.md",
+    "status": "DATA_STATUS.md",
 }
-DEFAULT_QPS_VARIANT = "v2"

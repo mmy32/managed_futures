@@ -15,8 +15,13 @@ from research_report import make_charts, trend_text, write_blocked_report, write
 from src.backtest.attribution import class_attribution
 from src.backtest.engine import simulate
 from src.backtest.performance import performance, regression_alpha
-from src.backtest.qps_baseline import build_forecasts, eligibility, portfolio_limits
-from src.backtest.qps_v2 import build_forecasts_v2, eligibility_v2, load_rules
+from src.backtest.qps_baseline import (
+    configured_components,
+    eligibility_from,
+    forecasts_from,
+    portfolio_limits,
+    rescaled_components,
+)
 from src.backtest.sample_diagnostics import (
     class_portfolios,
     rank_autocorrelation,
@@ -26,17 +31,16 @@ from src.backtest.sample_diagnostics import (
 )
 from src.config import (
     CONFIG_DIR,
-    DEFAULT_QPS_VARIANT,
     PROJECT_ROOT,
     QPS_OUTPUT_DIR,
     QPS_REPORT_DIR,
-    QPS_VARIANTS,
+    QPS_RUN_NAMES,
     RAW_DATA_DIR,
 )
 from src.data_loader import load_asset_map, load_daily_prices
 from src.data_processing.endpoint_sensitivity import apply_endpoint_assumption
 from src.data_processing.endpoints import close_frames
-from src.data_processing.strategy_inputs import load_strategy_inputs
+from src.data_processing.strategy_inputs import load_daily_returns, load_strategy_inputs
 from src.portfolio_construction import BandPolicy
 from src.transaction_cost_model import LinearBpsCost
 
@@ -285,21 +289,16 @@ def write_class_tables(returns, eligible, meta, sample, out):
     return classes, counts, class_stats, autocorr
 
 
-def strategy_builders(variant):
-    """(targets builder, eligibility builder) for a variant; both take (returns, meta, base, settings)."""
-    if variant == "baseline":
-        return build_forecasts, eligibility
-    rules = load_rules()
-    return (
-        lambda returns, meta, base, settings: build_forecasts_v2(
-            returns, meta, base, settings, rules
-        ),
-        lambda returns, meta, base, settings: eligibility_v2(returns, meta, base, settings, rules),
-    )
+def risk_inputs(returns, meta, base, settings, source, known):
+    """Components for the configured strategy, with the rescale applied when configured."""
+    needs_daily = settings.get("risk_model", {}).get("type") == "dcc_garch"
+    daily = load_daily_returns(returns.columns) if needs_daily else None
+    parts = configured_components(base, settings, meta, daily=daily)
+    return rescaled_components(parts, returns, meta, base, settings, source, known)
 
 
-def write_forecasts(returns, meta, base, settings, out, build=build_forecasts):
-    targets, covariance, diagnostics = build(returns, meta, base, settings)
+def write_forecasts(parts, returns, meta, base, out):
+    targets, covariance, diagnostics = forecasts_from(parts, returns, meta, base)
     diagnostics.to_csv(out / "correlated_target_diagnostics.csv", index=False)
     for strategy, target in targets.items():
         target.to_csv(out / f"correlated_{strategy}_targets.csv")
@@ -315,7 +314,6 @@ def write_blocked_run(
     base,
     original_hashes,
     out,
-    variant="baseline",
 ):
     """Record a run that stops on a missing held return; return the CLI status."""
     classes, counts, class_stats, autocorr = tables
@@ -326,9 +324,9 @@ def write_blocked_run(
         raise ValueError(
             "Endpoint sensitivity still has missing held returns; see its run_status.json"
         )
-    make_charts(classes, counts, autocorr, {}, settings, out, trend_text(variant)["label"])
+    make_charts(classes, counts, autocorr, {}, settings, out, trend_text(base, settings)["label"])
     primary_failures = [f for f in failures if f["band"] == 0.1 and f["cost_bps"] == 5]
-    write_blocked_report(class_stats, autocorr, audit, primary_failures or failures, variant)
+    write_blocked_report(class_stats, autocorr, audit, primary_failures or failures)
     write_manifest(settings, base, original_hashes, out)
     (out / "run_status.json").write_text(
         json.dumps(
@@ -343,7 +341,7 @@ def write_blocked_run(
         + "\n"
     )
     print(
-        f"DATA BLOCKER: preserved-policy comparison withheld; docs/{QPS_VARIANTS[variant]['status']} refreshed.",
+        f"DATA BLOCKER: preserved-policy comparison withheld; docs/{QPS_RUN_NAMES['status']} refreshed.",
         flush=True,
     )
     return 2
@@ -371,9 +369,8 @@ def write_attribution(ledgers, gross, details, covariance, meta, settings, out):
     return attribution
 
 
-def main(endpoint_sensitivity=False, variant=DEFAULT_QPS_VARIANT):
-    names = QPS_VARIANTS[variant]
-    build, make_eligibility = strategy_builders(variant)
+def main(endpoint_sensitivity=False):
+    names = QPS_RUN_NAMES
     out = QPS_OUTPUT_DIR / names["endpoint_output" if endpoint_sensitivity else "output"]
     report_path = QPS_REPORT_DIR / names["report"]
     out.mkdir(parents=True, exist_ok=True)
@@ -390,7 +387,8 @@ def main(endpoint_sensitivity=False, variant=DEFAULT_QPS_VARIANT):
     )
     meta = load_asset_map()
     sample = returns.loc[base["start"] : base["end"]]
-    eligible = make_eligibility(returns, meta, base, settings)
+    parts = risk_inputs(returns, meta, base, settings, source, known)
+    eligible = eligibility_from(parts, returns, meta, base)
     audit = write_sample_audit(
         returns, source, known, schedule, eligible, base, settings, out, changes
     )
@@ -398,7 +396,7 @@ def main(endpoint_sensitivity=False, variant=DEFAULT_QPS_VARIANT):
         endpoint_candidates(out)
     tables = write_class_tables(returns, eligible, meta, sample, out)
     classes, counts, class_stats, autocorr = tables
-    targets, covariance = write_forecasts(returns, meta, base, settings, out, build)
+    targets, covariance = write_forecasts(parts, returns, meta, base, out)
     metrics, alphas, ledgers, details, gross, failures = evaluate(
         sample,
         source.loc[sample.index],
@@ -418,7 +416,6 @@ def main(endpoint_sensitivity=False, variant=DEFAULT_QPS_VARIANT):
             base,
             original_hashes,
             out,
-            variant,
         )
     metrics.to_csv(out / "comparison.csv", index=False)
     alphas.to_csv(out / "alpha.csv", index=False)
@@ -429,7 +426,9 @@ def main(endpoint_sensitivity=False, variant=DEFAULT_QPS_VARIANT):
     assert not metrics.gross_breaches.any() and not metrics.risk_breaches.any()
     stability = stability_summary(ledgers)
     stability.to_csv(out / "stability.csv", index=False)
-    make_charts(classes, counts, autocorr, ledgers, settings, out, trend_text(variant)["label"])
+    make_charts(
+        classes, counts, autocorr, ledgers, settings, out, trend_text(base, settings)["label"]
+    )
     write_report(
         metrics,
         alphas,
@@ -443,7 +442,6 @@ def main(endpoint_sensitivity=False, variant=DEFAULT_QPS_VARIANT):
         report_path,
         assumption,
         stability,
-        variant,
     )
     write_manifest(settings, base, original_hashes, out)
     (out / "run_status.json").write_text(
@@ -467,6 +465,5 @@ def main(endpoint_sensitivity=False, variant=DEFAULT_QPS_VARIANT):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--endpoint-sensitivity", action="store_true")
-    parser.add_argument("--variant", choices=sorted(QPS_VARIANTS), default=DEFAULT_QPS_VARIANT)
     args = parser.parse_args()
-    raise SystemExit(main(args.endpoint_sensitivity, args.variant))
+    raise SystemExit(main(args.endpoint_sensitivity))

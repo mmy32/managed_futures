@@ -29,6 +29,8 @@ class RollingCovarianceRiskModel:
 
     Observations are weighted by exponential decay with each of `half_lives` (months) and the
     covariances averaged (fast/slow); None means equal weights, the default.
+    `correlation_half_lives` sets the weighting for the correlations alone (volatility keeps
+    `half_lives`); None uses the same weighting for both.
     Correlations are shrunk toward the identity by `correlation_shrinkage`;
     `diagonal=True` ignores correlations. Volatilities are floored at `volatility_floor`.
     """
@@ -41,6 +43,7 @@ class RollingCovarianceRiskModel:
         correlation_shrinkage: float,
         diagonal: bool = False,
         half_lives: Sequence[float | None] = (None,),
+        correlation_half_lives: Sequence[float | None] | None = None,
     ):
         if not 0 < correlation_shrinkage <= 1:
             raise ValueError("Shrinkage must be positive and at most one")
@@ -50,9 +53,14 @@ class RollingCovarianceRiskModel:
         self.correlation_shrinkage = correlation_shrinkage
         self.diagonal = diagonal
         self.weights = [decay_weights(window, half_life) for half_life in half_lives]
+        self.correlation_weights = (
+            self.weights
+            if correlation_half_lives is None
+            else [decay_weights(window, half_life) for half_life in correlation_half_lives]
+        )
 
-    def _covariance(self, history: np.ndarray) -> np.ndarray:
-        return np.mean([weighted_covariance(history, w) for w in self.weights], axis=0)
+    def _covariance(self, history: np.ndarray, weights: list[np.ndarray] | None = None):
+        return np.mean([weighted_covariance(history, w) for w in (weights or self.weights)], axis=0)
 
     def _variance(self, history: np.ndarray) -> float:
         return float(
@@ -85,8 +93,9 @@ class RollingCovarianceRiskModel:
                 if self.diagonal:
                     correlation = np.eye(len(ids))
                 else:
-                    scale = np.sqrt(np.diag(sample_cov))
-                    sample = sample_cov / np.outer(scale, scale)
+                    corr_cov = self._covariance(hist.to_numpy(), self.correlation_weights)
+                    scale = np.sqrt(np.diag(corr_cov))
+                    sample = corr_cov / np.outer(scale, scale)
                     shrinkage = self.correlation_shrinkage
                     correlation = (1 - shrinkage) * sample + shrinkage * np.eye(len(ids))
                 small = correlation * np.outer(floor_vol, floor_vol)
