@@ -1,5 +1,5 @@
 {
-  "protocol_id": "qps-prospective-v1",
+  "protocol_id": "qps-prospective-v2",
   "status": "frozen_protocol_awaiting_data_and_activation",
   "development_history_end": "2014-12",
   "evaluation_start": null,
@@ -13,6 +13,7 @@
   "primary_cost_bps": 2,
   "band": 0.1,
   "model": "correlated",
+  "risk_model": "dcc_garch with calibration rescale, as set in config/risk_config.json",
   "cash_income": "zero",
   "roll_schedule": null,
   "initial_nav": 1.0,
