@@ -1,4 +1,4 @@
-"""Run the fixed v2 band grid on verified Step 2 inputs, without changing defaults."""
+"""Run the fixed band grid on verified Step 2 inputs with the configured DCC-GARCH strategy."""
 
 import argparse
 import hashlib
@@ -11,7 +11,7 @@ import pandas as pd
 from src.alpha_model import lagged
 from src.backtest.band_diagnostics import paired_bootstrap, turnover_components
 from src.backtest.performance import performance
-from src.backtest.qps_baseline import configured_components, forecasts_from
+from src.backtest.qps_baseline import forecasts_from
 from src.backtest.research_spec import run_key, validate_research_settings
 from src.config import CONFIG_DIR, PROJECT_ROOT
 from src.data_loader import load_asset_map
@@ -45,13 +45,10 @@ def load_inputs(reference):
     return returns, source, known, meta, raw_hashes
 
 
-def frozen_settings(settings):
-    """The reference run used the rolling-covariance model; keep it for these implementation studies."""
-    return {**settings, "risk_model": {"type": "rolling"}}
+def forecasts(returns, source, known, meta, base, settings):
+    from run_risk_research import risk_inputs
 
-
-def forecasts(returns, meta, base, settings):
-    parts = configured_components(base, frozen_settings(settings), meta)
+    parts = risk_inputs(returns, meta, base, settings, source, known)
     targets, covariance, diagnostics = forecasts_from(parts, returns, meta, base)
     volatility = parts.risk_model.volatility(MarketData(returns, meta))
     raw_targets = {}
@@ -108,25 +105,13 @@ def export_runs(metrics, ledgers, details, gross, inputs, targets, raw_targets, 
         raw_targets[name].to_csv(out / f"{name}_raw_targets.csv")
 
 
-def verify_reference(ledgers, reference, out, reference_band):
-    checks = []
-    for name, ledger in ledgers.items():
-        saved = reference / "output/endpoint_sensitivity_v2" / f"{name}_ledger.csv"
-        if not saved.exists():
-            continue  # The new 5% candidates have no Step 2 ledger.
-        old = read_panel(saved)
-        pd.testing.assert_frame_equal(ledger, old, check_exact=False, rtol=1e-10, atol=1e-12)
-        delta = np.max(np.abs(ledger.to_numpy(dtype=float) - old.to_numpy(dtype=float)))
-        checks.append(dict(run=name, maximum_absolute_difference=float(delta)))
-    assert len(checks) == 8
+def write_validation(ledgers, out, reference_band):
+    for ledger in ledgers.values():
+        assert not ledger.gross_limit_breach.any() and not ledger.risk_limit_breach.any()
     (out / "validation.json").write_text(
         json.dumps(
             dict(
-                runs=len(ledgers),
-                months=468,
-                accounting_and_limits_passed=True,
-                reference_band=reference_band,
-                reference_checks=checks,
+                runs=len(ledgers), accounting_and_limits_passed=True, reference_band=reference_band
             ),
             indent=2,
         )
@@ -289,7 +274,9 @@ def main(reference, out):
     (out / "trial_specification.json").write_text(json.dumps(specification, indent=2) + "\n")
     (out / "risk_settings.json").write_text(json.dumps(settings, indent=2) + "\n")
     (out / "raw_hashes.json").write_text(json.dumps(raw_hashes, indent=2) + "\n")
-    targets, covariance, diagnostics, raw_targets = forecasts(returns, meta, base, settings)
+    targets, covariance, diagnostics, raw_targets = forecasts(
+        returns, source, known, meta, base, settings
+    )
     diagnostics.to_csv(out / "target_diagnostics.csv", index=False)
     sample = returns.loc[base["start"] : base["end"]]
     metrics, alphas, ledgers, details, gross, failures = evaluate(
@@ -313,7 +300,7 @@ def main(reference, out):
         out,
     )
     alphas.to_csv(out / "alpha.csv", index=False)
-    verify_reference(ledgers, reference, out, specification["reference_band"])
+    write_validation(ledgers, out, specification["reference_band"])
     save_diagnostics(ledgers, targets, specification, out)
     print(
         metrics[["band", "cost_bps", "strategy", "cagr", "sharpe", "turnover_ann"]].to_string(

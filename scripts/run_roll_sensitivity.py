@@ -1,4 +1,4 @@
-"""Data-gated, explicitly hypothetical roll calendars for v2 and matching STATIC."""
+"""Data-gated, explicitly hypothetical roll calendars for the DCC-GARCH strategy and matching STATIC."""
 
 import argparse
 import hashlib
@@ -8,12 +8,13 @@ from pathlib import Path
 import numpy as np
 import openpyxl
 import pandas as pd
-from run_band_experiment import frozen_settings, load_inputs, read_panel
+from run_band_experiment import load_inputs
+from run_risk_research import risk_inputs
 
 from src.backtest.attribution import class_attribution
 from src.backtest.engine import simulate
 from src.backtest.performance import performance
-from src.backtest.qps_baseline import build_forecasts, portfolio_limits
+from src.backtest.qps_baseline import forecasts_from, portfolio_limits
 from src.backtest.roll_events import execution_journal
 from src.backtest.sample_diagnostics import risk_diagnostics
 from src.config import CONFIG_DIR, PROJECT_ROOT, RAW_DATA_DIR
@@ -177,36 +178,18 @@ def scenarios(specification):
                     yield calendar, trade, roll, strategy, months
 
 
-def check_reference(ledger, case, reference):
-    calendar, trade, _, strategy, _ = case
-    if calendar != "trade_only":
-        return None
-    name = f"correlated_band10_{trade}bps_{strategy}_ledger.csv"
-    old = read_panel(reference / "output/endpoint_sensitivity_v2" / name)
-    pd.testing.assert_frame_equal(
-        ledger[old.columns], old, check_exact=False, rtol=1e-10, atol=1e-12
-    )
-    difference = np.max(
-        np.abs(ledger[old.columns].to_numpy(dtype=float) - old.to_numpy(dtype=float))
-    )
-    return dict(file=name, maximum_absolute_difference=float(difference))
-
-
-def run_cases(data, targets, covariance, settings, specification, reference, out):
+def run_cases(data, targets, covariance, settings, specification, out):
     sample, source, known, meta = data
-    summaries, classes, checks = [], [], []
+    summaries, classes = [], []
     for case in scenarios(specification):
-        summary, attribution, ledger = run_one(
+        summary, attribution, _ = run_one(
             sample, source, known, targets, covariance, meta, settings, case, out
         )
         summaries.append(summary)
         classes.append(attribution)
-        check = check_reference(ledger, case, reference)
-        if check is not None:
-            checks.append(check)
     pd.DataFrame(summaries).to_csv(out / "comparison.csv", index=False)
     pd.concat(classes, ignore_index=True).to_csv(out / "class_comparison.csv", index=False)
-    assert len(summaries) == 36 and len(checks) == 4
+    assert len(summaries) == 36
     (out / "validation.json").write_text(
         json.dumps(
             dict(
@@ -214,7 +197,6 @@ def run_cases(data, targets, covariance, settings, specification, reference, out
                 all_accounting_and_limits_passed=True,
                 event_journals_reconciled=True,
                 class_attribution_reconciled=True,
-                trade_only_reference_checks=checks,
             ),
             indent=2,
         )
@@ -234,10 +216,11 @@ def main(reference, out):
     audit_data(meta, out)
     (out / "assumptions.json").write_text(json.dumps(specification, indent=2) + "\n")
     (out / "raw_hashes.json").write_text(json.dumps(hashes, indent=2) + "\n")
-    targets, covariance, _ = build_forecasts(returns, meta, base, frozen_settings(settings))
+    parts = risk_inputs(returns, meta, base, settings, source, known)
+    targets, covariance, _ = forecasts_from(parts, returns, meta, base)
     sample = returns.loc[base["start"] : base["end"]]
     data = sample, source.loc[sample.index], known.loc[sample.index], meta
-    run_cases(data, targets, covariance, settings, specification, reference, out)
+    run_cases(data, targets, covariance, settings, specification, out)
     assert all(
         hashlib.sha256((PROJECT_ROOT / p).read_bytes()).hexdigest() == h for p, h in hashes.items()
     )

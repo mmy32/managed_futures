@@ -6,7 +6,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from run_band_experiment import digest, frozen_settings, load_inputs
+from run_band_experiment import digest, load_inputs
+from run_risk_research import risk_inputs
 
 from src.backtest.engine import simulate
 from src.backtest.implementation_diagnostics import (
@@ -16,7 +17,7 @@ from src.backtest.implementation_diagnostics import (
     map_trade_sources,
 )
 from src.backtest.performance import performance
-from src.backtest.qps_baseline import build_forecasts, portfolio_limits
+from src.backtest.qps_baseline import forecasts_from, portfolio_limits
 from src.config import CONFIG_DIR, PROJECT_ROOT, RAW_DATA_DIR
 from src.data_loader.daily_prices import load_daily_bars
 from src.portfolio_construction import BandPolicy
@@ -60,14 +61,11 @@ def coverage_row(group):
     )
 
 
-def audit_trades(reference, source, activity, meta, out):
-    for name, expected in json.loads((reference / "ARTIFACT_SHA256.json").read_text()).items():
-        if digest(reference / name) != expected:
-            raise ValueError(f"Step 4 artifact changed: {name}")
+def audit_trades(roll_output, source, activity, meta, out):
     summaries = []
     for strategy in ["trend", "static"]:
         name = f"trade_only_trade2bps_roll0bps_{strategy}_events.csv.gz"
-        events = pd.read_csv(reference / "output" / name)
+        events = pd.read_csv(roll_output / name)
         selected = map_trade_sources(events, source)
         joined = selected.merge(
             activity,
@@ -127,7 +125,9 @@ def funding_case(sample, source, known, targets, covariance, settings, rates, ca
 
 
 def run_funding(returns, source, known, meta, spec, settings, base, out):
-    targets, covariance, _ = build_forecasts(returns, meta, base, frozen_settings(settings))
+
+    parts = risk_inputs(returns, meta, base, settings, source, known)
+    targets, covariance, _ = forecasts_from(parts, returns, meta, base)
     sample = returns.loc[spec["funding_start"] : spec["funding_end"]]
     months = pd.period_range(spec["funding_start"], spec["funding_end"], freq="M")
     if not sample.index.equals(months):
@@ -186,7 +186,7 @@ def write_gate(out):
     (out / "data_gate.json").write_text(json.dumps(gate, indent=2) + "\n")
 
 
-def main(reference, roll_reference, out):
+def main(reference, roll_output, out):
     if out.exists():
         raise ValueError("Use a new output directory to preserve earlier results")
     spec = json.loads((CONFIG_DIR / "implementation_feasibility.json").read_text())
@@ -196,7 +196,7 @@ def main(reference, roll_reference, out):
     returns, source, known, meta, hashes = load_inputs(reference)
     out.mkdir(parents=True)
     activity = audit_activity(returns.loc[base["start"] : base["end"]].index, meta, spec, out)
-    audit_trades(roll_reference, source, activity, meta, out)
+    audit_trades(roll_output, source, activity, meta, out)
     run_funding(returns, source, known, meta, spec, settings, base, out)
     write_gate(out)
     (out / "assumptions.json").write_text(json.dumps(spec, indent=2) + "\n")
@@ -207,7 +207,7 @@ def main(reference, roll_reference, out):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reference", type=Path, required=True)
-    parser.add_argument("--roll-reference", type=Path, required=True)
+    parser.add_argument("--roll-output", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    main(args.reference.resolve(), args.roll_reference.resolve(), args.output.resolve())
+    main(args.reference.resolve(), args.roll_output.resolve(), args.output.resolve())
