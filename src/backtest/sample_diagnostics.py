@@ -7,6 +7,7 @@ from scipy.stats import t as student_t
 
 from src.backtest.attribution import CLASS_NAMES
 from src.backtest.performance import performance, sharpe_ratio
+from src.backtest.research_spec import primary_key
 
 
 def sample_audit(returns, eligible, base):
@@ -150,12 +151,12 @@ def risk_diagnostics(ledger):
     return through_time, summary
 
 
-def stability_summary(ledgers):
+def stability_summary(ledgers, settings):
     """Descriptive blocks of the existing trading path; no new strategies or holdouts."""
     rows = []
     fields = ["months", "mean_ann", "cagr", "vol_ann", "sharpe", "max_drawdown"]
     for strategy in ["trend", "static"]:
-        ledger = ledgers[f"correlated_band10_5bps_{strategy}"]
+        ledger = ledgers[primary_key(settings, strategy)]
         for start, end in [
             ("1976", "1984"),
             ("1985", "1994"),
@@ -186,4 +187,8 @@ def stability_summary(ledgers):
                 "max_drawdown": np.nan,
             }
         )
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows).assign(
+        model=settings["primary_model"],
+        band=settings["primary_band"],
+        cost_bps=settings["primary_cost_bps"],
+    )

@@ -16,6 +16,7 @@ def simulate(
     position_policy=None,
     source_known_at=None,
     instrument_details=None,
+    roll_schedule=None,
 ):
     """Exposure in units of beginning-month NAV; futures collateral earns RF.
 
@@ -30,6 +31,8 @@ def simulate(
         raise ValueError("Source schedule must match the return index and column order")
     if not np.isfinite(targets.to_numpy()).all():
         raise ValueError("Nonfinite target exposure")
+    if roll_schedule is not None:
+        roll_schedule.validate(returns)
     if source is not None and position_policy is not None:
         if source_known_at is None:
             raise ValueError("Policy-aware source costs require source_known_at dates")
@@ -50,6 +53,7 @@ def simulate(
     nav = 1.0
     prior_source = None
     rows, contributions, instrument_costs, holdings = [], [], [], []
+    roll_costs, roll_notionals = [], []
     for i, month in enumerate(returns.index):
         w = targets.loc[month].to_numpy(dtype=float)
         switched = np.zeros(len(w), dtype=bool)
@@ -61,9 +65,13 @@ def simulate(
                 )
             prior_source = current_source
         diagnostics = {}
+        roll_charge = None if roll_schedule is None else roll_schedule.charge(month)
         if position_policy is not None:
             # The policy sees past holdings and current targets, never this month's return.
-            w, diagnostics = position_policy(month, previous.copy(), w.copy(), cost_model, switched)
+            roll_options = {} if roll_charge is None else {"roll_charge": roll_charge}
+            w, diagnostics = position_policy(
+                month, previous.copy(), w.copy(), cost_model, switched, **roll_options
+            )
             if not np.isfinite(w).all():
                 raise ValueError("Nonfinite executed exposure")
         r = returns.loc[month].to_numpy(dtype=float)
@@ -76,7 +84,13 @@ def simulate(
         r = np.where(np.isfinite(r), r, 0.0)
         traded, source_extra = traded_exposure(w, previous, switched)
         turnover = float(traded.sum())
-        entry_cost = cost_model.cost(traded)
+        ordinary_entry_cost = cost_model.cost(traded)
+        rolled = (
+            np.zeros(len(w)) if roll_charge is None else roll_charge.notional(w, previous, switched)
+        )
+        roll_fees = np.zeros(len(w)) if roll_charge is None else roll_charge.rate * rolled
+        roll_fee = float(roll_fees.sum())
+        entry_cost = ordinary_entry_cost + roll_fee
         gross = float(w @ r)
         funding = float(cash_rates.loc[month]) * (1 - entry_cost)
         final_month = liquidate and i == len(returns) - 1
@@ -93,11 +107,11 @@ def simulate(
                 nav_end=ending_nav,
                 gross_return=gross,
                 collateral_income=funding,
-                rebalance_cost=entry_cost,
+                rebalance_cost=ordinary_entry_cost,
                 liquidation_cost=exit_cost,
                 cost=entry_cost + exit_cost,
                 net_return=net,
-                turnover=turnover + terminal_turnover,
+                turnover=turnover + terminal_turnover + 2 * float(rolled.sum()),
                 rebalance_turnover=turnover,
                 source_switch_extra_turnover=source_extra,
                 terminal_turnover=terminal_turnover,
@@ -112,12 +126,22 @@ def simulate(
                 **diagnostics,
             )
         )
+        if roll_schedule is not None:
+            rows[-1].update(
+                roll_cost=roll_fee,
+                ordinary_cost=ordinary_entry_cost + exit_cost,
+                rolled_notional=float(rolled.sum()),
+                roll_turnover=2 * float(rolled.sum()),
+                ordinary_turnover=turnover + terminal_turnover,
+            )
         contributions.append(w * r)
         # Allocate both source close/open trades and liquidation to the actual instrument.
         terminal_trades = (
             np.abs(w * (1 + r)) if liquidate and i == len(returns) - 1 else np.zeros(len(w))
         )
-        instrument_costs.append(cost_model.instrument_cost(traded + terminal_trades))
+        instrument_costs.append(cost_model.instrument_cost(traded + terminal_trades) + roll_fees)
+        roll_costs.append(roll_fees)
+        roll_notionals.append(rolled)
         holdings.append(w.copy())
         previous = np.zeros(len(w)) if terminal_turnover else w * (1 + r) / (1 + net)
         nav = ending_nav
@@ -135,5 +159,15 @@ def simulate(
         instrument_details["exposure"] = pd.DataFrame(
             holdings, index=returns.index, columns=returns.columns
         )
+        if roll_schedule is not None:
+            instrument_details["roll_cost"] = pd.DataFrame(
+                roll_costs, index=returns.index, columns=returns.columns
+            )
+            instrument_details["ordinary_cost"] = (
+                instrument_details["cost"] - instrument_details["roll_cost"]
+            )
+            instrument_details["rolled_notional"] = pd.DataFrame(
+                roll_notionals, index=returns.index, columns=returns.columns
+            )
         assert np.allclose(instrument_details["cost"].sum(axis=1), ledger.cost)
     return ledger, attribution

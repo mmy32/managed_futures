@@ -1,0 +1,40 @@
+{
+  "runs": 12,
+  "months": 468,
+  "accounting_and_limits_passed": true,
+  "reference_band": 0.1,
+  "reference_checks": [
+    {
+      "run": "correlated_band00_1bps_trend",
+      "maximum_absolute_difference": 5.542233338928781e-13
+    },
+    {
+      "run": "correlated_band00_1bps_static",
+      "maximum_absolute_difference": 4.440892098500626e-15
+    },
+    {
+      "run": "correlated_band00_2bps_trend",
+      "maximum_absolute_difference": 1.4210854715202004e-13
+    },
+    {
+      "run": "correlated_band00_2bps_static",
+      "maximum_absolute_difference": 9.769962616701378e-15
+    },
+    {
+      "run": "correlated_band10_1bps_trend",
+      "maximum_absolute_difference": 5.115907697472721e-13
+    },
+    {
+      "run": "correlated_band10_1bps_static",
+      "maximum_absolute_difference": 2.3092638912203256e-14
+    },
+    {
+      "run": "correlated_band10_2bps_trend",
+      "maximum_absolute_difference": 2.2737367544323206e-13
+    },
+    {
+      "run": "correlated_band10_2bps_static",
+      "maximum_absolute_difference": 8.881784197001252e-15
+    }
+  ]
+}

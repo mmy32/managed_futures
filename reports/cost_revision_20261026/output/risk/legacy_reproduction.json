@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "runs": 12,
+  "start": "2000-01",
+  "end": "2014-12",
+  "comparisons": [
+    {
+      "run": "correlated_band00_0bps_trend_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 2.6645352591003757e-15,
+      "reference_sha256": "729a39356ef0c59ac443d52f6ef1b1cee52d49ff0a328bb81f5d428c60417d8c"
+    },
+    {
+      "run": "correlated_band00_0bps_static_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 3.1086244689504383e-15,
+      "reference_sha256": "252bf40e9b88b7c202fa029e8e28e44064c7199353ec3cec669cce3dd8cbe5d9"
+    },
+    {
+      "run": "correlated_band00_5bps_trend_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 2.758318747020372e-15,
+      "reference_sha256": "1da1784885f7c2232d79bcdad71f55377ff76b71bc49a13a338ea92e966880f4"
+    },
+    {
+      "run": "correlated_band00_5bps_static_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 2.689227963578733e-15,
+      "reference_sha256": "0e1ee814e5ba50f78ad1e6653f6efcfc1a8e215bf3150625945e6d9deed7e918"
+    },
+    {
+      "run": "correlated_band00_10bps_trend_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 2.6645352591003757e-15,
+      "reference_sha256": "aefd9dbc6444d26d04e33aaf50dde0d35f9a1bc56e9dc541bc9d87c6c59ce919"
+    },
+    {
+      "run": "correlated_band00_10bps_static_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 3.552713678800501e-15,
+      "reference_sha256": "143ee2a05e8c90e069b2d4b5b3d30c8f1eed256660c5b6ef925de7388640fdb7"
+    },
+    {
+      "run": "correlated_band10_0bps_trend_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 2.6645352591003757e-15,
+      "reference_sha256": "d2f811fb6135eda454af126f3ee25174c7c9bf49401522de0db8ea22fd8816aa"
+    },
+    {
+      "run": "correlated_band10_0bps_static_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 2.220446049250313e-15,
+      "reference_sha256": "1f840d258d3cf7db6757e17d1efaa85a561d7d21908e1ce21680473c107670de"
+    },
+    {
+      "run": "correlated_band10_5bps_trend_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 2.6645352591003757e-15,
+      "reference_sha256": "9482414a515977babcc4474bdf963f7e18c1af06e54ecd3b674ea9074beddf3a"
+    },
+    {
+      "run": "correlated_band10_5bps_static_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 3.552713678800501e-15,
+      "reference_sha256": "669e0535d83c370da152feea87a69c92f1776fa71335a9795cf741178be93d20"
+    },
+    {
+      "run": "correlated_band10_10bps_trend_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 3.9968028886505635e-15,
+      "reference_sha256": "c9216c2396e9218d3d9a24e727b792a438b7cb3744a75ab91afc42c9666ebd78"
+    },
+    {
+      "run": "correlated_band10_10bps_static_ledger",
+      "months": 180,
+      "columns": 31,
+      "maximum_absolute_difference": 2.220446049250313e-15,
+      "reference_sha256": "b4e932a51280930e8f7cf7a4766ddfd405055078eb0771fc2898e6e6534e4e05"
+    }
+  ]
+}

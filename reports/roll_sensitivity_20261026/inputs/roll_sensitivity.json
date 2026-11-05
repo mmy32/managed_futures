@@ -1,0 +1,17 @@
+{
+  "variant": "v2",
+  "band": 0.10,
+  "trade_costs_bps": [1, 2],
+  "roll_costs_bps": [1, 2],
+  "roll_rate_basis": "complete_roll",
+  "calendars": {
+    "quarterly_jan": [1, 4, 7, 10],
+    "quarterly_feb": [2, 5, 8, 11],
+    "quarterly_mar": [3, 6, 9, 12],
+    "monthly": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  },
+  "schedule_status": "Hypothetical common calendars for every market, fixed before the sample. These are sensitivity assumptions, not observed expiry dates or recommendations for actual rolling.",
+  "execution_timing": "At the beginning of each scheduled holding month. Charge only min(abs(carried), abs(executed)) for same-direction exposure. Ordinary trades cover entries, exits, reversals and net resizing. A source switch supersedes a coincident assumed roll because its full close/open is already booked.",
+  "rate_interpretation": "1 or 2 bps per unit of matched continuing notional for the complete close/open; equivalent to 0.5 or 1 bp per leg. Ordinary trades retain their separate 1 or 2 bps one-way rate. These components have distinct rate bases.",
+  "adoption": "Do not change the production default or claim empirical all-in returns. Contract identifiers, expiry/roll schedules and adjustment lineage are required before adopting a historical roll model. Economic carry and continuous-price adjustments are not added as execution fees."
+}

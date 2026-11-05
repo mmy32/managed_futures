@@ -1,0 +1,8 @@
+{
+  "primary_band": 0.1,
+  "primary_cost_bps": 2,
+  "adopted_change": false,
+  "reason": "Neither candidate satisfies the frozen uncertainty screen; narrower bands have lower Sharpe and worse drawdown despite small historical return gains.",
+  "step_3_complete": true,
+  "step_4_started": false
+}

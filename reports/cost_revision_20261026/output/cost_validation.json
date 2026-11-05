@@ -1,0 +1,294 @@
+{
+  "runs": [
+    {
+      "variant": "baseline",
+      "run": "correlated_band00_0bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band00_0bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band00_1bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band00_1bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band00_2bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band00_2bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band00_5bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band00_5bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band10_0bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band10_0bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band10_1bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band10_1bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band10_2bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band10_2bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band10_5bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "baseline",
+      "run": "correlated_band10_5bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band00_0bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band00_0bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band00_1bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band00_1bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band00_2bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band00_2bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band00_5bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band00_5bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band10_0bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band10_0bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band10_1bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band10_1bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band10_2bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band10_2bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band10_5bps_trend",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    },
+    {
+      "variant": "v2",
+      "run": "correlated_band10_5bps_static",
+      "months": 468,
+      "accounting": true,
+      "linear_cost": true,
+      "nav": true,
+      "limits": true
+    }
+  ],
+  "all_32_passed": true,
+  "class_contributions_reconciled": true
+}

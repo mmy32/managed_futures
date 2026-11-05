@@ -1,0 +1,28 @@
+{
+  "supported": [
+    "lagged reported-series activity diagnostics",
+    "conditional fully collateralized RF sensitivity"
+  ],
+  "unsupported": {
+    "capacity_and_participation": [
+      "AUM",
+      "dated delivery-contract IDs",
+      "multipliers and quote units",
+      "FX conversion",
+      "verified contract volume"
+    ],
+    "market_impact": [
+      "spreads",
+      "execution horizon",
+      "fills/benchmarks",
+      "futures-specific coefficient calibration"
+    ],
+    "margin_and_borrowing": [
+      "contract margin schedules",
+      "cash balances",
+      "cash buffers",
+      "actual collateral yield and financing terms"
+    ]
+  },
+  "adopted_strategy_change": false
+}

@@ -1,0 +1,7 @@
+source_IDs,research_representative,rule,evidence
+RL;ER,RL,Prefer RL monthly returns; fill missing RL from independently calculated ER monthly returns.,73 ER months from 2008-12 through 2014-12
+ND;EN,ND,"Retain ND; no averaging, price splicing, or double counting.",ND alone reconciles supplied retained column
+SP;ES;SC,SP,"Retain SP; no averaging, price splicing, or double counting.",SP alone reconciles supplied retained column
+ZD;YM,ZD,Reproduction and EDA retain both; strategy drops YM as overlapping Dow exposure.,Economic exposure decision; no claim that contract specifications are identical
+EC,,EDA retains supplied FX class; strategy excludes pending identity verification.,No invented metadata correction
+BC;BG;FF;ZH,,Absent from raw inputs and retained monthly data; no synthetic reconstruction.,Unobserved sources remain unavailable

@@ -1,0 +1,85 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 6: prospective rules frozen, validation pending</title><style>
+body{max-width:1040px;margin:48px auto;padding:0 28px;font:17px/1.6 system-ui,sans-serif;color:#233044}
+h1,h2,h3{line-height:1.25;color:#17395b}h1{font-size:2.1em}h2{margin-top:2.5em;padding-top:1em;border-top:1px solid #dbe3eb;font-size:1.5em}h3{margin-top:1.6em;font-size:1.1em}
+p,li{max-width:90ch}li{margin:8px 0}img{display:block;max-width:100%;height:auto;margin:24px auto}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:20px 0}th,td{padding:11px 12px;border-bottom:1px solid #dbe3eb;text-align:left;vertical-align:top}
+th{background:#edf3f8}tbody tr:nth-child(even){background:#f8fafc}pre{background:#f4f6f8;padding:12px;overflow:auto}a{color:#17648c}
+details{margin-top:40px;padding:18px 22px;border:1px solid #dbe3eb;border-radius:8px;background:#f8fafc}summary{cursor:pointer;font-weight:650;color:#17395b}
+@media(max-width:640px){body{margin:24px auto;padding:0 16px;font-size:16px}h1{font-size:1.8em}table{display:block;overflow-x:auto;font-size:13px}th,td{padding:8px}}
+@media print{body{margin:0;font-size:11px}h2,h3{break-after:avoid}img,tr{break-inside:avoid}details{display:none}}
+</style></head><body><main><h1>Step 6: prospective rules frozen, validation pending</h1>
+<p><strong>The preparation is complete. Independent performance validation is not.</strong> The team selected a prospective protocol because no untouched dataset was supplied. All 65 available raw files end by December 2014; the historical results have already informed strategy decisions. No paper account, live feed or scheduled monitoring has been started.</p>
+<h2>Frozen decisions</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Declaration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Candidate</td>
+<td>v2 TREND: 12-month directions outside FX; equal 3/12-month sign blend in FX</td>
+</tr>
+<tr>
+<td>Comparators</td>
+<td>Matching v2 STATIC and original 12-month baseline TREND</td>
+</tr>
+<tr>
+<td>Runs</td>
+<td>Each portfolio at 1 and 2 bps; six cases total, with 2 bps primary</td>
+</tr>
+<tr>
+<td>Risk and execution</td>
+<td>Existing 36-month covariance, 50% correlation shrinkage, 2% volatility floor, 10% forecast-risk ceiling, 3× gross cap, 10% band and prior-only eligibility/source rules</td>
+</tr>
+<tr>
+<td>Cost scope</td>
+<td>Ordinary one-way traded-notional proxy; zero cash interest; no assumed regular-roll schedule</td>
+</tr>
+<tr>
+<td>Initialization</td>
+<td>NAV 1, flat positions, current contiguous warmup history; retain all calendar months</td>
+</tr>
+<tr>
+<td>Horizon</td>
+<td>First 36 months after a documented activation; descriptive checkpoints at 12 and 24 months</td>
+</tr>
+<tr>
+<td>Primary endpoint</td>
+<td>Paired annualized mean net return: v2 TREND minus v2 STATIC at 2 bps</td>
+</tr>
+<tr>
+<td>Secondary endpoint</td>
+<td>Paired annualized mean net return: v2 TREND minus original baseline TREND at 2 bps</td>
+</tr>
+<tr>
+<td>Uncertainty</td>
+<td>Fixed 20,000-draw paired block bootstrap; 6-month blocks and mandatory 12-month sensitivity; nominal and two-comparison family-adjusted intervals</td>
+</tr>
+<tr>
+<td>Decision discipline</td>
+<td>No performance-based early stopping, retuning, sample restart or automatic promotion</td>
+</tr>
+</tbody>
+</table>
+<p>The 36-month horizon is an operational choice, not a power calculation. Uncertainty intervals are descriptive. Portfolio differences do not isolate directional skill because exposures can differ. Evaluate returns alongside costs, drawdowns, exposure and risk calibration. Trade-only proxy results would not establish executable capacity or all-in returns.</p>
+<h2>What is still needed</h2>
+<ol>
+<li>Current, dated data and enough contiguous warmup history to apply the frozen risk, signal and source rules. Do not bridge the gap from 2014 with invented observations.</li>
+<li>A verified data adapter and source/endpoint conventions, declared before evaluation outcomes are examined. Any necessary code change requires a new version of the freeze.</li>
+<li>A timestamped activation record specifying the first holding month, the exact 36-month calendar, input availability, initial state and this release's hash. Only evaluation start/end dates may be administratively overridden in runtime config copies.</li>
+<li>Before-month target/input records, then append-only monthly outcomes and failure logs. Missing held returns or failed reconciliation block a complete performance claim; they do not justify dropping months.</li>
+</ol>
+<p>The simulator assumes an idealized prior-endpoint fill. Targets must be recorded before the next return period begins; missed deadlines cannot be backdated. Executable paper trading would need contract-level data and a separately declared fill convention. No prospective performance has been generated here.</p>
+<h2>Frozen package and verification</h2>
+<p>The release seals <strong>115 source/config/protocol files</strong> and records <strong>65 raw-input hashes</strong>, the four prior release manifests, the current Git HEAD plus uncommitted source state, and numerical-package versions. It includes the exact source archive. Local hashes detect subsequent changes relative to the retained record; they do not constitute independent public timestamping.</p>
+<p>From the repository root:</p>
+<pre><code class="language-sh">python scripts/freeze_prospective.py verify --release reports/prospective_freeze_20261026
+</code></pre>
+<p>Verification checks archive contents, current source/config membership and hashes, raw inputs and every artifact listed in the prior releases. Changed rules or added source files fail verification. Never overwrite this release; an intentional change requires a new version and an explanation of its effect on prospective status.</p>
+<p>The detailed <span>evaluation protocol (in the code package)</span> and <span>machine-readable declaration (in the code package)</span> define recording, failure handling, metrics and decision rules. The archive preserves both. <strong>All 179 tests pass</strong>, including six freeze-integrity tests. Changed Python files pass Ruff. Repository-wide lint retains 12 existing active-code/notebook findings and 98 in archived reproduction scripts; mypy retains the existing <code>targets.py:44</code> error. Test and lint outcomes are recorded in <code>validation.json</code> and <code>execution_logs/</code>.</p>
+<p><strong>Handoff:</strong> preparation complete; activation and future observations remain outstanding. The final evaluation criterion in Delivery F is still pending.</p></main></body></html>

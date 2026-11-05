@@ -1,0 +1,296 @@
+{
+  "removed": [
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/.DS_Store",
+      "bytes": 8196,
+      "reason": "macOS Finder metadata, not research content"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/reports/.DS_Store",
+      "bytes": 6148,
+      "reason": "macOS Finder metadata, not research content"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/qps-baseline/.DS_Store",
+      "bytes": 10244,
+      "reason": "macOS Finder metadata, not research content"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/qps-baseline",
+      "bytes": 0,
+      "reason": "Empty legacy folder after removing Finder metadata"
+    },
+    {
+      "path": "/private/tmp/managed_futures_step1_pytest.log",
+      "bytes": 181,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/managed_futures_step1_regression.log",
+      "bytes": 98,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/orie_lecture8_review",
+      "bytes": 4799016,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/orie_pdf_tools",
+      "bytes": 252609503,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps-cost-revision-jtnmay78",
+      "bytes": 131624157,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps-cost-revision-state.json",
+      "bytes": 42619,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps-step1-final-tests",
+      "bytes": 3249578,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps-step2-matplotlib",
+      "bytes": 125346,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps-step3-matplotlib",
+      "bytes": 125346,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step2_diagnostics.py",
+      "bytes": 4838,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step2_package.py",
+      "bytes": 6978,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step2_publish.py",
+      "bytes": 10203,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step2_refresh.py",
+      "bytes": 1427,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step2_run.py",
+      "bytes": 3461,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step3_mypy.log",
+      "bytes": 161,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step3_package.py",
+      "bytes": 8610,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step3_pytest.log",
+      "bytes": 262,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step3_pytest.xml",
+      "bytes": 19235,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step3_report.py",
+      "bytes": 11971,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/private/tmp/qps_step3_run.log",
+      "bytes": 741,
+      "reason": "Task-generated scratch material; durable reports, source snapshots and validation retained in repository"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/.pytest_cache",
+      "bytes": 17395,
+      "reason": "Disposable generated validation cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/.mypy_cache",
+      "bytes": 35763959,
+      "reason": "Disposable generated validation cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/.ruff_cache",
+      "bytes": 102415,
+      "reason": "Disposable generated validation cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/transaction_cost_model/__pycache__",
+      "bytes": 9683,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/risk_model/__pycache__",
+      "bytes": 16980,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/portfolio_construction/__pycache__",
+      "bytes": 17353,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/models/__pycache__",
+      "bytes": 1325,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/data_processing/__pycache__",
+      "bytes": 10951,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/data_loader/__pycache__",
+      "bytes": 8753,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/data_cleaning/__pycache__",
+      "bytes": 13286,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/config/__pycache__",
+      "bytes": 2258,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/backtest/__pycache__",
+      "bytes": 54346,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/alpha_model/__pycache__",
+      "bytes": 10835,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/src/__pycache__",
+      "bytes": 154,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/scripts/__pycache__",
+      "bytes": 82437,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/tests/transaction_cost_model/__pycache__",
+      "bytes": 39099,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/tests/risk_model/__pycache__",
+      "bytes": 41241,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/tests/portfolio_construction/__pycache__",
+      "bytes": 29757,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/tests/data_processing/__pycache__",
+      "bytes": 15045,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/tests/data_loader/__pycache__",
+      "bytes": 15571,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/tests/data_cleaning/__pycache__",
+      "bytes": 24430,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/tests/backtest/__pycache__",
+      "bytes": 161678,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/tests/alpha_model/__pycache__",
+      "bytes": 20936,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/Users/anaybhat/Documents/managed_futures/tests/__pycache__",
+      "bytes": 156,
+      "reason": "Disposable Python bytecode cache"
+    },
+    {
+      "path": "/private/tmp/qps_step4_run.log",
+      "bytes": 1722,
+      "reason": "Step 4 scratch material; durable validation, source and figures retained in the release"
+    },
+    {
+      "path": "/private/tmp/qps_step4_targeted.log",
+      "bytes": 99,
+      "reason": "Step 4 scratch material; durable validation, source and figures retained in the release"
+    },
+    {
+      "path": "/private/tmp/qps_step4_roll_tests.log",
+      "bytes": 99,
+      "reason": "Step 4 scratch material; durable validation, source and figures retained in the release"
+    },
+    {
+      "path": "/private/tmp/qps_step4_pytest.log",
+      "bytes": 342,
+      "reason": "Step 4 scratch material; durable validation, source and figures retained in the release"
+    },
+    {
+      "path": "/private/tmp/qps_step4_pytest.xml",
+      "bytes": 22618,
+      "reason": "Step 4 scratch material; durable validation, source and figures retained in the release"
+    },
+    {
+      "path": "/private/tmp/qps_step4_mypy.log",
+      "bytes": 161,
+      "reason": "Step 4 scratch material; durable validation, source and figures retained in the release"
+    },
+    {
+      "path": "/private/tmp/qps_step4_report.py",
+      "bytes": 10655,
+      "reason": "Step 4 scratch material; durable validation, source and figures retained in the release"
+    },
+    {
+      "path": "/private/tmp/qps_step4_package.py",
+      "bytes": 8393,
+      "reason": "Step 4 scratch material; durable validation, source and figures retained in the release"
+    },
+    {
+      "path": "/private/tmp/qps-step4-matplotlib",
+      "bytes": 125346,
+      "reason": "Step 4 scratch material; durable validation, source and figures retained in the release"
+    },
+    {
+      "path": "/private/tmp/qps-matplotlib",
+      "bytes": 125346,
+      "reason": "Step 4 scratch material; durable validation, source and figures retained in the release"
+    }
+  ],
+  "total_bytes": 429423143,
+  "preserved": "Raw inputs, original Downloads files, historical reports and reproducibility packages"
+}

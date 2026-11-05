@@ -1,0 +1,27 @@
+{
+  "start": "1976-01",
+  "end": "2014-12",
+  "signal_months": 12,
+  "volatility_months": 36,
+  "information_lag_months": 1,
+  "exclude_from_strategy": {
+    "YM": "Duplicate Dow exposure; retain older ZD series.",
+    "EC": "Instrument identity/classification unresolved; omit from strategy rather than assign an unverified class."
+  },
+  "instrument_volatility_scale": 0.4,
+  "minimum_instruments": 10,
+  "hac_lags": [
+    3,
+    6,
+    12
+  ],
+  "primary_hac_lag": 6,
+  "funding": "Primary: zero-interest synthetic futures-price-return proxy. RF-added results are conditional fully collateralized sensitivities, not verified vendor total returns.",
+  "signal": "Sign of the sum of the preceding 12 monthly price returns; scaling that window by the same current positive risk estimate leaves its sign unchanged. Zero means flat.",
+  "execution": "Primary monthly endpoint execution is idealized: history through t-1 determines t exposure at the prior endpoint. A two-month information lag tests one extra full month of execution delay.",
+  "missing_data": "Require complete trailing signal/risk windows. Never select assets using current/future returns. Raise on any nonzero held exposure with missing realized return; do not fill or silently drop P&L months.",
+  "cost_model": "Illustrative linear bps per absolute traded notional divided by beginning-month NAV, including initial entry, drift-adjusted monthly rebalancing, RL-to-ER source transition and final liquidation. No bid/ask, market impact, margin, tax or contract-roll cost history is available.",
+  "volatility_floor_annual": 0.02,
+  "baseline": "12-month trend, trailing correlation-aware risk model, 2% volatility floor, 3x gross cap, 10% forecast risk ceiling, +/-10% trading band; portfolio controls are in config/risk_config.json.",
+  "benchmark": "STATIC: always long, using the same instrument eligibility, risk model, limits, trading band, and costs; its own forecast determines scaling."
+}

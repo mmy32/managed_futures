@@ -1,0 +1,162 @@
+[
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/__pycache__",
+    "bytes": 156,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/scripts/__pycache__",
+    "bytes": 71622,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/__pycache__",
+    "bytes": 154,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/risk_model/__pycache__",
+    "bytes": 16980,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/config/__pycache__",
+    "bytes": 2258,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/portfolio_construction/__pycache__",
+    "bytes": 17353,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/alpha_model/__pycache__",
+    "bytes": 10835,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/data_processing/__pycache__",
+    "bytes": 10951,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/models/__pycache__",
+    "bytes": 1325,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/transaction_cost_model/__pycache__",
+    "bytes": 9683,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/backtest/__pycache__",
+    "bytes": 62267,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/data_loader/__pycache__",
+    "bytes": 8753,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/src/data_cleaning/__pycache__",
+    "bytes": 13286,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/risk_model/__pycache__",
+    "bytes": 41241,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/portfolio_construction/__pycache__",
+    "bytes": 29757,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/alpha_model/__pycache__",
+    "bytes": 20936,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/data_processing/__pycache__",
+    "bytes": 15045,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/transaction_cost_model/__pycache__",
+    "bytes": 39099,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/backtest/__pycache__",
+    "bytes": 184277,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/data_loader/__pycache__",
+    "bytes": 15571,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/tests/data_cleaning/__pycache__",
+    "bytes": 24445,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/.pytest_cache",
+    "bytes": 18456,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/.ruff_cache",
+    "bytes": 127943,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/Users/anaybhat/Documents/managed_futures/.mypy_cache",
+    "bytes": 35769594,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/private/tmp/qps_step6_cache",
+    "bytes": 6159688,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/private/tmp/qps_step6_ruff_all.log",
+    "bytes": 55963,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/private/tmp/qps_step6_mypy.log",
+    "bytes": 161,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/private/tmp/qps_step6_mpl",
+    "bytes": 125346,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/private/tmp/qps_step6_tests.xml",
+    "bytes": 24431,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/private/tmp/qps_step6_tests.log",
+    "bytes": 352,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/private/tmp/qps_step6_ruff_targeted.log",
+    "bytes": 19,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  },
+  {
+    "path": "/private/tmp/qps_step6_seal.log",
+    "bytes": 104,
+    "reason": "Task scratch or disposable cache; useful logs archived"
+  }
+]

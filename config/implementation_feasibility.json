@@ -1,0 +1,15 @@
+{
+  "variant": "v2",
+  "volume_lookback_observations": 20,
+  "volume_information_lag_bars": 1,
+  "stale_after_calendar_days": 7,
+  "repeat_screen_observations": 5,
+  "funding_start": "2000-01",
+  "funding_end": "2014-12",
+  "trade_costs_bps": [1, 2],
+  "band": 0.10,
+  "aum": null,
+  "volume_convention": "Reported series units, not verified delivery-contract volume. Exclude the latest pre-month bar, then use the preceding 20 recorded bars. Keep zero observations; never fill missing or splice RL and ER histories. The 7-day age and five-row repeat screens are descriptive, not trading or eligibility filters.",
+  "funding_convention": "Use the supplied monthly RF as a conditional fully collateralized income proxy on capital after entry fees. It is realized holding-period income, not an input to current position decisions. Restart both zero-cash and RF cases flat at January 2000 with prior price history for initialization; liquidate December 2014. No funding spread, cash borrowing, margin utilization or stock-borrow fee is inferred.",
+  "adoption": "Readiness assessment only. No empirical impact/capacity or margin/borrowing model without the missing contract, AUM, liquidity and funding evidence. Primary strategy settings remain unchanged."
+}

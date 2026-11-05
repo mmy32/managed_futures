@@ -1,0 +1,33 @@
+{
+  "base_config": "config/baseline_config.json",
+  "volatility_months": 36,
+  "volatility_floor_annual": 0.02,
+  "portfolio_risk_ceiling": 0.1,
+  "gross_cap": 3.0,
+  "correlation_shrinkage": 0.5,
+  "models": [
+    "correlated"
+  ],
+  "bands": [
+    0.0,
+    0.1
+  ],
+  "cost_scenarios_bps": [
+    0,
+    5,
+    10
+  ],
+  "primary_model": "correlated",
+  "primary_band": 0.1,
+  "primary_cost_bps": 5,
+  "trade_rule": "Existing same-direction positions: retain within relative band, otherwise trade to nearest edge. New entries, zero targets and sign changes execute at target. Hard risk and exposure limits override the band.",
+  "limit_timing": "Monthly decision points, after beginning-of-month trading costs; capital and forecasts can change between rebalances. Proportional reductions only; do not enlarge positions to reach the risk ceiling.",
+  "lecture_source": "ORIE5260 Lecture 5, slides 9, 12\u201316, 26\u201327 and 36 (reference only; not a runtime input)",
+  "source_selection": {
+    "minimum_history": 36,
+    "decision_lag_months": 2,
+    "rule": "RL until ER has 36 consecutive observed monthly returns ending at least two months before the holding month, then ER permanently. Never choose source from current realized availability."
+  },
+  "baseline_name": "Risk-controlled 12-month trend with +/-10% trading band",
+  "autocorrelation_hac": "At return lag k, use k Bartlett HAC lags on calendar-spaced scores, with n/(n-2) correction and t(n-2) intervals."
+}

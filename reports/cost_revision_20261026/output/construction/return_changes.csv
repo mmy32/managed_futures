@@ -1,0 +1,9 @@
+month,ID,old_return,new_return,reason
+2006-01,HS,,0.06608239616593581,HS January endpoint correction propagates to both adjacent returns
+2006-02,HS,,0.0018343398749516293,HS January endpoint correction propagates to both adjacent returns
+2014-12,AX,,-0.019914677153139104,Eurex final-month endpoint correction
+2014-12,DT,,0.013037809647979293,Eurex final-month endpoint correction
+2014-12,UB,,0.0052269144611298834,Eurex final-month endpoint correction
+2014-12,UZ,,0.0014500634402754287,Eurex final-month endpoint correction
+2014-12,XU,,-0.03514359034083392,Eurex final-month endpoint correction
+2014-12,XX,,-0.028270709864628096,Eurex final-month endpoint correction

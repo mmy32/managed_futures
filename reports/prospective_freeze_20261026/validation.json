@@ -1,0 +1,18 @@
+{
+  "tests": 179,
+  "failures": 0,
+  "errors": 0,
+  "freeze_tests": 6,
+  "freeze_verification": "passed",
+  "source_files": 115,
+  "raw_inputs": 65,
+  "prior_releases_verified": 4,
+  "targeted_ruff": "passed",
+  "repository_ruff_findings": 110,
+  "existing_active_ruff_findings": 12,
+  "existing_archived_ruff_findings": 98,
+  "mypy": "Existing targets.py:44 slice-index error; no new source modules",
+  "prospective_observations": 0,
+  "independent_validation_complete": false,
+  "operational_paper_trading_started": false
+}

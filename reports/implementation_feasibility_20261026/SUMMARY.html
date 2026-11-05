@@ -1,0 +1,165 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquidity and funding: implementation feasibility</title><style>
+body{max-width:1040px;margin:48px auto;padding:0 28px;font:17px/1.6 system-ui,sans-serif;color:#233044}
+h1,h2,h3{line-height:1.25;color:#17395b}h1{font-size:2.1em}h2{margin-top:2.5em;padding-top:1em;border-top:1px solid #dbe3eb;font-size:1.5em}h3{margin-top:1.6em;font-size:1.1em}
+p,li{max-width:90ch}li{margin:8px 0}img{display:block;max-width:100%;height:auto;margin:24px auto}
+table{border-collapse:collapse;width:100%;font-size:15px;margin:20px 0}th,td{padding:11px 12px;border-bottom:1px solid #dbe3eb;text-align:left;vertical-align:top}
+th{background:#edf3f8}tbody tr:nth-child(even){background:#f8fafc}pre{background:#f4f6f8;padding:12px;overflow:auto}a{color:#17648c}
+details{margin-top:40px;padding:18px 22px;border:1px solid #dbe3eb;border-radius:8px;background:#f8fafc}summary{cursor:pointer;font-weight:650;color:#17395b}
+@media(max-width:640px){body{margin:24px auto;padding:0 16px;font-size:16px}h1{font-size:1.8em}table{display:block;overflow-x:auto;font-size:13px}th,td{padding:8px}}
+@media print{body{margin:0;font-size:11px}h2,h3{break-after:avoid}img,tr{break-inside:avoid}details{display:none}}
+</style></head><body><main><h1>Liquidity and funding: implementation feasibility</h1>
+<p><strong>Step 5 complete; no production strategy change.</strong> The supplied files support a descriptive activity audit and a conditional collateral-income comparison. They do not yet support an empirical capacity, market-impact, margin or borrowing-cost estimate. Step 6 has not started.</p>
+<h2>What the data support</h2>
+<p>All 62 daily series were audited: 457,155 observations, including 730 zero-volume observations retained in calculations. There are no negative volume/open-interest values or fractional volume observations. Ten rows repeat the preceding full OHLC/volume/OI bar; none belong to a run of five identical bars. Repetition is a review flag, not proof of bad data or a reason to delete observations.</p>
+<p>For each holding month in 1976–2014, the diagnostic excludes the latest pre-month bar and uses the preceding 20 recorded observations. It never uses holding-month volume, fills missing history or combines volume across source aliases. Seven calendar days is a descriptive history-age screen, not a trading filter. Source-close trades use the old source; other beginning trades use the current source. Final liquidations are outside this beginning-decision screen.</p>
+<table>
+<thead>
+<tr>
+<th>Portfolio</th>
+<th style="text-align: right;">Beginning trade-event rows</th>
+<th style="text-align: right;">Positive, complete, recent volume window</th>
+<th style="text-align: right;">Share of summed NAV-normalized trade notional</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TREND</td>
+<td style="text-align: right;">11,788</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td>STATIC</td>
+<td style="text-align: right;">8,661</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+</tbody>
+</table>
+<p>Each asset class also has 100% coverage under this screen. Events are execution legs, not independent trade decisions. Notional coverage weights each event by its beginning-month NAV-normalized size; it is not a dollar-volume estimate. <strong>Passing means reported activity data exist; it does not establish that orders are executable at the modeled cost.</strong> Volume units and delivery-contract lineage remain unverified. See <span>daily audit (in the code package)</span>, <span>class coverage (in the code package)</span> and the compressed source-specific panels/event joins in <code>output/</code>.</p>
+<h2>Conditional collateral income</h2>
+<p>Eight v2 cases compare TREND and STATIC at ordinary costs of 1 and 2 bps, using zero cash income or the workbook's monthly RF as a hypothetical full-capital collateral-income proxy. Both conventions start flat with NAV 1 in January 2000 and liquidate in December 2014. Earlier returns initialize forecasts; the 10% band and existing risk controls remain fixed. No hypothetical roll costs are added.</p>
+<table>
+<thead>
+<tr>
+<th>Portfolio</th>
+<th style="text-align: right;">Trade bps</th>
+<th>Cash convention</th>
+<th style="text-align: right;">CAGR</th>
+<th style="text-align: right;">Zero-rate mean/vol</th>
+<th style="text-align: right;">Excess Sharpe vs RF</th>
+<th style="text-align: right;">Max drawdown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TREND</td>
+<td style="text-align: right;">1</td>
+<td>Zero cash</td>
+<td style="text-align: right;">9.50%</td>
+<td style="text-align: right;">0.957</td>
+<td style="text-align: right;">0.775</td>
+<td style="text-align: right;">-14.43%</td>
+</tr>
+<tr>
+<td>TREND</td>
+<td style="text-align: right;">1</td>
+<td>RF proxy</td>
+<td style="text-align: right;">11.49%</td>
+<td style="text-align: right;">1.138</td>
+<td style="text-align: right;">0.959</td>
+<td style="text-align: right;">-14.39%</td>
+</tr>
+<tr>
+<td>STATIC</td>
+<td style="text-align: right;">1</td>
+<td>Zero cash</td>
+<td style="text-align: right;">7.28%</td>
+<td style="text-align: right;">0.666</td>
+<td style="text-align: right;">0.506</td>
+<td style="text-align: right;">-37.89%</td>
+</tr>
+<tr>
+<td>STATIC</td>
+<td style="text-align: right;">1</td>
+<td>RF proxy</td>
+<td style="text-align: right;">9.24%</td>
+<td style="text-align: right;">0.828</td>
+<td style="text-align: right;">0.667</td>
+<td style="text-align: right;">-36.90%</td>
+</tr>
+<tr>
+<td>TREND</td>
+<td style="text-align: right;">2</td>
+<td>Zero cash</td>
+<td style="text-align: right;">9.41%</td>
+<td style="text-align: right;">0.949</td>
+<td style="text-align: right;">0.767</td>
+<td style="text-align: right;">-14.44%</td>
+</tr>
+<tr>
+<td>TREND</td>
+<td style="text-align: right;">2</td>
+<td>RF proxy</td>
+<td style="text-align: right;">11.40%</td>
+<td style="text-align: right;">1.130</td>
+<td style="text-align: right;">0.950</td>
+<td style="text-align: right;">-14.40%</td>
+</tr>
+<tr>
+<td>STATIC</td>
+<td style="text-align: right;">2</td>
+<td>Zero cash</td>
+<td style="text-align: right;">7.27%</td>
+<td style="text-align: right;">0.666</td>
+<td style="text-align: right;">0.505</td>
+<td style="text-align: right;">-37.90%</td>
+</tr>
+<tr>
+<td>STATIC</td>
+<td style="text-align: right;">2</td>
+<td>RF proxy</td>
+<td style="text-align: right;">9.23%</td>
+<td style="text-align: right;">0.827</td>
+<td style="text-align: right;">0.667</td>
+<td style="text-align: right;">-36.91%</td>
+</tr>
+</tbody>
+</table>
+<p>At 2 bps, TREND CAGR rises from <strong>9.41% to 11.40%</strong>, and STATIC from <strong>7.27% to 9.23%</strong>, with the hypothetical RF income. Average annualized collateral income is about <strong>1.83% of NAV</strong>. This is an arithmetic income average, not the CAGR difference: compounding and subsequent portfolio drift also matter. The matching zero-cash controls use this same 15-year window; they are not the 39-year reference runs.</p>
+<p>The workbook RF is used as supplied in decimal monthly units (January 2000: 0.0041 = 0.41%). Income is <code>RF × (1 − entry fees)</code>, measured against beginning-period NAV. Terminal fees are paid at the ending endpoint. Holdings and costs are resimulated; current RF affects realized P&amp;L and future drift, never current positions. Cash income stays separate from asset-class trading P&amp;L.</p>
+<p>The zero-rate mean/volatility ratio divides annualized mean net return by annualized volatility. The excess Sharpe subtracts the <strong>same monthly workbook RF once from both cash conventions</strong>, then uses excess-return volatility. This distinguishes interest income from trading performance. Actual collateral yield, cash availability and the supplied return series' interest/cost coverage are not verified; the funded cases are sensitivities, not validated total account returns. <span>All metrics (in the code package)</span>.</p>
+<h2>Inputs required before adopting more detailed models</h2>
+<table>
+<thead>
+<tr>
+<th>Proposed model</th>
+<th>Missing evidence</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Participation / capacity</td>
+<td>AUM, dated delivery-contract IDs, multipliers, quote units, FX conversion and verified contract-volume units</td>
+<td>Do not convert NAV weights into contract orders or participation.</td>
+</tr>
+<tr>
+<td>Market impact</td>
+<td>Spreads, execution horizon, fills/benchmarks and defensible futures-specific calibration</td>
+<td>Keep the linear proxy; do not fit unsupported coefficients or add an arbitrary nonlinear solver term.</td>
+</tr>
+<tr>
+<td>Margin / cash borrowing</td>
+<td>Contract margin schedules, balances, buffers, actual collateral yield and financing terms</td>
+<td>Do not treat 3× gross exposure as a 2× cash loan.</td>
+</tr>
+</tbody>
+</table>
+<p>The primary reference remains trade-only at 2 bps and the 10% band. The earlier roll sensitivity remains separate. All inputs/history are already inspected; this assessment is not independent validation. The broader research also retains the unverified March 1997 endpoint qualification. A final evaluation needs frozen rules and genuinely untouched history or prospective paper trading.</p>
+<h2>Verification and reproduction</h2>
+<p>All <strong>173 tests pass</strong>, including lagged-volume timing, source mapping, zero retention, missing-RF rejection, current-RF position independence, accounting and risk limits. All eight runs reconcile return components and NAV, with no forecast-risk or gross-limit breaches. All 65 raw input hashes and the Step 2–4 artifact manifests remain unchanged. Primary configuration matches Step 4.</p>
+<p>Changed Python files pass Ruff. Repository-wide Ruff reports 110 findings: the existing 12 active-code/notebook findings plus 98 in archived reproduction scripts. Excluding archived reports leaves the same 12 findings. Mypy retains the existing <code>targets.py:44</code> slice-index error. Historical artifacts were preserved. The source snapshot, execution logs, manifests and cleanup inventory accompany this report.</p>
+<p><span>Reproduction instructions (in the code package)</span> · <span>Readiness gates (in the code package)</span> · <span>Validation (in the code package)</span></p></main></body></html>
