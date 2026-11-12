@@ -4,8 +4,8 @@ Each market has a GARCH(1,1) variance with variance targeting. The (alpha, beta)
 pooled by asset class so markets with short histories get stable estimates. Correlations
 follow DCC on the standardized residuals, with the two DCC parameters fitted by composite
 likelihood on random pairs (Engle, Shephard and Sheppard 2008). Gaussian quasi-likelihood.
-Forecasts for month t use daily returns through the end of month t - lag only; parameters are
-refit each January on data through the prior December.
+Forecasts for month t use daily returns through the end of month t - lag only. January
+parameter refits use the prior December and become available after the configured lag.
 """
 
 import copy
@@ -172,6 +172,7 @@ class DccGarchRiskModel:
         self,
         correlation_shrinkage: float | None = None,
         dynamic_correlation: bool | None = None,
+        lag: int | None = None,
     ) -> "DccGarchRiskModel":
         """A copy with another shrinkage or correlation setting that reuses the fitted models."""
         other = copy.copy(self)
@@ -180,6 +181,8 @@ class DccGarchRiskModel:
             other.correlation_shrinkage = correlation_shrinkage
         if dynamic_correlation is not None:
             other.dynamic_correlation = dynamic_correlation
+        if lag is not None:
+            other.lag = check_lag(lag)
         return other
 
     def fitted_parameters(self) -> pd.DataFrame:
@@ -264,11 +267,15 @@ class DccGarchRiskModel:
 
     def _forecast_all(self, months: pd.PeriodIndex, wanted: pd.DataFrame) -> dict:
         forecasts: dict[pd.Period, pd.DataFrame] = {}
-        for year in sorted({m.year for m in months[wanted.any(axis=1).to_numpy()]}):
+        active = months[wanted.any(axis=1).to_numpy()]
+        # The refit using December may first be used when December is in the
+        # information set: February for lag=2, January for the usual lag=1.
+        fit_years = {month: (month - self.lag + 1).year for month in active}
+        for year in sorted(set(fit_years.values())):
             model = self._year_model(year)
             ends = {d.to_period("M"): d for d in model.next_q}
-            for month in months[wanted.any(axis=1).to_numpy()]:
-                if month.year != year:
+            for month in active:
+                if fit_years[month] != year:
                     continue
                 date = ends[month - self.lag]
                 forecasts[month] = self._month_forecast(model, date)

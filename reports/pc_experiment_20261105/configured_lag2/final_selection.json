@@ -1,0 +1,32 @@
+{
+  "selected": "gamma20",
+  "scores": [
+    {
+      "policy": "gamma5",
+      "gamma": 5,
+      "information_through": "2014-12",
+      "validation_start": "2010-01",
+      "validation_months": 60,
+      "net_difference_ann": -0.006043935317419669,
+      "turnover_ann": 5.0925307327379015
+    },
+    {
+      "policy": "gamma10",
+      "gamma": 10,
+      "information_through": "2014-12",
+      "validation_start": "2010-01",
+      "validation_months": 60,
+      "net_difference_ann": 7.712010201032477e-05,
+      "turnover_ann": 6.453543584272305
+    },
+    {
+      "policy": "gamma20",
+      "gamma": 20,
+      "information_through": "2014-12",
+      "validation_start": "2010-01",
+      "validation_months": 60,
+      "net_difference_ann": 0.0005462870048992079,
+      "turnover_ann": 7.845346204392063
+    }
+  ]
+}

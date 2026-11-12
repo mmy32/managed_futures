@@ -1,0 +1,4 @@
+{
+  "run": "gamma5",
+  "error": "ValueError('Portfolio optimization failed: optimal_inaccurate')"
+}
