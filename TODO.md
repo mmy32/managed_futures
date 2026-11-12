@@ -10,7 +10,6 @@ Ordered by pipeline stage: data, signal, risk model, construction, costs, backte
    1.  Verify the March 1997 endpoint (DT, GS, LX, SS) against the real exchange calendar
    1.  Verify vendor identities and executable futures accounting (midterm deck: all full-period results are conditional on the unverified 27 March 1997 endpoint)
 1.  Portfolio construction: commodities carry most forecast risk (4.74 of 8.00 pts); test class risk budgets and contract caps, net of extra costs
-1.  Transaction cost model: real cost model (spread, commission, impact); separate commission, spread, impact and roll trades, calibrate from liquidity data, and stress costs (midterm deck: only a flat 0/5/10 bps sensitivity so far)
 1.  Backtest comparison and attribution
    -  Compare qps with the baseline on the same footing (same sample, cost assumption and risk model): switch the qps controls on one at a time over the TSMOM setup (correlation shrinkage, limits, bands, costs). The `QPS_VS_BASELINE.md` attribution of the performance gap to the controls is inference until this is done
    -  Separate direction, volatility weighting and leverage (TREND vs STATIC differ in absolute exposure, so the 5.67 pt CAGR gap is not pure signal alpha): TREND vs always-long under equal-notional and inverse-vol weights, plus fixed-gross

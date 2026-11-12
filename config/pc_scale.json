@@ -1,0 +1,16 @@
+{
+  "ceilings": [0.06, 0.08, 0.10, 0.12, 0.14],
+  "reference": {"policy": "limit_3x", "ceiling": 0.10},
+  "arms": [
+    {"name": "limit_3x", "lever_up": false, "gross_cap": 3.0},
+    {"name": "target_3x", "lever_up": true, "gross_cap": 3.0},
+    {"name": "target_4x", "lever_up": true, "gross_cap": 4.0},
+    {"name": "target_6x", "lever_up": true, "gross_cap": 6.0}
+  ],
+  "models": ["rolling", "configured"],
+  "bootstrap": {"block_months": 12, "draws": 2000, "seed": 20261111},
+  "deflation_trial_counts": [25, 100],
+  "tail_thresholds": [2.0, 3.0],
+  "tail_arms": ["limit_3x", "target_6x"],
+  "scope": "TREND, 10% band, 2 bps, 1976-2014. Rolling-covariance baseline and the configured DCC-GARCH model with rescale. Every arm and ceiling is a trial on an inspected window."
+}

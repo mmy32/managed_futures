@@ -3,8 +3,10 @@
 The trend signal per asset class and the risk model are chosen in risk_config.json. Without
 `trend_signal_by_asset_class` every class uses the baseline rule (the sum of the previous
 `signal_months` returns); without `risk_model` the risk model is the rolling covariance.
+The hold stage is chosen by `hold_sizing` in baseline_config.json (default inverse volatility).
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, replace
 
 import pandas as pd
@@ -27,6 +29,7 @@ from src.portfolio_construction import (
     PortfolioLimits,
     construct_targets,
 )
+from src.portfolio_construction.hold import HrpSizing
 from src.risk_model import (
     DccGarchRiskModel,
     RiskModel,
@@ -48,6 +51,16 @@ class QpsComponents:
     risk_model: RiskModel
     sizer: InverseVolatilitySizer
     limits: PortfolioLimits
+    adjustment: Callable | None = None
+
+
+def hold_adjustment(name: str) -> Callable | None:
+    """The hold-stage reshaping named by `hold_sizing`: None keeps inverse-volatility sizes."""
+    if name == "inverse_vol":
+        return None
+    if name == "hrp_within_class":
+        return HrpSizing(within_class=True, signed=True)
+    raise ValueError(f"Unknown hold_sizing {name!r}")
 
 
 def portfolio_limits(settings) -> PortfolioLimits:
@@ -132,6 +145,7 @@ def qps_components(base, settings, meta, risk_model, model="correlated") -> QpsC
             excluded=base["exclude_from_strategy"],
         ),
         limits=portfolio_limits(settings),
+        adjustment=hold_adjustment(base.get("hold_sizing", "inverse_vol")),
     )
 
 
@@ -197,6 +211,7 @@ def forecasts_from(parts: QpsComponents, returns, meta, base, model="correlated"
         start=base["start"],
         end=base["end"],
         class_balanced=model == "class_balanced",
+        adjustment=parts.adjustment,
     )
 
 

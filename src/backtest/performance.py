@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+from scipy.stats import kurtosis, norm, skew
 
 
 def sharpe_ratio(net_returns, risk_free=None):
@@ -75,3 +76,29 @@ def regression_alpha(y, factors, lags):
     for name in factors:
         row[f"beta_{name}"] = fit.params[name]
     return row, fit
+
+
+EULER_GAMMA = 0.5772156649015329
+
+
+def deflated_sharpe(net_returns, trial_sharpes, n_trials):
+    """Probability that the monthly Sharpe beats the best expected from `n_trials` skill-free trials.
+
+    Bailey and Lopez de Prado: the benchmark is the expected maximum of `n_trials` Sharpe ratios
+    with the dispersion of `trial_sharpes` (monthly, unannualised), and the statistic allows for
+    the skew and kurtosis of the returns. `n_trials` may exceed `len(trial_sharpes)` when only some
+    trials were kept; the dispersion is then assumed to carry over.
+    """
+    if n_trials < 2 or len(net_returns) < 3:
+        raise ValueError("Need at least two trials and three returns")
+    observed = net_returns.mean() / net_returns.std(ddof=1)
+    benchmark = np.std(trial_sharpes, ddof=1) * (
+        (1 - EULER_GAMMA) * norm.ppf(1 - 1 / n_trials)
+        + EULER_GAMMA * norm.ppf(1 - 1 / (n_trials * np.e))
+    )
+    spread = (
+        1
+        - skew(net_returns) * observed
+        + (kurtosis(net_returns, fisher=False) - 1) / 4 * observed**2
+    )
+    return float(norm.cdf((observed - benchmark) * np.sqrt(len(net_returns) - 1) / np.sqrt(spread)))

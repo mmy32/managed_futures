@@ -208,3 +208,21 @@ def test_comparison_runner_reports_blocked_pairs_without_partial_performance(tmp
     assert len(failures) == 12 and metrics.empty and alphas.empty and not ledgers
     assert (tmp_path / "blocked_holdings.csv").is_file()
     assert not list(tmp_path.glob("*_ledger.csv"))
+
+
+def test_deflated_sharpe_falls_with_more_trials_and_is_a_probability():
+    from src.backtest.performance import deflated_sharpe
+
+    rng = np.random.default_rng(1)
+    returns = pd.Series(rng.normal(0.01, 0.03, 400))
+    trials = rng.normal(0.1, 0.05, 20)
+    few, many = (deflated_sharpe(returns, trials, n) for n in (5, 500))
+    assert 0 <= many < few <= 1
+
+
+def test_deflated_sharpe_is_high_for_a_strong_strategy_and_half_when_at_the_benchmark():
+    from src.backtest.performance import deflated_sharpe
+
+    rng = np.random.default_rng(2)
+    strong = pd.Series(rng.normal(0.05, 0.02, 400))
+    assert deflated_sharpe(strong, np.array([0.0, 0.05, 0.1]), 10) > 0.99

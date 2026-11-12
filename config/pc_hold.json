@@ -1,0 +1,19 @@
+{
+  "baseline": "inverse_vol",
+  "concentration_share": 0.4,
+  "variants": [
+    {"name": "inverse_vol", "kind": "inverse_vol"},
+    {"name": "class_balanced", "kind": "class_balanced", "scale_up": true},
+    {"name": "class_balanced_down", "kind": "class_balanced", "scale_up": false},
+    {"name": "class_cap_50", "kind": "class_cap", "cap": 0.5},
+    {"name": "class_cap_40", "kind": "class_cap", "cap": 0.4},
+    {"name": "class_cap_30", "kind": "class_cap", "cap": 0.3},
+    {"name": "hrp_within_class", "kind": "hrp", "within_class": true, "signed": true},
+    {"name": "hrp_within_class_raw", "kind": "hrp", "within_class": true, "signed": false},
+    {"name": "hrp_all_markets", "kind": "hrp", "within_class": false, "signed": true}
+  ],
+  "bootstrap": {"block_months": 12, "draws": 2000, "seed": 20261111, "confidence": 0.9},
+  "cpcv": {"groups": 8, "test_groups": 2, "embargo_months": 36},
+  "deflation_trial_counts": [25, 100],
+  "scope": "Rolling-covariance baseline (36 months, 50% shrinkage), TREND, 10% band, 2 bps, 1976-2014. Every variant is a trial on an inspected window."
+}

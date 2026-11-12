@@ -1,5 +1,7 @@
 """Monthly target exposures: signals sized by volatility, then bounded by portfolio limits."""
 
+from collections.abc import Callable
+
 import numpy as np
 import pandas as pd
 
@@ -21,10 +23,13 @@ def construct_targets(
     start: str,
     end: str,
     class_balanced: bool = False,
+    adjustment: Callable | None = None,
 ):
     """Return (targets by strategy, covariance by month, per-month diagnostics).
 
     Every strategy shares one eligibility set and one covariance forecast per month.
+    `adjustment(weights, matrix, labels, active)` optionally reshapes the sized book before the
+    portfolio limits (class budgets, class caps, HRP).
     """
     returns = data.returns
     check_monthly_calendar(returns)
@@ -49,6 +54,8 @@ def construct_targets(
             weights = raw[name].loc[month].to_numpy().copy()
             if class_balanced and active.sum() >= sizer.minimum_instruments:
                 weights = balance_classes(weights, matrix, labels, active, limits.risk_ceiling)
+            if adjustment is not None and active.sum() >= sizer.minimum_instruments:
+                weights = adjustment(weights, matrix, labels, active)
             desired = bounded_target(weights, matrix, limits)
             target.loc[month] = desired
             records.append(

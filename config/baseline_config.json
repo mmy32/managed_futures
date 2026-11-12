@@ -10,6 +10,7 @@
   },
   "instrument_volatility_scale": 0.4,
   "minimum_instruments": 10,
+  "hold_sizing": "hrp_within_class",
   "hac_lags": [
     3,
     6,

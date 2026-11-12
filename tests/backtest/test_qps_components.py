@@ -11,10 +11,12 @@ from src.backtest.qps_baseline import (
     build_signal,
     configured_components,
     eligibility,
+    forecasts_from,
     rescaled_components,
     trend_signal,
 )
 from src.config import CONFIG_DIR
+from src.portfolio_construction.hold import HrpSizing
 from src.risk_model import DccGarchRiskModel, RollingCovarianceRiskModel, ScaledRiskModel
 
 CLASSES = ["EQ", "EQ", "FI", "FI", "FX", "FX", "COMM", "COMM"]
@@ -183,3 +185,24 @@ def test_configured_rescale_wraps_the_risk_model_with_a_past_only_scale():
     first = returns.loc[base["start"] :].index[0]
     assert scaled.risk_model.scale.loc[first] == 1.0  # no past ratios yet
     assert scaled.risk_model.scale.loc[base["end"]] != 1.0
+
+
+def test_hold_sizing_selects_the_hrp_adjustment_and_defaults_to_inverse_volatility():
+    _, meta, base = data()
+    assert configured_components(base, RISK_SETTINGS, meta).adjustment is None
+    hrp = configured_components({**base, "hold_sizing": "hrp_within_class"}, RISK_SETTINGS, meta)
+    assert isinstance(hrp.adjustment, HrpSizing)
+
+
+def test_unknown_hold_sizing_is_rejected():
+    _, meta, base = data()
+    with pytest.raises(ValueError, match="Unknown hold_sizing"):
+        configured_components({**base, "hold_sizing": "kelly"}, RISK_SETTINGS, meta)
+
+
+def test_forecasts_apply_the_hold_adjustment():
+    returns, meta, base = data()
+    plain, _, _ = forecasts_from(configured_components(base, RISK_SETTINGS, meta), returns, meta, base)
+    parts = configured_components({**base, "hold_sizing": "hrp_within_class"}, RISK_SETTINGS, meta)
+    hrp, _, _ = forecasts_from(parts, returns, meta, base)
+    assert not np.allclose(plain["trend"].to_numpy(), hrp["trend"].to_numpy())
