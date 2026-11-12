@@ -1,0 +1,31 @@
+{
+  "band": 0.10,
+  "reference_bps": 2,
+  "stress_grid_bps": [0, 2, 5, 10, 20, 50, 100],
+  "breakeven_search_bps": [0, 1000],
+  "sharpe_tolerance": 0.1,
+  "spread_half_bps": [1, 2, 5],
+  "high_volatility_month_share": 0.1,
+  "impact_coefficient": [0.5, 1.0],
+  "aum_grid": [1e7, 1e8, 1e9, 1e10],
+  "reference_aum": 1e9,
+  "adv_scale": [0.5, 1.0, 2.0],
+  "adv_window_days": 60,
+  "adv_min_days": 20,
+  "capacity_search_aum": [1e6, 1e13],
+  "trading_days_per_year": 252,
+  "subperiods": [["1976", "1984"], ["1985", "1994"], ["1995", "2004"], ["2005", "2014"]],
+  "multiplier_status": "USD value of one price point per contract, from standard contract sizes written from memory (non-USD contracts at rough end-2014 exchange rates). Not verified against exchange specifications; the supplied prices are adjusted series, so contract values are indicative.",
+  "contract_multiplier": {
+    "AN": 1000, "BN": 625, "CN": 1000, "FN": 1250, "SN": 1250, "MP": 500000, "EC": 10000,
+    "AP": 20.5, "LX": 15.6, "CA": 12.5, "HS": 6.45, "NK": 5, "AX": 31, "XU": 12.5, "XX": 12.5,
+    "ND": 100, "RL": 500, "MD": 100, "SP": 250, "YM": 5, "ZD": 10,
+    "ZL": 600, "ZU": 1000, "ZB": 420, "ZN": 10000, "CC": 10, "CT": 500, "DA": 2000,
+    "JO": 150, "KC": 375, "ZC": 50, "ZS": 50, "ZM": 100, "ZO": 50, "LB": 110, "MW": 50,
+    "ZW": 50, "ZR": 20, "SB": 1120, "ZG": 100, "ZI": 50, "ZK": 250, "ZA": 100,
+    "ZP": 50, "ZF": 500, "ZT": 400, "ZZ": 400,
+    "FB": 1000, "TU": 2000, "TY": 1000, "US": 1000, "UB": 1250, "UZ": 1250, "SS": 7800,
+    "GS": 1560, "CB": 860, "DT": 1250
+  },
+  "inverse_quoted_contract_size": {"JN": 12500000}
+}
