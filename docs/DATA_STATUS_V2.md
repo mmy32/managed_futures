@@ -2,7 +2,7 @@
 
 **The 1976–2014 comparison stops on missing held returns.** The simulator preserves the existing endpoint rules and fails explicitly; full-period portfolio metrics are unavailable under this policy.
 
-For the completed, clearly labeled conditional research, read [ENDPOINT_SENSITIVITY_V2.md](../reports/qps_baseline/ENDPOINT_SENSITIVITY_V2.md) or [offline HTML](../reports/qps_baseline/ENDPOINT_SENSITIVITY_V2.html). That report uses March 27 as an unverified March 1997 endpoint for four instruments.
+For the completed, clearly labeled conditional research, read [ENDPOINT_SENSITIVITY_V2.md](../reports/qps_baseline/ENDPOINT_SENSITIVITY_V2.md). That report uses March 27 as an unverified March 1997 endpoint for four instruments.
 
 ## What blocks evaluation
 

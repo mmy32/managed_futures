@@ -26,7 +26,7 @@ The modified returns affect subsequent eligibility, signals and covariance as we
 
 ## Results and interpretation
 
-The [conditional report](../reports/qps_baseline/ENDPOINT_SENSITIVITY.md) and [standalone HTML](../reports/qps_baseline/ENDPOINT_SENSITIVITY.html) contain all 12 comparisons, four-class statistics, rank/HAC diagnostics, alpha, risk plots and class attribution. All 468 months are retained; the unchanged ten-instrument minimum makes January 1976 flat. Results explicitly identify the unverified endpoint assumption.
+The [conditional report](../reports/qps_baseline/ENDPOINT_SENSITIVITY.md) contains all 12 comparisons, four-class statistics, rank/HAC diagnostics, alpha, risk plots and class attribution. All 468 months are retained; the unchanged ten-instrument minimum makes January 1976 flat. Results explicitly identify the unverified endpoint assumption.
 
 The scenario enables an internally consistent research calculation. It does not prove the original monthly blanks were mistakes or establish performance under the unresolved primary data policy. The 2000–2014 regression replay remains based on the preserved inputs; it validates the refactor independently of this sensitivity.
 

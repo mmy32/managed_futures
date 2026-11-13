@@ -1,5 +1,9 @@
 # TODO
 
+The active out-of-sample preparation and release-data checks are in
+[docs/OOS_IMPLEMENTATION_PLAN.md](docs/OOS_IMPLEMENTATION_PLAN.md) and
+[docs/OOS_VALIDATION.md](docs/OOS_VALIDATION.md). The items below are an older research backlog.
+
 ## Current strategy (qps)
 
 Ordered by pipeline stage: data, signal, risk model, construction, costs, backtest and attribution, validation.
