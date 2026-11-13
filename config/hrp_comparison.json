@@ -1,0 +1,10 @@
+{
+  "base_config": "config/baseline_config.json",
+  "risk_config": "config/risk_config.json",
+  "strategy": "trend",
+  "rescale_shadow": "baseline",
+  "portfolios": {
+    "baseline": {"hold_sizing": "inverse_vol"},
+    "enhanced": {"hold_sizing": "hrp_within_class"}
+  }
+}

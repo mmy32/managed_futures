@@ -13,7 +13,7 @@ import pandas as pd
 
 from src.config import FUTURES_UNDERLYING_DIR, MONTHLY_RETURNS_PATH, PROJECT_ROOT, QPS_OUTPUT_DIR
 from src.data_loader import load_daily_prices, load_monthly_return_tokens, load_monthly_returns
-from src.data_processing.endpoints import close_frames, endpoints
+from src.data_processing.endpoints import close_frames, historical_span_endpoints
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "endpoint_review"
@@ -49,21 +49,21 @@ def boundary_checks():
         {"Close": [100.0, 101.0, 105.0]},
         index=pd.to_datetime(["2024-03-26", "2024-03-27", "2024-04-30"]),
     )
-    e = endpoints(d, m)
+    e = historical_span_endpoints(d, m)
     assert e.loc[m[0], "target_date"] == pd.Timestamp("2024-03-29")
     assert e.loc[m[0], "age"] == 2
     d2 = d.drop(pd.Timestamp("2024-03-27"))
-    assert endpoints(d2, m).loc[m[0], "endpoint_accepted"]
+    assert historical_span_endpoints(d2, m).loc[m[0], "endpoint_accepted"]
     d3 = pd.DataFrame({"Close": [100.0, 105.0]}, index=pd.to_datetime(["2024-03-25", "2024-04-30"]))
-    assert not endpoints(d3, m).loc[m[0], "endpoint_accepted"]
-    p = endpoints(d3, m).endpoint_close
+    assert not historical_span_endpoints(d3, m).loc[m[0], "endpoint_accepted"]
+    p = historical_span_endpoints(d3, m).endpoint_close
     assert (p / p.shift(1) - 1).isna().all()
     terminal = pd.DataFrame(
         {"Close": [100.0, 101.0]}, index=pd.to_datetime(["2014-11-28", "2014-12-30"])
     )
     mm = pd.period_range("2014-11", "2014-12", freq="M")
-    assert not endpoints(terminal, mm).iloc[-1].endpoint_accepted
-    assert endpoints(terminal, mm, bound_span=False).iloc[-1].endpoint_accepted
+    assert not historical_span_endpoints(terminal, mm).iloc[-1].endpoint_accepted
+    assert historical_span_endpoints(terminal, mm, bound_span=False).iloc[-1].endpoint_accepted
 
 
 def compare_rules(raw, supplied, months):
@@ -82,7 +82,8 @@ def compare_rules(raw, supplied, months):
     selected_e, selected_r = {}, {}
     for name, anchor, lookback, bound, age_kind in variants:
         tables = {
-            a: endpoints(d, months, anchor, lookback, bound, age_kind) for a, d in raw.items()
+            a: historical_span_endpoints(d, months, anchor, lookback, bound, age_kind)
+            for a, d in raw.items()
         }
         ratios = {a: e.endpoint_close / e.endpoint_close.shift(1) - 1 for a, e in tables.items()}
         # Diagnostic only: RL's own monthly return takes precedence, with ER

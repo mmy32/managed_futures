@@ -135,6 +135,25 @@ def test_dcc_garch_forecast_ignores_the_future_and_is_positive_definite():
     np.testing.assert_allclose(matrix, again)
 
 
+def test_dcc_forecast_start_keeps_prior_data_for_the_same_forecast():
+    data = monthly_data(months=72)
+    daily = daily_frame(list(data.returns.columns), start="1999-01-01", end="2005-12-31")
+    eligible = eligible_from(data).loc["2004-06":"2004-06"]
+    args = (daily, data.meta.AssetClass, 36, 1, 0.02, 0.1)
+    full = DccGarchRiskModel(*args).covariances(data, eligible)[0]
+    bounded = DccGarchRiskModel(*args, forecast_start="2004-01").covariances(data, eligible)[0]
+    np.testing.assert_allclose(full[pd.Period("2004-06", "M")], bounded[pd.Period("2004-06", "M")])
+
+
+def test_dcc_refit_explains_insufficient_prior_markets():
+    data = monthly_data(months=48, markets=2)
+    daily = daily_frame(list(data.returns.columns), start="2000-01-01", end="2003-12-31")
+    daily.loc[:"2001-12-31", "B"] = np.nan
+    model = DccGarchRiskModel(daily, data.meta.AssetClass, 12, 1, 0.02, 0.1)
+    with pytest.raises(ValueError, match="requires two markets.*through 2001-12-31"):
+        model._fit_year(2002)
+
+
 def test_trailing_scale_uses_past_months_only_and_defaults_to_one():
     z = pd.Series(
         np.random.default_rng(2).normal(0, 1.3, 80),

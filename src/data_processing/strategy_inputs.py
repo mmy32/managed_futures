@@ -45,6 +45,8 @@ def select_source(own_returns, fallback_returns, months, minimum_history=36, dec
 
 
 def load_strategy_inputs(settings, write=False):
+    # The input file's RL fallback is retrospective; replace it and its source
+    # schedule below before constructing strategy signals or positions.
     returns = pd.read_csv(QPS_OUTPUT_DIR / "construction/monthly_returns_research.csv", index_col=0)
     returns.index = pd.PeriodIndex(returns.index, freq="M")
     independent = {}

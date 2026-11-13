@@ -94,6 +94,8 @@ def _dcc_pair_negative_loglik(theta, pairs: list[tuple[np.ndarray, np.ndarray, f
 def fit_dcc(z: pd.DataFrame, rng: np.random.Generator) -> tuple[float, float]:
     """DCC (a, b) from composite likelihood over random market pairs with enough overlap."""
     columns = list(z.columns)
+    if len(columns) < 2:
+        raise ValueError("DCC estimation requires at least two markets with sufficient history")
     pairs: list[tuple[np.ndarray, np.ndarray, float]] = []
     attempts = 0
     while len(pairs) < DCC_PAIRS and attempts < 20 * DCC_PAIRS:
@@ -154,6 +156,7 @@ class DccGarchRiskModel:
         correlation_shrinkage: float,
         dynamic_correlation: bool = True,
         seed: int = 0,
+        forecast_start: str | None = None,
     ):
         if not 0 < correlation_shrinkage <= 1:
             raise ValueError("Shrinkage must be positive and at most one")
@@ -165,6 +168,7 @@ class DccGarchRiskModel:
         self.correlation_shrinkage = correlation_shrinkage
         self.dynamic_correlation = dynamic_correlation
         self.seed = seed
+        self.forecast_start = None if forecast_start is None else pd.Period(forecast_start, freq="M")
         self._forecasts: dict[pd.Period, pd.DataFrame] | None = None
         self._years: dict[int, _YearModel] = {}
 
@@ -205,6 +209,11 @@ class DccGarchRiskModel:
         fit = self.daily.loc[: f"{year - 1}-12-31"]
         counts = fit.notna().sum()
         modelled = list(counts.index[counts >= MIN_FIT_OBS])
+        if len(modelled) < 2:
+            raise ValueError(
+                f"DCC refit for {year} requires two markets with at least {MIN_FIT_OBS} "
+                f"daily observations through {year - 1}-12-31"
+            )
         target = (fit[modelled] ** 2).mean()
         params = {}
         for group in sorted(set(self.asset_class.reindex(modelled).dropna())):
@@ -284,7 +293,10 @@ class DccGarchRiskModel:
     def _universe(self, data: MarketData) -> pd.DataFrame:
         check_monthly_calendar(data.returns)
         eligible = complete_monthly_window(data.returns, self.window)
-        return eligible.shift(self.lag, fill_value=False)
+        eligible = eligible.shift(self.lag, fill_value=False)
+        if self.forecast_start is not None:
+            eligible.loc[eligible.index < self.forecast_start] = False
+        return eligible
 
     def _ensure(self, data: MarketData) -> dict[pd.Period, pd.DataFrame]:
         if self._forecasts is None:

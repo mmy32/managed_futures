@@ -7,6 +7,7 @@ import pandas as pd
 import pytest
 
 import research_report as report
+import run_risk_research
 from run_risk_research import evaluate
 from src.backtest.attribution import class_attribution
 from src.backtest.performance import performance
@@ -36,6 +37,38 @@ def config():
         cost_scenarios_bps=[1, 2],
         risk_model={"type": "rolling"},
     )
+
+
+def test_risk_research_records_missing_rescale_shadow_and_stops(tmp_path, monkeypatch):
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "risk_config.json").write_text(json.dumps(config()))
+    (config_dir / "baseline_config.json").write_text(
+        json.dumps({"start": "2000-01", "end": "2000-01"})
+    )
+    monkeypatch.setattr(run_risk_research, "ROOT", tmp_path)
+    monkeypatch.setattr(run_risk_research, "CONFIG_DIR", config_dir)
+    monkeypatch.setattr(run_risk_research, "QPS_OUTPUT_DIR", tmp_path / "output")
+    monkeypatch.setattr(run_risk_research, "QPS_REPORT_DIR", tmp_path / "reports")
+    monkeypatch.setattr(run_risk_research, "RAW_DATA_DIR", tmp_path / "raw")
+    monkeypatch.setattr(run_risk_research, "archive_previous_outputs", lambda *args: None)
+    index = pd.period_range("2000-01", periods=1, freq="M")
+    returns = pd.DataFrame({"A": [0.01]}, index=index)
+    monkeypatch.setattr(
+        run_risk_research, "load_returns", lambda *args: (returns, None, None, None, None, None)
+    )
+    monkeypatch.setattr(run_risk_research, "load_asset_map", lambda: None)
+
+    def missing(*args):
+        raise ValueError("Missing held return at 2000-01: ['A']")
+
+    monkeypatch.setattr(run_risk_research, "risk_inputs", missing)
+    assert run_risk_research.main() == 2
+    status = json.loads((tmp_path / "output" / "risk" / "run_status.json").read_text())
+    assert status["status"] == "blocked_missing_held_returns"
+    assert status["stage"] == "risk_rescale_shadow"
+    assert status["full_period_comparison_published"] is False
+    assert "2000-01" in status["error"]
 
 
 @pytest.mark.parametrize(

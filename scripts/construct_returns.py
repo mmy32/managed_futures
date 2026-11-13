@@ -9,7 +9,7 @@ import pandas as pd
 
 from src.config import PROJECT_ROOT, QPS_OUTPUT_DIR, RAW_DATA_DIR
 from src.data_loader import load_daily_prices, load_monthly_return_tokens, load_monthly_returns
-from src.data_processing.endpoints import close_frames, endpoints
+from src.data_processing.endpoints import close_frames, endpoints, historical_span_endpoints
 
 ROOT = PROJECT_ROOT
 OUT = QPS_OUTPUT_DIR / "construction"
@@ -22,8 +22,10 @@ def read_inputs():
     return raw, supplied
 
 
-def assemble(raw, months, columns, calendar_corrections=False):
-    e = {a: endpoints(d, months) for a, d in raw.items()}
+def assemble(raw, months, columns, calendar_corrections=False, *, historical_reproduction=False):
+    # The full-file span rule is retained only to reconcile the supplied historical file.
+    select = historical_span_endpoints if historical_reproduction else endpoints
+    e = {a: select(d, months) for a, d in raw.items()}
     overrides = []
     if calendar_corrections:
         cases = [
@@ -63,7 +65,9 @@ def assemble(raw, months, columns, calendar_corrections=False):
     ratios = {a: x.endpoint_close / x.endpoint_close.shift(1) - 1 for a, x in e.items()}
     result = pd.DataFrame({a: ratios[a] for a in columns}, index=months)
     source = pd.DataFrame({a: pd.Series(a, index=months).where(result[a].notna()) for a in columns})
-    # Priority is empirical. Use within-source returns, never cross-source price ratios.
+    # Retrospective supplied-file reconstruction and descriptive data only: this
+    # fallback uses the current month's availability and is not a trading rule.
+    # load_strategy_inputs replaces RL and its source with a past-only schedule.
     fallback = result.RL.isna() & ratios["ER"].notna()
     result.loc[fallback, "RL"] = ratios["ER"].loc[fallback]
     source.loc[fallback, "RL"] = "ER"
@@ -79,7 +83,9 @@ def main():
         if p.is_file()
     }
     raw, supplied = read_inputs()
-    replica, _provenance, _ = assemble(raw, supplied.index, supplied.columns)
+    replica, _provenance, _ = assemble(
+        raw, supplied.index, supplied.columns, historical_reproduction=True
+    )
     # Loaders return floats; the stored decimal strings set the comparison tolerance.
     tokens = load_monthly_return_tokens()
     tokens.index = supplied.index

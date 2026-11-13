@@ -394,7 +394,25 @@ def main(endpoint_sensitivity=False):
     )
     meta = load_asset_map()
     sample = returns.loc[base["start"] : base["end"]]
-    parts = risk_inputs(returns, meta, base, settings, source, known)
+    try:
+        parts = risk_inputs(returns, meta, base, settings, source, known)
+    except ValueError as error:
+        if not str(error).startswith("Missing held return"):
+            raise
+        (out / "run_status.json").write_text(
+            json.dumps(
+                {
+                    "status": "blocked_missing_held_returns",
+                    "stage": "risk_rescale_shadow",
+                    "full_period_comparison_published": False,
+                    "error": str(error),
+                },
+                indent=2,
+            )
+            + "\n"
+        )
+        print(f"DATA BLOCKER: risk-rescale shadow stopped: {error}", flush=True)
+        return 2
     eligible = eligibility_from(parts, returns, meta, base)
     audit = write_sample_audit(
         returns, source, known, schedule, eligible, base, settings, out, changes

@@ -126,6 +126,7 @@ def build_risk_model(base, settings, meta, model="correlated", daily=None) -> Ri
         meta.AssetClass,
         **common,
         correlation_shrinkage=options["correlation_shrinkage"],
+        forecast_start=base.get("risk_forecast_start"),
     )
 
 
@@ -161,28 +162,23 @@ def rescaled_components(
     """Scale the risk model's covariance by its own past realised/forecast ratio (config `rescale`).
 
     The trend strategy is run once with the unscaled model; its standardized returns through
-    the month before each decision give one scale per month, used for both strategies.
-    A configuration without `rescale`, or a run blocked by a missing held return, returns
-    `parts` unchanged.
+    the configured information cutoff give one scale per month. A configuration without
+    `rescale` returns `parts` unchanged. A missing held return stops the run: it must never
+    cause the rescale to be dropped retrospectively from the entire history.
     """
     options = settings.get("risk_model", {}).get("rescale")
     if options is None:
         return parts
     targets, covariance, _ = forecasts_from(parts, returns, meta, base, model)
     sample = returns.loc[base["start"] : base["end"]]
-    try:
-        ledger, _ = simulate(
-            sample,
-            targets["trend"],
-            LinearBpsCost(settings["primary_cost_bps"]),
-            source.loc[sample.index],
-            position_policy=BandPolicy(covariance, parts.limits, settings["primary_band"]),
-            source_known_at=known.loc[sample.index],
-        )
-    except ValueError as error:
-        if not str(error).startswith("Missing held return"):
-            raise
-        return parts  # data-blocked run: the evaluation step records the failure
+    ledger, _ = simulate(
+        sample,
+        targets["trend"],
+        LinearBpsCost(settings["primary_cost_bps"]),
+        source.loc[sample.index],
+        position_policy=BandPolicy(covariance, parts.limits, settings["primary_band"]),
+        source_known_at=known.loc[sample.index],
+    )
     scale = trailing_scale(
         standardized_returns(ledger),
         options["window"],
