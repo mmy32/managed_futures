@@ -12,7 +12,7 @@ def load_asset_map(path: Path = ASSET_MAP_PATH) -> pd.DataFrame:
 
     Raises ValueError on duplicate IDs or an unknown asset class.
     """
-    asset_map = pd.read_csv(path, index_col="ID")
+    asset_map = pd.read_csv(path, index_col="ID", dtype={"ID": str})
     if not asset_map.index.is_unique:
         duplicated = asset_map.index[asset_map.index.duplicated()].unique().tolist()
         raise ValueError(f"{path}: duplicate market IDs: {duplicated}")

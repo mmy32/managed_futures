@@ -42,3 +42,20 @@ def test_rejects_non_positive_close(tmp_path):
 def test_rejects_empty_directory(tmp_path):
     with pytest.raises(ValueError, match="no CSV"):
         load_daily_prices(tmp_path)
+
+
+def test_loads_only_declared_markets_in_declared_order(tmp_path):
+    _market(tmp_path, "AA", [("2000-01-03", 10.0)])
+    _market(tmp_path, "BB", [("2000-01-03", 5.0)])
+    (tmp_path / "UNUSED.csv").write_text("not a price file")
+    result = load_daily_prices(tmp_path, ["BB", "AA"], iso_dates=True)
+    assert list(result.columns) == ["BB", "AA"]
+
+
+def test_normalized_input_requires_unambiguous_dates_and_one_close(tmp_path):
+    _market(tmp_path, "AA", [("01/03/2000", 10.0)])
+    with pytest.raises(ValueError, match="YYYY-MM-DD"):
+        load_daily_prices(tmp_path, ["AA"], iso_dates=True)
+    (tmp_path / "AA.csv").write_text(",Close,Close\n2000-01-03,10,11\n")
+    with pytest.raises(ValueError, match="exactly one Close"):
+        load_daily_prices(tmp_path, ["AA"], iso_dates=True)
