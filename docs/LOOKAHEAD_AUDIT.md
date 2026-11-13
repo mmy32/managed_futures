@@ -1,5 +1,8 @@
 # Original-period timing audit and OOS assessment
 
+**Current matched-HRP status:** see [HRP timing audit](HRP_TIMING_AUDIT.md). The historical
+notes below predate the causal endpoint and rescale-failure fixes described there.
+
 **Scope note (7 October 2026):** The empirical figures below describe the archived 2000–2014 evaluation. The current 1976–2014 run stops on missing held DT/GS/LX returns in March 1997; its timing comparison is not published. Synthetic causal tests still pass. See the current [report](../reports/qps_baseline/REPORT.md) and [validation status](VALIDATION.md).
 
 The implementation has past-only signal, risk and trading rules under the stated monthly endpoint convention. That is not a certificate that the vendor dataset or same-close fills are historically executable.

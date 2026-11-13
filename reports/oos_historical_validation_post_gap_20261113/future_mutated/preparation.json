@@ -1,0 +1,788 @@
+{
+  "asset_map": "/Users/anaybhat/Documents/managed_futures/.worktrees/oos-readiness/data/raw/AssetMapCsv.csv",
+  "base": {
+    "baseline": "12-month trend, trailing correlation-aware risk model, 2% volatility floor, 3x gross cap, 10% forecast risk ceiling, +/-10% trading band; portfolio controls are in config/risk_config.json.",
+    "benchmark": "STATIC: always long, using the same instrument eligibility, risk model, limits, trading band, and costs; its own forecast determines scaling.",
+    "cost_model": "Illustrative linear bps per absolute traded notional divided by beginning-month NAV, including initial entry, drift-adjusted monthly rebalancing, RL-to-ER source transition and final liquidation. No bid/ask, market impact, margin, tax or contract-roll cost history is available.",
+    "end": "2009-03",
+    "exclude_from_strategy": {
+      "EC": "Instrument identity/classification unresolved; omit from strategy rather than assign an unverified class.",
+      "YM": "Duplicate Dow exposure; retain older ZD series."
+    },
+    "execution": "Primary monthly endpoint execution is idealized: history through t-1 determines t exposure at the prior endpoint. A two-month information lag tests one extra full month of execution delay.",
+    "funding": "Primary: zero-interest synthetic futures-price-return proxy. RF-added results are conditional fully collateralized sensitivities, not verified vendor total returns.",
+    "hac_lags": [
+      3,
+      6,
+      12
+    ],
+    "hold_sizing": "hrp_within_class",
+    "information_lag_months": 1,
+    "instrument_volatility_scale": 0.4,
+    "minimum_instruments": 10,
+    "missing_data": "Require complete trailing signal/risk windows. Never select assets using current/future returns. Raise on any nonzero held exposure with missing realized return; do not fill or silently drop P&L months.",
+    "primary_hac_lag": 6,
+    "signal": "Sign of the sum of the preceding 12 monthly price returns; scaling that window by the same current positive risk estimate leaves its sign unchanged. Zero means flat.",
+    "signal_months": 12,
+    "start": "1976-01",
+    "volatility_floor_annual": 0.02,
+    "volatility_months": 36
+  },
+  "comparison": {
+    "base_config": "config/baseline_config.json",
+    "portfolios": {
+      "baseline": {
+        "hold_sizing": "inverse_vol"
+      },
+      "enhanced": {
+        "hold_sizing": "hrp_within_class"
+      }
+    },
+    "rescale_shadow": "baseline",
+    "risk_config": "config/risk_config.json",
+    "strategy": "trend"
+  },
+  "coverage": {
+    "evaluation_end": "2014-12",
+    "evaluation_start": "2009-04",
+    "first_price_month": "1969-01",
+    "last_price_month": "2014-12",
+    "per_market": {
+      "AN": {
+        "first": "1988-01-04",
+        "last": "2014-12-31"
+      },
+      "AP": {
+        "first": "2008-09-01",
+        "last": "2014-12-31"
+      },
+      "AX": {
+        "first": "1997-11-05",
+        "last": "2014-12-30"
+      },
+      "BN": {
+        "first": "1976-01-02",
+        "last": "2014-12-31"
+      },
+      "CA": {
+        "first": "1999-01-04",
+        "last": "2014-12-31"
+      },
+      "CB": {
+        "first": "1994-06-01",
+        "last": "2014-12-31"
+      },
+      "CC": {
+        "first": "1981-01-05",
+        "last": "2014-12-31"
+      },
+      "CN": {
+        "first": "1978-01-03",
+        "last": "2014-12-31"
+      },
+      "CT": {
+        "first": "1973-01-02",
+        "last": "2014-12-31"
+      },
+      "DA": {
+        "first": "1997-09-02",
+        "last": "2014-12-31"
+      },
+      "DT": {
+        "first": "1989-11-23",
+        "last": "2014-12-30"
+      },
+      "EC": {
+        "first": "1982-02-01",
+        "last": "2014-12-31"
+      },
+      "ER": {
+        "first": "2002-11-26",
+        "last": "2014-12-31"
+      },
+      "FB": {
+        "first": "1989-01-03",
+        "last": "2014-12-31"
+      },
+      "FN": {
+        "first": "1975-02-13",
+        "last": "2014-12-31"
+      },
+      "GS": {
+        "first": "1989-11-23",
+        "last": "2014-12-31"
+      },
+      "HS": {
+        "first": "1997-10-22",
+        "last": "2014-12-31"
+      },
+      "JN": {
+        "first": "1978-01-03",
+        "last": "2014-12-31"
+      },
+      "JO": {
+        "first": "1973-01-02",
+        "last": "2014-12-31"
+      },
+      "KC": {
+        "first": "1974-01-02",
+        "last": "2014-12-31"
+      },
+      "LB": {
+        "first": "1974-01-02",
+        "last": "2014-12-31"
+      },
+      "LX": {
+        "first": "1990-01-02",
+        "last": "2014-12-31"
+      },
+      "MD": {
+        "first": "1992-02-13",
+        "last": "2014-12-31"
+      },
+      "MP": {
+        "first": "1995-05-03",
+        "last": "2014-12-31"
+      },
+      "MW": {
+        "first": "1981-01-02",
+        "last": "2014-12-31"
+      },
+      "ND": {
+        "first": "1996-04-10",
+        "last": "2014-12-31"
+      },
+      "NK": {
+        "first": "1991-01-02",
+        "last": "2014-12-31"
+      },
+      "RL": {
+        "first": "1993-02-04",
+        "last": "2008-12-10"
+      },
+      "SB": {
+        "first": "1975-01-02",
+        "last": "2014-12-31"
+      },
+      "SN": {
+        "first": "1976-01-02",
+        "last": "2014-12-31"
+      },
+      "SP": {
+        "first": "1982-04-21",
+        "last": "2014-12-31"
+      },
+      "SS": {
+        "first": "1991-09-24",
+        "last": "2014-12-31"
+      },
+      "TU": {
+        "first": "1990-09-20",
+        "last": "2014-12-31"
+      },
+      "TY": {
+        "first": "1983-01-03",
+        "last": "2014-12-31"
+      },
+      "UB": {
+        "first": "1999-01-04",
+        "last": "2014-12-30"
+      },
+      "US": {
+        "first": "1978-01-03",
+        "last": "2014-12-31"
+      },
+      "UZ": {
+        "first": "1999-01-04",
+        "last": "2014-12-30"
+      },
+      "XU": {
+        "first": "2001-03-27",
+        "last": "2014-12-30"
+      },
+      "XX": {
+        "first": "2002-06-04",
+        "last": "2014-12-30"
+      },
+      "YM": {
+        "first": "2002-04-03",
+        "last": "2014-12-31"
+      },
+      "ZA": {
+        "first": "1983-01-03",
+        "last": "2014-12-31"
+      },
+      "ZB": {
+        "first": "1985-01-02",
+        "last": "2014-12-31"
+      },
+      "ZC": {
+        "first": "1970-01-05",
+        "last": "2014-12-31"
+      },
+      "ZD": {
+        "first": "1998-04-21",
+        "last": "2014-12-31"
+      },
+      "ZF": {
+        "first": "1978-01-03",
+        "last": "2014-12-31"
+      },
+      "ZG": {
+        "first": "1975-01-02",
+        "last": "2014-12-31"
+      },
+      "ZI": {
+        "first": "1973-01-02",
+        "last": "2014-12-31"
+      },
+      "ZK": {
+        "first": "1989-01-03",
+        "last": "2014-12-31"
+      },
+      "ZL": {
+        "first": "1969-01-02",
+        "last": "2014-12-31"
+      },
+      "ZM": {
+        "first": "1969-01-02",
+        "last": "2014-12-31"
+      },
+      "ZN": {
+        "first": "1991-01-02",
+        "last": "2014-12-31"
+      },
+      "ZO": {
+        "first": "1975-01-02",
+        "last": "2014-12-31"
+      },
+      "ZP": {
+        "first": "1973-01-02",
+        "last": "2014-12-31"
+      },
+      "ZR": {
+        "first": "1987-01-02",
+        "last": "2014-12-31"
+      },
+      "ZS": {
+        "first": "1969-01-02",
+        "last": "2014-12-31"
+      },
+      "ZT": {
+        "first": "1971-01-04",
+        "last": "2014-12-31"
+      },
+      "ZU": {
+        "first": "1984-01-03",
+        "last": "2014-12-31"
+      },
+      "ZW": {
+        "first": "1969-01-02",
+        "last": "2014-12-31"
+      },
+      "ZZ": {
+        "first": "1970-01-05",
+        "last": "2014-12-31"
+      }
+    },
+    "required_first_price_month": "2003-01",
+    "shadow_start": "2006-03",
+    "strategy_markets": 58
+  },
+  "declaration": {
+    "cash_interest": "zero",
+    "evaluation_end": "2014-12",
+    "evaluation_start": "2009-04",
+    "execution_convention": "idealized_prior_endpoint",
+    "information_lags_months": [
+      1,
+      2
+    ],
+    "initial_positions": "flat",
+    "liquidate_at_end": true,
+    "ordinary_cost_bps": 2,
+    "primary_information_lag_months": 1,
+    "provenance": {
+      "availability_convention": "unknown: historical development data",
+      "continuous_contract_adjustment": "unknown: historical development data",
+      "price_definition": "unknown: historical development data",
+      "timezone": "unknown: historical development data",
+      "vendor": "unknown: historical development data",
+      "vintage": "unknown: historical development data"
+    },
+    "shadow_start": "2006-03",
+    "trading_band": 0.1,
+    "universe": [
+      "AN",
+      "AP",
+      "AX",
+      "BN",
+      "CA",
+      "CB",
+      "CC",
+      "CN",
+      "CT",
+      "DA",
+      "DT",
+      "EC",
+      "FB",
+      "FN",
+      "GS",
+      "HS",
+      "JN",
+      "JO",
+      "KC",
+      "LB",
+      "LX",
+      "MD",
+      "MP",
+      "MW",
+      "ND",
+      "NK",
+      "RL",
+      "SB",
+      "SN",
+      "SP",
+      "SS",
+      "TU",
+      "TY",
+      "UB",
+      "US",
+      "UZ",
+      "XU",
+      "XX",
+      "YM",
+      "ZA",
+      "ZB",
+      "ZC",
+      "ZD",
+      "ZF",
+      "ZG",
+      "ZI",
+      "ZK",
+      "ZL",
+      "ZM",
+      "ZN",
+      "ZO",
+      "ZP",
+      "ZR",
+      "ZS",
+      "ZT",
+      "ZU",
+      "ZW",
+      "ZZ"
+    ]
+  },
+  "declaration_sha256": "ec1f2c32cd49b6ee9ff57aef492e46946d23450f27286cf3fe0177703d19f603",
+  "git_head": null,
+  "input_files": {
+    "asset_map": {
+      "path": "/Users/anaybhat/Documents/managed_futures/.worktrees/oos-readiness/data/raw/AssetMapCsv.csv",
+      "sha256": "d123e85848edd5385c65d2080d8d2b27808c8ef2e3804e65053d8c79c4199fdb"
+    },
+    "price:AN": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/AN.csv",
+      "sha256": "7889ede82cf361c206dde4f1b42025019b138bc7cfb399fdcfb988589807d4d3"
+    },
+    "price:AP": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/AP.csv",
+      "sha256": "ffdd67127b97310f294b599023001cb68bdc45c44c635ebf34936d25cf6ca531"
+    },
+    "price:AX": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/AX.csv",
+      "sha256": "73638e16b828694dd33a1e7d5c4d03efeb4ce216570ff34719165c29d9bc4584"
+    },
+    "price:BN": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/BN.csv",
+      "sha256": "d3d9ca285396f8d4696e9097e36bb884c9458ae40144b2def92b539c8c2b100a"
+    },
+    "price:CA": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/CA.csv",
+      "sha256": "2ed58968a7a32603fa54ae012a32745e8636669cff692136e12354c0e6c9d629"
+    },
+    "price:CB": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/CB.csv",
+      "sha256": "069785d6ff778c74df85bb3c24aff57ce5988ad97229792c686d308d491db054"
+    },
+    "price:CC": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/CC.csv",
+      "sha256": "af09a79fb353fae33887e959ca047b149ab50682dfac034c083e500409a1a600"
+    },
+    "price:CN": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/CN.csv",
+      "sha256": "5dc80779100dd33771785e6ba1302dad3958c4f6d14346f3030766b5d84adf1f"
+    },
+    "price:CT": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/CT.csv",
+      "sha256": "14de0105dc8efbbdc98cdb1f7d5f428dca7eb2b7a280d2f004228e90c23d9708"
+    },
+    "price:DA": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/DA.csv",
+      "sha256": "3d7cdcf23e3c187b5f285c1399d47fc4201c5cbdbe86dcf31631a43c617ed1e4"
+    },
+    "price:DT": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/DT.csv",
+      "sha256": "d60cd5bcf09e5289c6e18153e1c74b8b2f4df60b7a8fc93ce3cd1de63bf11cd2"
+    },
+    "price:EC": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/EC.csv",
+      "sha256": "a303068a7b85cbc0cfb475a06014eb3b2c0351095d71cbcd5060ee13559bccd0"
+    },
+    "price:ER": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ER.csv",
+      "sha256": "b99fa7c8cf9719420b29c78e07b6494a301d37f77a9016a1a73f9b2995a6496c"
+    },
+    "price:FB": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/FB.csv",
+      "sha256": "3c478277e6312ce0bd200a31f90fd80a842d5301e704c775b3436b4c97842c7f"
+    },
+    "price:FN": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/FN.csv",
+      "sha256": "4a3886e566ca3c169cca1b2777efe74f34efb65834d00d154a2fe2604e5bcc29"
+    },
+    "price:GS": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/GS.csv",
+      "sha256": "b01a4d5811506dd30a284de84aed3888e1dd3954c2f9bfb7b9e3acd38a00dd58"
+    },
+    "price:HS": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/HS.csv",
+      "sha256": "4a7c39c4847c029169febc4f67bdb96e356bf1383a90b7b1999bb26dc6fbc332"
+    },
+    "price:JN": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/JN.csv",
+      "sha256": "9045e709592264a0500792669b4631f910ed5d6860cde5d7205751aa74da0d96"
+    },
+    "price:JO": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/JO.csv",
+      "sha256": "d0a311843c6f2740acde60eeb0b08cfb7fce81d32b43b29dd7144951696cac6d"
+    },
+    "price:KC": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/KC.csv",
+      "sha256": "0d32dce561ce1007c91b415d791d71151d2bf779c061785f358092438099039b"
+    },
+    "price:LB": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/LB.csv",
+      "sha256": "c36e7dfd83b7ef70cd42fda9f2bda1c28c297e087aef60dd1e880cc5c68d4538"
+    },
+    "price:LX": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/LX.csv",
+      "sha256": "8ef78e5da96c3e20f1c3d5e707b09da46db36c094907e57e5886f0c88ccbfc8b"
+    },
+    "price:MD": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/MD.csv",
+      "sha256": "5bdf673907c72a7e9cc922699e286abbb05c0a9995f51601d55cba820106c9fd"
+    },
+    "price:MP": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/MP.csv",
+      "sha256": "37559ccd0849cb3d5e707b2046f9b163f7c0676294b56067e8ba33e87ea5d10e"
+    },
+    "price:MW": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/MW.csv",
+      "sha256": "98a6a61e51a6196bcc85ef89b17d51c80b410e7388fcc5ec46924c48c1957361"
+    },
+    "price:ND": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ND.csv",
+      "sha256": "6e1541c72b304e7aed3ef5e35bb11f6caed411cb31ee98555b5f4244dc56f342"
+    },
+    "price:NK": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/NK.csv",
+      "sha256": "04109c5085f2354a7c3e17002c55be11a3da8d223fbbd6b87a5b6a25d5673b12"
+    },
+    "price:RL": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/RL.csv",
+      "sha256": "3632546f882477ef290ad43b497423f72952d8cff7a6b37d94fac69713b0964d"
+    },
+    "price:SB": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/SB.csv",
+      "sha256": "5995b4c72e5f6b5acdf9964181b899a03329579ec4dc03f4c9b4925c03c42935"
+    },
+    "price:SN": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/SN.csv",
+      "sha256": "44d477a87659cac7203cfa1ce23ec931523554f52a1fb05ba150112ca7aa13f2"
+    },
+    "price:SP": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/SP.csv",
+      "sha256": "b6253578102a669064a048cb255dbacf7495b5610d0075abf3c505280f6b0ee1"
+    },
+    "price:SS": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/SS.csv",
+      "sha256": "9b800a4af1f70cddd7a235f4a946975adce7b8bb2eb464db14375ed822991b56"
+    },
+    "price:TU": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/TU.csv",
+      "sha256": "4bcee0c9340f1bed4fc96faf8233f7a41ea7cb305436fa53642eafa86d9748fc"
+    },
+    "price:TY": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/TY.csv",
+      "sha256": "a2651ff356c1b8d623d16c3e8f1140e0e02fe890148a5500b10ba9d6234c9915"
+    },
+    "price:UB": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/UB.csv",
+      "sha256": "3ef7061e0030566b8ce43b07ba3e717c5d3ecf8fc7eebd257148a0667a341a2c"
+    },
+    "price:US": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/US.csv",
+      "sha256": "c0e5d89c31bd42eff60977b16345032f5567f7b372b593e473ee7573c02593ef"
+    },
+    "price:UZ": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/UZ.csv",
+      "sha256": "b12f76ab80c542d496ca8c0e8b355d1f0181f86cc0a4bafd58dcad7f40463995"
+    },
+    "price:XU": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/XU.csv",
+      "sha256": "425ddae0619cb5cbde769d89df68e89e542e2c01c6df5014f0a8703ffc1bc254"
+    },
+    "price:XX": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/XX.csv",
+      "sha256": "3af0cb45c576d4c81ef3ef134c97dd6b3d24522ac3895fbaf5956ec32f3d8c11"
+    },
+    "price:YM": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/YM.csv",
+      "sha256": "60211595567e1981c502b172851a907872b47a88b3f06ba960c56dbfd9006169"
+    },
+    "price:ZA": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZA.csv",
+      "sha256": "494acceac747e831e063c6caca3195d1bda9410dce16c3d9fd3d87dad0b06f1e"
+    },
+    "price:ZB": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZB.csv",
+      "sha256": "7dde2ebeced12218d4b7a979bd7d9ac6800f4724755635975fecc4c006a80b4f"
+    },
+    "price:ZC": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZC.csv",
+      "sha256": "eeff8d19ee738c979b32d30e9b99f668d333a20d6f1ae4304c9c6dc52c2364c8"
+    },
+    "price:ZD": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZD.csv",
+      "sha256": "3638fee5c88141f4508dac0d3fe17139ad6bcf7423c544ce89e5f5f9e8795d32"
+    },
+    "price:ZF": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZF.csv",
+      "sha256": "fc5a8edcf4a03f30af6e5b3cbf9ce0fa53050635839cafd5717498ea119c8c48"
+    },
+    "price:ZG": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZG.csv",
+      "sha256": "32b0e6d528cfa9b3bf2c38a2658d5de623bbb50dd1360ed0002129d3479e411a"
+    },
+    "price:ZI": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZI.csv",
+      "sha256": "8bc984bc50080f00f1aaaaa568c38fb599ec4304d6ecdeee56bc62fa47a2a34d"
+    },
+    "price:ZK": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZK.csv",
+      "sha256": "9e8ab16afdd42c53f0b31a494c9a2962d34113b6de870b9529bd0e1e880395dd"
+    },
+    "price:ZL": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZL.csv",
+      "sha256": "1d5fb30638ba63fe566e15c26504b647243a019cb70a6e2702d1b585587641aa"
+    },
+    "price:ZM": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZM.csv",
+      "sha256": "d054c8ef46c387b1badef3f5e6adfb959dfb95ce2a600ee0fd496962dff65a6a"
+    },
+    "price:ZN": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZN.csv",
+      "sha256": "ed944caa129987fb31b5386b405a7633bb8921eb94213f61dfbd5620d56970d6"
+    },
+    "price:ZO": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZO.csv",
+      "sha256": "c048fe954e374555376e7c335e5b388472ddc8dcef69a8f347fec0ea1c400f1f"
+    },
+    "price:ZP": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZP.csv",
+      "sha256": "3f995b60d8947fa6a038911aeecdb03649fc0e0eb4aef21d85f7c0dbd768c733"
+    },
+    "price:ZR": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZR.csv",
+      "sha256": "30c9e6d6b4a9964d3f806600fa36e56a05cd75b367703c052e9468d400e47119"
+    },
+    "price:ZS": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZS.csv",
+      "sha256": "56ed96aa24bf1a0074fc2fdeb8784effe61b64c378c28b40b5a7d1aba3a29c5d"
+    },
+    "price:ZT": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZT.csv",
+      "sha256": "ad2a0e64fb796b353f6f136e160077b0201c5ceb52db2da78a700d63bea4c97d"
+    },
+    "price:ZU": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZU.csv",
+      "sha256": "29f24194bbb875ffafa48e68976f4ca7de76c9bd5ac1bc58379ae07aaf5bdf62"
+    },
+    "price:ZW": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZW.csv",
+      "sha256": "161e35286e0beaab673ef8cf4bd7e0f79b730de8a37d39e4e04a946da816bb48"
+    },
+    "price:ZZ": {
+      "path": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices/ZZ.csv",
+      "sha256": "819c71eac34e6b4ad440f5c471fcade1660da8f78454bb5e4acb269c90ea2601"
+    }
+  },
+  "preparation_note": "Local timestamp records preparation; it is not independent proof of preregistration.",
+  "prepared_utc": "2026-11-13T22:30:41.074566+00:00",
+  "price_dir": "/private/var/folders/0s/5tqg2lp57zndb95p3yqq869c0000gn/T/oos-history-validation-fcd0_www/mutated-prices",
+  "risk": {
+    "autocorrelation_hac": "At return lag k, use k Bartlett HAC lags on calendar-spaced scores, with n/(n-2) correction and t(n-2) intervals.",
+    "bands": [
+      0.0,
+      0.1
+    ],
+    "base_config": "config/baseline_config.json",
+    "baseline_name": "Risk-controlled 12-month trend with +/-10% trading band",
+    "correlation_shrinkage": 0.5,
+    "cost_convention": "Effective aggregate trading-cost proxy in bps per unit of absolute one-way traded notional / beginning-period NAV; turnover is not divided by two. Entries, source close/open trades and terminal liquidation are charged. Regular expiry-roll activity is not yet modeled separately.",
+    "cost_scenarios_bps": [
+      0,
+      1,
+      2,
+      5
+    ],
+    "gross_cap": 3.0,
+    "lecture_source": "ORIE5260 Lecture 5, slides 9, 12\u201316, 26\u201327 and 36 (reference only; not a runtime input)",
+    "limit_timing": "Monthly decision points, after beginning-of-month trading costs; capital and forecasts can change between rebalances. Proportional reductions only; do not enlarge positions to reach the risk ceiling.",
+    "models": [
+      "correlated"
+    ],
+    "portfolio_risk_ceiling": 0.1,
+    "primary_band": 0.1,
+    "primary_cost_bps": 2,
+    "primary_model": "correlated",
+    "risk_model": {
+      "correlation_shrinkage": 0.1,
+      "rescale": {
+        "minimum": 24,
+        "window": 60
+      },
+      "type": "dcc_garch"
+    },
+    "risk_model_note": "correlation_shrinkage (0.5) is the rolling covariance baseline, kept as the reference; risk_model.correlation_shrinkage is the DCC-GARCH value (notebooks/risk_model_estimators.ipynb: with the rescale the level matters little, 0.05 to 0.1 recommended). rescale: past-only calibration scale, window and minimum in months. Set risk_model to {\"type\": \"rolling\"} for the baseline.",
+    "source_selection": {
+      "decision_lag_months": 2,
+      "minimum_history": 36,
+      "rule": "RL until ER has 36 consecutive observed monthly returns ending at least two months before the holding month, then ER permanently. Never choose source from current realized availability."
+    },
+    "trade_rule": "Existing same-direction positions: retain within relative band, otherwise trade to nearest edge. New entries, zero targets and sign changes execute at target. Hard risk and exposure limits override the band.",
+    "trend_signal_by_asset_class": {
+      "COMM": {
+        "lookback": 12,
+        "type": "sum"
+      },
+      "EQ": {
+        "lookback": 12,
+        "type": "sum"
+      },
+      "FI": {
+        "lookback": 12,
+        "type": "sum"
+      },
+      "FX": {
+        "components": [
+          {
+            "lookback": 3,
+            "type": "sum"
+          },
+          {
+            "lookback": 12,
+            "type": "sum"
+          }
+        ],
+        "type": "blend"
+      }
+    },
+    "trend_signal_note": "notebooks/trend_measures.ipynb, section 5 and the summary table. In-sample class-portfolio rankings, not validated out of sample. COMM, FI and EQ keep the baseline 12-month sum; FX averages a 3-month and a 12-month sum, a blend that was not itself in the notebook's grid.",
+    "volatility_floor_annual": 0.02,
+    "volatility_months": 36
+  },
+  "schema_version": 1,
+  "source_sha256": {
+    "config/band_experiment.json": "eb4522c063d603516c3c1103a5977008c7503b3d9378c71d784572d020780d97",
+    "config/baseline_config.json": "8b0fefd8e0276d399c2392818000613a9e94ee7ea15e9bdb50c7fb28e3d6806f",
+    "config/endpoint_sensitivity.json": "caccc741fe29ba9a1b3cff0544d5e0ce52d44fd1a6ddb77cc26eb392db115027",
+    "config/hrp_comparison.json": "7a81c64c0a9506f63731f49c4a3a6ade67e8215ea09077fe59a0f9ecf0b23104",
+    "config/implementation_feasibility.json": "27948cfee5442000174d2fa11efbb5ca0a66d4525511f9a81f0f2346eeaecd51",
+    "config/oos_declaration.example.json": "65960323158b4ef129d301ddd5f5edfcea3a7a9e6199f3bdfd460dd8ae915537",
+    "config/pc_experiment.json": "31c3bbfd41f3e4d10fda16d2de71595a3e65dcbf7eb69b0d6fdd1db998ad4cdd",
+    "config/pc_hold.json": "89c21f70bb393a7729294acd07bdb2d603e3c57c1c39e7b4d1af35dfa3768abb",
+    "config/pc_scale.json": "a62fa44c224767473ddbd98f41d4cdfd8a47682031e4ff219d1dca4ccab23db9",
+    "config/prospective_evaluation.json": "421f6fbc951e2edc698fbfc059c077797105b9a5cb95dd304262454836d8a09d",
+    "config/risk_config.json": "8f44131c3c6f233690d5a4367d969a17d5d4b0f7d786615709791c81bc1bce96",
+    "config/risk_model_comparison.json": "d64ff9b2f62ce21e93994cfea99514922e0ec24a83b0007f7df6e3773bc11e47",
+    "config/roll_sensitivity.json": "9e74c800ac2709478b0e1a49306bf6823b9553cfb69f171c9dd647dc792d7046",
+    "config/transaction_costs.json": "838a2e68c8b11904eff5d107ced9214911acffea2d028706efc8603681c71adf",
+    "config/tsmom_baseline.json": "2f15cd298ccb13c538eee1e4d4d9619468b4e611bb6daaf829359e1eb88bffe6",
+    "pyproject.toml": "7f2de7a9abe0f17d861b45926125a82ea5054be8dbaa3c7ad8a0c68766551f0a",
+    "scripts/run_hrp_oos.py": "86a2df524204d9bab0975d188bb2cbd187b44e40a0944d50c01f935c316b5048",
+    "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/alpha_model/__init__.py": "206fd5a3f24b91edc91ae30afbf85a344543c8bd66d9664b5702a37cb0e5ab3f",
+    "src/alpha_model/signals.py": "7cfe07e67e7d0af8e9d6c45f6a23b7c9b06305700bfdec5fdf9c4988dd9e7ea0",
+    "src/backtest/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/backtest/attribution.py": "b48d304fb57f5300e9563843c6d2390a69ad80946a02581723f782427edf2fd5",
+    "src/backtest/band_diagnostics.py": "ffcd96c7a4dd0c305269042885dbe0264c75718bc00d84fa6f9f697724ee9526",
+    "src/backtest/cross_validation.py": "60aa6310e9d5e810153526aa68acfb2c452fa3ad37e7a14a634f147830a9cac3",
+    "src/backtest/engine.py": "187ccecab8ad964d630bd31b554239a5d1b48643a45ae580251c06bf202ddb06",
+    "src/backtest/hrp_comparison.py": "e482c1c6530fc4416b052fbf91d469e301dd1140fbe456f013a8d655cd207cb5",
+    "src/backtest/implementation_diagnostics.py": "0f3a6e627dc60b0eeb8a1931ea32327f7982253e8f0dfd9a914db8ac5af6abf9",
+    "src/backtest/oos_inputs.py": "78457633ab0848fcc5820a63dbd911d064310e80d7588fb751e465b2570e52fb",
+    "src/backtest/oos_runner.py": "9af9661c7765b4f2a8ea5622b66f7aa2ba4fce38b807e616429d3e35d2731b5e",
+    "src/backtest/pc_experiment.py": "1dc78aa73c88bee9a1ad58016362f47f37052d43ec7496f204de4b0c538d3120",
+    "src/backtest/performance.py": "9bd75ef09fffa00d92d6f22db59e9cbca5d834a971103c03c09fc4496647b143",
+    "src/backtest/qps_baseline.py": "f0ca6de05237172daffd7749c0e99679a404f6ae911caeb45ed8747124ec5a56",
+    "src/backtest/research_spec.py": "2860c4c8dac88b766f2658e3951e79dd1ddf6fa3731d88e90ea961d1c524baa5",
+    "src/backtest/roll_events.py": "a38c71579379befe96b66e64bc23194ea8e22e9e4d333269deff87d3a7a7c062",
+    "src/backtest/sample_diagnostics.py": "52c069de35f99318d3d8f0ce2ed3e1fa6758c965e45d759b772853cbbd34eb42",
+    "src/config/__init__.py": "1e8c90f3221a4b8e13bca9b7ec5433ea5be93cb5567756fbbf9875ad3c93d05e",
+    "src/data_cleaning/__init__.py": "24ad512ab8ee66fdbf80324fd51d103ad22b68b887d2eaf42e09bc9ed763e446",
+    "src/data_cleaning/cleaner.py": "ab8cc1aa82262153175ceba6f3c9c2ca0c366109a58069e179bc60c6951133b4",
+    "src/data_cleaning/combine.py": "49d43bb30b055ad3bca9f907dd33d8ebce340bc2745f54ae270477e9a30b0846",
+    "src/data_cleaning/duplicates.py": "2b43131942e4f6e692f938a5c0d8fade3b2ce709eecabe7b615182741593c638",
+    "src/data_cleaning/quality.py": "ce77a1d534582b5ecf912a134239d362771eea1111453dad2deb425dc3c5667b",
+    "src/data_cleaning/report.py": "2283aaab0db1698ce3f648fafa4ce1fba803330c28a1c0fb0be29c6dfefe0315",
+    "src/data_loader/__init__.py": "275dc8aa7d0acbb1f7596ad4a26b6f0b917be5e8e7020b34d5596aa0f84f470d",
+    "src/data_loader/asset_map.py": "bf5ac422e921bb2448713433f8cbd3e745ba57a237b6159b29f76e4c55b7a927",
+    "src/data_loader/daily_prices.py": "c717e32926f97ff481cd6c65756e1342f51a13e9899d2a381f60b573e8f5af26",
+    "src/data_loader/monthly_returns.py": "578d74f86fa1f2a47131138e15107f2b903de3e2f9cbfb5a87f9386b0916d4c1",
+    "src/data_processing/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/data_processing/endpoint_sensitivity.py": "48c3f3ba9753452a57ca1a671a2ecfc14504f4ea3871ddc4e72851caafb197ce",
+    "src/data_processing/endpoints.py": "7be44d194f6b8aaeea5532517f92670739eb65b27296c4659b15622754774c5a",
+    "src/data_processing/strategy_inputs.py": "d2af7b76ee4adef7c2720b1b35ed1de7e38f303658c71075bc541970573022c7",
+    "src/feature_registry/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/feedback_loop/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/models/__init__.py": "02cafe25ada0fab3b027b2f10550c0623f93e87ba14e28bc260a6e862fd9237c",
+    "src/models/market_data.py": "542f4f610e65b0846e21e4a84743bb85bf81e1899b2679b3881bb5e8b6774d36",
+    "src/portfolio_construction/__init__.py": "e759995d64a6b61569dbbb342398a6960031148b3f6b0caf73f6c759e0a4c94a",
+    "src/portfolio_construction/hold/__init__.py": "6b98160081c4bcef46bb0c74fc2a28e62bc76cfe08a2ee6c57154b49a95b406b",
+    "src/portfolio_construction/hold/class_balance.py": "ed3657f7b0f8a31fd4fbdc82b366ab7a194d3c69bc5819db58ae99ae8d6735b1",
+    "src/portfolio_construction/hold/hrp.py": "81200edc5adcc7aeca2a119709852ddd5f2699d83c541a7cb6b935af9b66624f",
+    "src/portfolio_construction/hold/sizing.py": "675c3f5244db5b3ef6ec86f0eff7244ed8211fd5a769832f3ec86389595101e3",
+    "src/portfolio_construction/scale/__init__.py": "6b1aeaffb50361e7a34c56dcbfaf81f84c17ec9b17726968bcb355ba76a0b0e6",
+    "src/portfolio_construction/scale/limits.py": "4b72f1f9335237ca36a1ad0cf9d4cbc95ae854b4cc5423c0794d5dc7cdd06c48",
+    "src/portfolio_construction/targets.py": "6b8ef2552afa22359e5d22a4ba4bc849fc480fb6f14e17e015935b6c153f7e6b",
+    "src/portfolio_construction/trade/__init__.py": "e78644cf91270b33b9063295930d37b7e9a5d1b970f9fcbdf7ff0715a8cd5feb",
+    "src/portfolio_construction/trade/bands.py": "fa1482ee0fb8ef486f4c2c8efabd56f69e35ad9ce2ede6c4e14ad266d4b433fb",
+    "src/portfolio_construction/trade/cost_aware.py": "33730d4250cc0743c335a0433c1ea3bd6b460884dffd8786580d418db7f381cf",
+    "src/portfolio_construction/trade/feasibility.py": "cd3426fb3e4721d4f6ce62ebb0a5389123781a97b4373f62fea43a9cdef3f208",
+    "src/portfolio_construction/trade/policy.py": "a0ce9f30925ed84b9de6a7959b65ee2322ad348d407a13804d519307536a0a8e",
+    "src/risk_model/__init__.py": "f4aa94d120b05621a5eee5a78dbbdb55545b7d1c433df863094e1bfa32e90fc7",
+    "src/risk_model/base.py": "6f33fddc79efb65400c220fa2d3683b3abee0dc1ea3116cd7d78af969245d818",
+    "src/risk_model/daily.py": "d0ae9943ba42e0aada87c97153e4df28c1951ed205cc51ca7651626db98a6378",
+    "src/risk_model/ewma.py": "49ee53bcf31aefe911c63ddcde70a7b15ab05125a65bdd35b691dd4fcdc32677",
+    "src/risk_model/garch.py": "bd15b99ebf224205bbc4337457eedaf9b55e89581197f0e22ae213bfc214040b",
+    "src/risk_model/measures.py": "d379679f0a3376309f39ce62829b63f087d8b5f629beebe55771c0a8362f9124",
+    "src/risk_model/rescale.py": "a1392c3eb851845ad6a2cb1c557d197ad0ddfb43dd76046326579facced19cfe",
+    "src/risk_model/rolling.py": "5faed6e2b72197a438062c9c0b3fae394e96a801e408e363b920efee296287ec",
+    "src/transaction_cost_model/__init__.py": "3361be197720972251f4fc2ab49943d74a565e4ac25bbabd1a64482973b216d0",
+    "src/transaction_cost_model/costs.py": "a26968e4a72f76252651882334595936fb0d795f28317def1050e6f495089a95",
+    "src/transaction_cost_model/rolls.py": "d7301caa3d9b468b9bdf684c7c8127a75479e5c15abd0760c81e71fbcccc1caa",
+    "src/transaction_cost_model/trades.py": "8580b0b43aec1a89cd6175594137e20e9036d36f0c93f61f78c192f852cbd9b9",
+    "src/transformations/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "source_snapshot_sha256": "4593ab09180ba5fe365c3b8608ab9b6934a47669ca142f5b14cd5ea71c52229d",
+  "status": "prepared_not_evaluated",
+  "versions": {
+    "numpy": "2.3.5",
+    "pandas": "2.3.3",
+    "python": "3.13.9",
+    "scipy": "1.16.3",
+    "statsmodels": "0.14.5"
+  }
+}

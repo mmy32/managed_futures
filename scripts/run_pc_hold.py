@@ -149,10 +149,10 @@ def block_indices(n, block, draws, seed):
 
 
 def bootstrap(nets, turnovers, bets, config):
-    """P3: distribution across resampled calendars of out-of-sample vol, Sharpe, turnover, bets.
+    """P3: sampling variation of historical vol, Sharpe, turnover and bets.
 
-    Positions at month t use only data before t, so each month's return is out of sample for its
-    weights. Months are resampled; weights are not re-estimated.
+    Months and existing returns are resampled; weights are not re-estimated. These are
+    development diagnostics on inspected data, not independent out-of-sample evidence.
     """
     options = config["bootstrap"]
     index = block_indices(len(nets), options["block_months"], options["draws"], options["seed"])
@@ -180,7 +180,7 @@ def bootstrap(nets, turnovers, bets, config):
 
 
 def variant_cpcv(nets: pd.DataFrame, baseline: str, config):
-    """P5: pick the variant with the best training Sharpe, score it on held-out months."""
+    """P5: assess selection across historical splits, which can train on later months."""
     options = config["cpcv"]
     splits = cpcv_splits(
         len(nets), options["groups"], options["test_groups"], options["embargo_months"]
