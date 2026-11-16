@@ -7,6 +7,7 @@
   "correlation_shrinkage": 0.5,
   "risk_model": {
     "type": "dcc_garch",
+    "validation_status": "experimental_pending_corrected_historical_replay_and_independent_evaluation",
     "correlation_shrinkage": 0.1,
     "rescale": {
       "window": 60,
@@ -67,6 +68,6 @@
   },
   "baseline_name": "Risk-controlled 12-month trend with +/-10% trading band",
   "autocorrelation_hac": "At return lag k, use k Bartlett HAC lags on calendar-spaced scores, with n/(n-2) correction and t(n-2) intervals.",
-  "risk_model_note": "correlation_shrinkage (0.5) is the rolling covariance baseline, kept as the reference; risk_model.correlation_shrinkage is the DCC-GARCH value (notebooks/risk_model_estimators.ipynb: with the rescale the level matters little, 0.05 to 0.1 recommended). rescale: past-only calibration scale, window and minimum in months. Set risk_model to {\"type\": \"rolling\"} for the baseline.",
+  "risk_model_note": "DCC-GARCH is an experimental candidate, not an established improvement over rolling covariance. Annual parameter fits use expanding past daily history; volatility_months controls monthly eligibility, not GARCH fitting length. Archived notebook results used older inputs/configuration and require a corrected matched replay. correlation_shrinkage (0.5) is the rolling reference; risk_model.correlation_shrinkage is the DCC candidate value. The scalar rescale uses past shadow-portfolio calibration and does not validate individual covariance forecasts. Set risk_model to {\"type\": \"rolling\"} for the reference.",
   "trend_signal_note": "notebooks/trend_measures.ipynb, section 5 and the summary table. In-sample class-portfolio rankings, not validated out of sample. COMM, FI and EQ keep the baseline 12-month sum; FX averages a 3-month and a 12-month sum, a blend that was not itself in the notebook's grid."
 }

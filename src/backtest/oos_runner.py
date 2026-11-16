@@ -180,7 +180,9 @@ def _comparison(record):
     )
     if _hash_inputs(files) != record["input_files"]:
         raise ValueError("Resolved input files changed after preparation")
-    returns, source, known, daily = strategy_inputs(prices, declaration["universe"], risk, end)
+    returns, source, known, daily = strategy_inputs(
+        prices, declaration["universe"], risk, end, base["exclude_from_strategy"]
+    )
     sample = returns.loc[start:end]
     if not sample.index.equals(pd.period_range(start, end, freq="M")):
         raise ValueError("Evaluation must have a complete and ordered monthly calendar")

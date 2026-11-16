@@ -1,0 +1,133 @@
+{
+  "base": {
+    "baseline": "12-month trend, trailing correlation-aware risk model, 2% volatility floor, 3x gross cap, 10% forecast risk ceiling, +/-10% trading band; portfolio controls are in config/risk_config.json.",
+    "benchmark": "STATIC: always long, using the same instrument eligibility, risk model, limits, trading band, and costs; its own forecast determines scaling.",
+    "cost_model": "Illustrative linear bps per absolute traded notional divided by beginning-month NAV, including initial entry, drift-adjusted monthly rebalancing, RL-to-ER source transition and final liquidation. No bid/ask, market impact, margin, tax or contract-roll cost history is available.",
+    "end": "2025-05",
+    "exclude_from_strategy": {
+      "EC": "Instrument identity/classification unresolved; omit from strategy rather than assign an unverified class.",
+      "YM": "Duplicate Dow exposure; retain older ZD series."
+    },
+    "execution": "Primary monthly endpoint execution is idealized: history through t-1 determines t exposure at the prior endpoint. A two-month information lag uses one extra month of stale information, including a stale risk forecast; it is not a next-session execution simulation.",
+    "funding": "Primary: zero-interest synthetic futures-price-return proxy. RF-added results are conditional fully collateralized sensitivities, not verified vendor total returns.",
+    "hac_lags": [
+      3,
+      6,
+      12
+    ],
+    "hold_sizing": "hrp_within_class",
+    "information_lag_months": 1,
+    "instrument_volatility_scale": 0.4,
+    "minimum_instruments": 10,
+    "missing_data": "Require complete trailing signal/risk windows. Never select assets using current/future returns. Raise on any nonzero held exposure with missing realized return; do not fill or silently drop P&L months.",
+    "primary_hac_lag": 6,
+    "signal": "Sign of the sum of the preceding 12 monthly price returns; scaling that window by the same current positive risk estimate leaves its sign unchanged. Zero means flat.",
+    "signal_months": 12,
+    "start": "1976-01",
+    "volatility_floor_annual": 0.02,
+    "volatility_months": 36
+  },
+  "risk": {
+    "autocorrelation_hac": "At return lag k, use k Bartlett HAC lags on calendar-spaced scores, with n/(n-2) correction and t(n-2) intervals.",
+    "bands": [
+      0.0,
+      0.1
+    ],
+    "base_config": "config/baseline_config.json",
+    "baseline_name": "Risk-controlled 12-month trend with +/-10% trading band",
+    "correlation_shrinkage": 0.1,
+    "cost_convention": "Effective aggregate trading-cost proxy in bps per unit of absolute one-way traded notional / beginning-period NAV; turnover is not divided by two. Entries, source close/open trades and terminal liquidation are charged. Regular expiry-roll activity is not yet modeled separately.",
+    "cost_scenarios_bps": [
+      0,
+      1,
+      2,
+      5
+    ],
+    "gross_cap": 3.0,
+    "lecture_source": "ORIE5260 Lecture 5, slides 9, 12\u201316, 26\u201327 and 36 (reference only; not a runtime input)",
+    "limit_timing": "Monthly decision points, after beginning-of-month trading costs; capital and forecasts can change between rebalances. Proportional reductions only; do not enlarge positions to reach the risk ceiling.",
+    "models": [
+      "correlated"
+    ],
+    "portfolio_risk_ceiling": 0.1,
+    "primary_band": 0.1,
+    "primary_cost_bps": 2,
+    "primary_model": "correlated",
+    "risk_model": {
+      "correlation_shrinkage": 0.1,
+      "rescale": {
+        "minimum": 24,
+        "window": 60
+      },
+      "type": "monthly_dcc_garch"
+    },
+    "risk_model_note": "Monthly GARCH/DCC estimated from supplied monthly returns; one-month covariance annualized by 12. Expanding annual fits use prior December; the rolling comparator uses the same shrinkage and past-only eligibility. See monthly run specification.",
+    "source_selection": {
+      "decision_lag_months": 2,
+      "minimum_history": 36,
+      "rule": "RL until ER has 36 consecutive observed monthly returns ending at least two months before the holding month, then ER permanently. Never choose source from current realized availability."
+    },
+    "trade_rule": "Existing same-direction positions: retain within relative band, otherwise trade to nearest edge. New entries, zero targets and sign changes execute at target. Hard risk and exposure limits override the band.",
+    "trend_signal_by_asset_class": {
+      "COMM": {
+        "lookback": 12,
+        "type": "sum"
+      },
+      "EQ": {
+        "lookback": 12,
+        "type": "sum"
+      },
+      "FI": {
+        "lookback": 12,
+        "type": "sum"
+      },
+      "FX": {
+        "components": [
+          {
+            "lookback": 3,
+            "type": "sum"
+          },
+          {
+            "lookback": 12,
+            "type": "sum"
+          }
+        ],
+        "type": "blend"
+      }
+    },
+    "trend_signal_note": "notebooks/trend_measures.ipynb, section 5 and the summary table. In-sample class-portfolio rankings, not validated out of sample. COMM, FI and EQ keep the baseline 12-month sum; FX averages a 3-month and a 12-month sum, a blend that was not itself in the notebook's grid.",
+    "volatility_floor_annual": 0.02,
+    "volatility_months": 36
+  },
+  "spec": {
+    "asset_map": "data/raw/AssetMapCsv.csv",
+    "base_config": "config/baseline_config.json",
+    "cash_interest": "zero",
+    "correlation_shrinkage": 0.1,
+    "cost_bps": 2,
+    "coverage_policy": "After the existing EC/YM exclusions, select a fixed universe with no blanks from each market's first observed return through May 2025. This uses future availability and can have survivorship bias. Test-period results are conditional calendar holdouts, not independently untouched OOS proof.",
+    "dcc_pair_count": 100,
+    "development_end": "2014-12",
+    "eligibility_policy": "Both risk estimators use the intersection of their past-only eligibility: 36 consecutive prior monthly observations and membership in the GARCH annual fit with at least 60 observed past months. Signals must also be known.",
+    "end": "2025-05",
+    "evaluation_policy": "One continuous 1976-2025 account per variant, liquidated only at the final endpoint. Period tables slice the same account; no restart or liquidation at the 2014 boundary.",
+    "garch_min_fit_observations": 60,
+    "gross_cap": 3.0,
+    "information_lag_months": 1,
+    "monthly_returns": "data/raw/MonthlyReturns_FullSample.xlsx",
+    "portfolio_risk_ceiling": 0.1,
+    "rescale": {
+      "minimum": 24,
+      "window": 60
+    },
+    "risk_config": "config/risk_config.json",
+    "sample_policy": "coverage_conditioned_and_strict_check",
+    "seed": 0,
+    "selection_note": "Monthly specification and coverage rules were chosen after the workbook's availability was inspected. All four variants are reported; no winner is automatically promoted.",
+    "source_policy": "Use the professor's monthly series as supplied, including RL. No daily source override, interpolation, return filling, or external data.",
+    "start": "1976-01",
+    "trading_band": 0.1,
+    "volatility_floor_annual": 0.02,
+    "volatility_months": 36
+  }
+}

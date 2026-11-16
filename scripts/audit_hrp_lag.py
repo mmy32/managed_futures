@@ -63,7 +63,7 @@ def main(output):
         raise ValueError("This audit is restricted to the declared 1976–2014 development sample")
     returns, source, known = verified_inputs()
     meta = load_asset_map()
-    daily = load_daily_returns(returns.columns)
+    daily = load_daily_returns(returns.columns, risk, base["exclude_from_strategy"])
     sample = returns.loc[base["start"] : base["end"]]
     ledgers, rows = {}, []
     for lag in (1, 2):

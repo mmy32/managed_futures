@@ -1,4 +1,5 @@
 {
+  "history_start": "1969-01",
   "start": "1976-01",
   "end": "2014-12",
   "subsample_start": "1985-01",
@@ -7,5 +8,21 @@
   "information_lag_months": 1,
   "instrument_volatility_scale": 0.4,
   "volatility_floor_annual": 0.0,
-  "minimum_instruments": 1
+  "minimum_instruments": 1,
+  "ewma_center_of_mass_days": 60,
+  "ewma_trading_days_per_year": 261,
+  "ewma_min_observations": 60,
+  "endpoint_lookback_calendar_days": 3,
+  "universe": [
+    "AN", "AP", "AX", "BN", "CA", "CB", "CC", "CN", "CT", "DA", "DT", "EC",
+    "FB", "FN", "GS", "HS", "JN", "JO", "KC", "LB", "LX", "MD", "MP", "MW",
+    "ND", "NK", "RL", "SB", "SN", "SP", "SS", "TU", "TY", "UB", "US", "UZ",
+    "XU", "XX", "YM", "ZA", "ZB", "ZC", "ZD", "ZF", "ZG", "ZI", "ZK", "ZL",
+    "ZM", "ZN", "ZO", "ZP", "ZR", "ZS", "ZT", "ZU", "ZW", "ZZ"
+  ],
+  "exclude_from_strategy": {
+    "YM": "Duplicate Dow exposure; retain the predeclared older ZD identity.",
+    "EC": "Instrument identity/classification unresolved."
+  },
+  "input_policy": "Predeclared raw identities from the audited historical universe: ND over EN, SP over ES/SC, ZD over YM; EC excluded. Monthly returns use only sufficiently fresh observed endpoint closes. No full-panel cleaning, empirical duplicate selection, averaging, retrospective supplied-monthly reconstruction or RL/ER fallback. Missing held returns fail. These repaired development rules do not reproduce archived zero-filled results or create fresh out-of-sample evidence."
 }

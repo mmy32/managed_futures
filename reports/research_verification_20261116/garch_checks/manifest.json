@@ -1,0 +1,35 @@
+{
+  "input_source": "Synthetic quote paths only; no real daily data supplied or fitted",
+  "seed": 20261116,
+  "model_pair_sampling_seed": 0,
+  "created_utc": "2026-11-16T16:19:53.697833+00:00",
+  "runtime_seconds": 11.21986349998042,
+  "passed": true,
+  "versions": {
+    "python": "3.15.2",
+    "numpy": "2.5.5",
+    "pandas": "3.1.1",
+    "scipy": "1.18.1"
+  },
+  "source_sha256": {
+    "scripts/verify_garch_fixes.py": "fe3eefabab075e175f35d2a35c71ddd2a1be67510a152106fc6f046bb1b1fa52",
+    "src/risk_model/garch.py": "0e9638256ff0b1c13742688367895e8afd20ad3210d8b8281687f5feff480df9",
+    "src/risk_model/daily.py": "bebe010f77fa1d51862f506a6f1ce098f5dd0c7b4c69ba5fc559156e53b5a4da",
+    "src/backtest/qps_baseline.py": "4821f73bc971cab9f7602964bff445adb2665a042fa07ec576ba3155d93d30da",
+    "src/backtest/oos_inputs.py": "398d7c7b8f7478b848f45a82e46ae700c5895e6a40bfed0612a2619482dd5659",
+    "src/data_processing/strategy_inputs.py": "42f1c9c8dca654a1396a45277ed0941cce327a71133320aeb196bc24b79d105d",
+    "src/data_processing/endpoints.py": "7be44d194f6b8aaeea5532517f92670739eb65b27296c4659b15622754774c5a"
+  },
+  "artifact_sha256": {
+    "SUMMARY.md": "8090fd3d23ffc4cbb7e3520dc510da3d9645755a591b39a3929a82ca47537180",
+    "checks.csv": "b67a00a17bbe547a9dfc50e00c23a621d7f4f55112088ae1d2c1928c9b426cdd",
+    "dcc_missing_moments.csv": "33f97c7ae504f9c00b7b264639a191db8b2c58904ff90bf3dcac81149ad4619a",
+    "dcc_missing_state_trace.csv": "195bb69e9f03afe738cbab38e670b5746277e93f44771a689d86683e6b9efba0",
+    "fitted_parameters.csv": "0edadcbf0ce1358405cace5534726dcec1502de8ad0aa01c30c1df2ccbb5fd7c",
+    "forecast_covariances.csv": "d9186f7828670c5ff2aaacf61be42afb39e3a87abff180ebdc419bda346a8346",
+    "forecast_coverage.csv": "ee68818203208d49c5df867d32e9313766d5e2bcec9f47372022a00689e7e32c",
+    "source_continuation.csv": "4594734ce509d8fa29abc22ce077439db5cd17d5b168bcd32043088d11615797",
+    "synthetic_prices.csv": "8b0d75a7809edcb8e242fc7aeb3c3c1c3afe430e8ad3f26f2da87dd95240d79c",
+    "variance_trace.csv": "797c0379f0e9ed15fb3f6da40c23ee7aea9db007f0a55564f0c4eb0295b585c3"
+  }
+}

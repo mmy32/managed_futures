@@ -44,24 +44,63 @@ def select_source(own_returns, fallback_returns, months, minimum_history=36, dec
     return selected, source, pd.DataFrame(records)
 
 
+def _price_source(prices, months, settings):
+    """Apply the same prior-only source rule to independently constructed returns."""
+    frames = close_frames(prices[["RL", "ER"]])
+    monthly = pd.DataFrame({
+        name: endpoints(frame, months).endpoint_close for name, frame in frames.items()
+    }).pct_change(fill_method=None)
+    rule = settings.get("source_selection", {})
+    return select_source(
+        monthly.RL, monthly.ER, months,
+        rule.get("minimum_history", 36), rule.get("decision_lag_months", 2),
+    )
+
+
+def _risk_prices(prices, markets, excluded):
+    """Form the observation grid from declared estimation sources before taking ratios."""
+    retained = [market for market in markets if market not in excluded]
+    required = retained + (["ER"] if "RL" in retained and "ER" not in retained else [])
+    missing = set(required) - set(prices.columns)
+    if missing:
+        raise ValueError(f"Missing daily estimation prices: {sorted(missing)}")
+    if not retained:
+        raise ValueError("Daily risk returns require at least one estimation market")
+    panel = prices[required].dropna(how="all")
+    if panel.empty:
+        raise ValueError("Daily estimation markets have no observed prices")
+    return panel, retained
+
+
+def source_consistent_daily_returns(prices, source, markets=None, excluded=()):
+    """Use each selected contract's own daily return, without a cross-price ratio.
+
+    A missing RL observation must not remove ER from the risk universe once ER
+    has been selected for that month. Source decisions are supplied separately
+    and must cover every requested daily observation. Excluded and unused files
+    cannot insert observation dates into the retained markets' return grid.
+    """
+    prices, retained = _risk_prices(prices, source.columns if markets is None else markets, excluded)
+    result = daily_returns(prices)
+    if "RL" not in retained:
+        return result
+    if "RL" not in source:
+        raise ValueError("Daily risk returns require a complete RL/ER source schedule")
+    chosen = source.RL.reindex(result.index.to_period("M"))
+    if chosen.isna().any() or not chosen.isin(["RL", "ER"]).all():
+        raise ValueError("Daily risk returns require a complete RL/ER source schedule")
+    if "ER" not in result or "RL" not in result:
+        raise ValueError("Daily risk returns require both RL and ER prices")
+    result["RL"] = np.where(chosen.eq("ER").to_numpy(), result.ER, result.RL)
+    return result[retained]
+
+
 def load_strategy_inputs(settings, write=False):
     # The input file's RL fallback is retrospective; replace it and its source
     # schedule below before constructing strategy signals or positions.
     returns = pd.read_csv(QPS_OUTPUT_DIR / "construction/monthly_returns_research.csv", index_col=0)
     returns.index = pd.PeriodIndex(returns.index, freq="M")
-    independent = {}
-    prices = close_frames(load_daily_prices())
-    for name in ["RL", "ER"]:
-        closes = endpoints(prices[name], returns.index).endpoint_close
-        independent[name] = closes / closes.shift(1) - 1
-    rule = settings.get("source_selection", {})
-    selected, chosen, schedule = select_source(
-        independent["RL"],
-        independent["ER"],
-        returns.index,
-        rule.get("minimum_history", 36),
-        rule.get("decision_lag_months", 2),
-    )
+    selected, chosen, schedule = _price_source(load_daily_prices(), returns.index, settings)
     returns["RL"] = selected
     # A predeclared source label remains defined even if a realized return is missing.
     source = pd.DataFrame({a: a for a in returns.columns}, index=returns.index)
@@ -80,6 +119,11 @@ def load_strategy_inputs(settings, write=False):
     return returns, source, known_at, schedule
 
 
-def load_daily_returns(markets) -> pd.DataFrame:
-    """Daily returns for `markets`, the input of risk models that estimate from daily data."""
-    return daily_returns(load_daily_prices())[list(markets)]
+def load_daily_returns(markets, settings=None, excluded=()) -> pd.DataFrame:
+    """Daily risk returns using the monthly strategy's prior-only source rule."""
+    prices, retained = _risk_prices(load_daily_prices(), markets, excluded)
+    months = pd.period_range(prices.index.min().to_period("M"), prices.index.max(), freq="M")
+    source = pd.DataFrame(index=months)
+    if "RL" in retained:
+        _, source["RL"], _ = _price_source(prices, months, settings or {})
+    return source_consistent_daily_returns(prices, source, retained)

@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from src.backtest.cross_validation import cpcv_paths, cpcv_splits
+from src.backtest.cross_validation import cpcv_paths, cpcv_splits, walk_forward_splits
 
 
 def test_split_counts_match_the_book_example():
@@ -32,3 +32,26 @@ def test_invalid_arguments_raise():
     with pytest.raises(ValueError):
         cpcv_splits(10, 3, 3, 0)
     assert np.array_equal(cpcv_splits(10, 5, 1, 0)[0].test, [0, 1])
+
+
+def test_walk_forward_training_is_trailing_and_strictly_before_disjoint_tests():
+    splits = walk_forward_splits(104, train_months=60, test_months=12, minimum_test_months=8)
+    assert len(splits) == 4
+    for split in splits:
+        assert len(split.train) == 60
+        assert split.train[-1] + 1 == split.test[0]
+        assert split.train.max() < split.test.min()
+        assert not set(split.train) & set(split.test)
+    assert [len(split.test) for split in splits] == [12, 12, 12, 8]
+    all_tests = np.concatenate([split.test for split in splits])
+    assert np.array_equal(all_tests, np.arange(60, 104))
+    assert len(walk_forward_splits(103, 60, 12, 8)) == 3
+
+
+@pytest.mark.parametrize("arguments", [
+    (61, 60, 12, 12), (5, 1, 2, 2), (10, 3, 2, 3), (10, 3, 0, 0),
+    (10, True, 2, 2), (10.0, 3, 2, 2),
+])
+def test_walk_forward_rejects_tiny_history_and_invalid_window_sizes(arguments):
+    with pytest.raises(ValueError):
+        walk_forward_splits(*arguments)

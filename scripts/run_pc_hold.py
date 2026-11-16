@@ -1,9 +1,10 @@
-"""Hold-stage tests P0, P1, P2, P3 and P5: class budgets, class caps and HRP against inverse-vol.
+"""Historical hold-stage comparisons with past-only walk-forward selection diagnostics.
 
-Every variant reshapes the sized TREND book (`construct_targets(adjustment=...)`) and then runs
-through the same limits, 10% band and 2 bps cost as the baseline. Variants are compared at
-matched realised volatility: Sharpe is scale-free, and mean return and drawdown are rescaled
-by baseline volatility over variant volatility.
+Fixed variants use the same limits, band and costs; headline metrics are their
+actual simulated returns. Previously inspected history cannot supply a fresh
+holdout. Fold scores describe separate candidate ledgers, not an executable
+switching portfolio, and never authorize automatic promotion. CPCV is optional
+and explicitly historical because its training periods may follow test periods.
 """
 
 import argparse
@@ -17,7 +18,7 @@ from risk_model_study import Study, load_study
 from run_pc_scale import model_parts
 
 from src.alpha_model import lagged
-from src.backtest.cross_validation import cpcv_paths, cpcv_splits
+from src.backtest.cross_validation import cpcv_paths, cpcv_splits, walk_forward_splits
 from src.backtest.engine import simulate
 from src.backtest.performance import deflated_sharpe, performance, sharpe_ratio
 from src.backtest.sample_diagnostics import risk_diagnostics
@@ -93,23 +94,17 @@ def construction_diagnostics(target, covariance, labels, minimum):
     return pd.DataFrame(rows).set_index("month")
 
 
-def max_drawdown(net):
-    wealth = (1 + net).cumprod()
-    return (wealth / wealth.cummax().clip(lower=1) - 1).min()
-
-
-def summary_row(name, ledger, diagnostics, baseline, config):
+def summary_row(name, ledger, diagnostics, config):
     performed = performance(ledger)
-    scale = baseline.net_return.std() / ledger.net_return.std()
-    matched = ledger.net_return * scale
     return {
         "variant": name,
+        "mean_ann": performed["mean_ann"],
+        "cagr": performed["cagr"],
         "sharpe": performed["sharpe"],
         "vol_ann": performed["vol_ann"],
-        "matched_mean_ann": matched.mean() * MONTHS,
-        "matched_max_drawdown": max_drawdown(matched),
+        "max_drawdown": performed["max_drawdown"],
         "turnover_ann": performed["turnover_ann"],
-        "matched_cost_ann": ledger.cost.mean() * MONTHS * scale,
+        "mean_cost_ann": performed["mean_cost_ann"],
         "calibration": risk_diagnostics(ledger)[1]["realized_predicted_ratio"],
         "effective_bets": diagnostics.effective_bets.mean(),
         "effective_bets_min": diagnostics.effective_bets.min(),
@@ -179,6 +174,38 @@ def bootstrap(nets, turnovers, bets, config):
     return pd.DataFrame(rows)
 
 
+def variant_walk_forward(nets: pd.DataFrame, baseline: str, config):
+    """Score a past-only selection rule on separately maintained historical candidates."""
+    if (nets.empty or not isinstance(nets.index, pd.PeriodIndex) or nets.index.freqstr != "M"
+            or not nets.index.equals(pd.period_range(nets.index.min(), nets.index.max(), freq="M"))
+            or not nets.columns.is_unique or baseline not in nets
+            or not np.isfinite(nets.to_numpy()).all()):
+        raise ValueError("Selection requires finite candidates on one complete monthly calendar")
+    options = config["walk_forward"]
+    splits = walk_forward_splits(len(nets), options["train_months"], options["test_months"],
+                                options["minimum_test_months"])
+    rows = []
+    for fold, split in enumerate(splits, start=1):
+        train, test = nets.iloc[split.train], nets.iloc[split.test]
+        scores = train.apply(sharpe_ratio).replace([np.inf, -np.inf], np.nan).dropna()
+        if scores.empty:
+            raise ValueError(f"No varying training candidate in walk-forward fold {fold}")
+        chosen = scores.idxmax()
+        difference = (test[chosen] - test[baseline]).mean() * MONTHS
+        rows.append({
+            "fold": fold, "train_start": str(train.index[0]), "train_end": str(train.index[-1]),
+            "test_start": str(test.index[0]), "test_end": str(test.index[-1]),
+            "train_months": len(train), "test_months": len(test), "chosen": chosen,
+            "train_sharpe": scores[chosen],
+            "candidate_test_sharpe": sharpe_ratio(test[chosen]),
+            "baseline_test_sharpe": sharpe_ratio(test[baseline]),
+            "candidate_test_mean_ann": test[chosen].mean() * MONTHS,
+            "baseline_test_mean_ann": test[baseline].mean() * MONTHS,
+            "candidate_minus_baseline_mean_ann": difference,
+        })
+    return pd.DataFrame(rows)
+
+
 def variant_cpcv(nets: pd.DataFrame, baseline: str, config):
     """P5: assess selection across historical splits, which can train on later months."""
     options = config["cpcv"]
@@ -209,7 +236,8 @@ def variant_cpcv(nets: pd.DataFrame, baseline: str, config):
         stitched = pd.concat(
             [nets[name].iloc[idx] for name, idx in zip(chosen, groups, strict=True)]
         )
-        paths.append({"path": number, "chosen": chosen, "sharpe": sharpe_ratio(stitched)})
+        paths.append({"path": number, "chosen": chosen,
+                      "stitched_candidate_sharpe_diagnostic": sharpe_ratio(stitched)})
     return pd.DataFrame(rows), pd.DataFrame(paths)
 
 
@@ -232,10 +260,36 @@ def deflation(nets: pd.DataFrame, baseline: str, config):
     return pd.DataFrame(columns).rename_axis("variant")
 
 
-def main(out, model="rolling"):
+def write_selection_diagnostics(out, nets, config, model):
+    """Record diagnostic scores and their historical scope without a promotion decision."""
+    folds = variant_walk_forward(nets, config["baseline"], config)
+    folds.to_csv(out / "walk_forward_folds.csv", index=False)
+    evidence = {
+        "scope": "Previously inspected historical development data",
+        "independent_out_of_sample": False, "automatic_promotion": False,
+        "model": model, "primary_selection_diagnostic": "past_only_walk_forward",
+        "walk_forward": config["walk_forward"], "folds": len(folds),
+        "selection_counts": folds.chosen.value_counts().to_dict(),
+        "headline_metrics": "Actual fixed-variant simulated returns in variants.csv",
+        "fold_scores": "Separate candidate ledgers retain their own holdings/NAV; no switching "
+                       "portfolio is simulated and no stitched portfolio performance is reported",
+        "cpcv_enabled": config["cpcv"]["enabled"],
+        "historical_cpcv": "Optional resampling diagnostic; training can follow testing and "
+                           "finite embargo does not isolate expanding risk/calibration states",
+    }
+    (out / "evaluation_evidence.json").write_text(json.dumps(evidence, indent=2) + "\n")
+    if config["cpcv"]["enabled"]:
+        splits, paths = variant_cpcv(nets, config["baseline"], config)
+        splits.to_csv(out / "historical_cpcv_splits.csv", index=False)
+        paths.to_csv(out / "historical_cpcv_paths.csv", index=False)
+
+
+def main(out, model="rolling", historical_cpcv=False):
     if out.exists():
         raise ValueError("Use a new output directory; existing experiments are immutable")
     config = json.loads((CONFIG_DIR / "pc_hold.json").read_text())
+    if historical_cpcv:
+        config["cpcv"]["enabled"] = True
     study = load_study()
     _, base, returns, _, _, meta = study.inputs
     parts = model_parts(study, model)
@@ -246,11 +300,10 @@ def main(out, model="rolling"):
         for name, (t, c, _) in results.items()
     }
     ledgers = {name: result[2] for name, result in results.items()}
-    reference = ledgers[config["baseline"]]
     out.mkdir(parents=True)
     (out / "trial_specification.json").write_text(json.dumps(config, indent=2) + "\n")
     pd.DataFrame(
-        [summary_row(n, ledgers[n], diagnostics[n], reference, config) for n in ledgers]
+        [summary_row(n, ledgers[n], diagnostics[n], config) for n in ledgers]
     ).to_csv(out / "variants.csv", index=False)
     pd.concat(diagnostics, names=["variant"]).to_csv(out / "diagnostics.csv")
     balance_check(study, parts, results[config["baseline"]][1], labels).to_csv(
@@ -260,9 +313,7 @@ def main(out, model="rolling"):
     turnovers = pd.DataFrame({n: ledgers[n].turnover for n in ledgers})
     bets = pd.DataFrame({n: diagnostics[n].effective_bets for n in ledgers}).reindex(nets.index)
     bootstrap(nets, turnovers, bets, config).to_csv(out / "bootstrap.csv", index=False)
-    splits, paths = variant_cpcv(nets, config["baseline"], config)
-    splits.to_csv(out / "cpcv_splits.csv", index=False)
-    paths.to_csv(out / "cpcv_paths.csv", index=False)
+    write_selection_diagnostics(out, nets, config, model)
     deflation(nets, config["baseline"], config).to_csv(out / "deflated_sharpe.csv")
 
 
@@ -270,5 +321,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--model", choices=["rolling", "configured"], default="rolling")
+    parser.add_argument("--historical-cpcv", action="store_true",
+                        help="Also write the nonchronological historical CPCV diagnostic")
     args = parser.parse_args()
-    main(args.output.resolve(), args.model)
+    main(args.output.resolve(), args.model, args.historical_cpcv)

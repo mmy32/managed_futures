@@ -275,7 +275,7 @@ def main(reference, output):
     spec, base, risk, inputs = prepare(reference, output)
     try:
         primary = output / "configured_lag2"
-        daily = (load_daily_returns(inputs[0].columns)
+        daily = (load_daily_returns(inputs[0].columns, risk, base["exclude_from_strategy"])
                  if risk.get("risk_model", {}).get("type") == "dcc_garch" else None)
         model_cache = {}
         data = forecasts(inputs, base, risk, spec["primary_information_lag_months"],

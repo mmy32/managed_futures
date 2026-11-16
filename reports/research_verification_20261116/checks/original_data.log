@@ -1,0 +1,3 @@
+COMMAND: '/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/.venv/bin/python' scripts/verify_original_inputs.py --raw-dir '/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/data/raw' --output '/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/research_verification_20261116/historical_data_checks'
+
+Original-input verification passed: /Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/research_verification_20261116/historical_data_checks

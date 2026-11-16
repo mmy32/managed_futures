@@ -1,0 +1,13 @@
+{
+  "archive": "reports/hrp_timing_sensitivity_20261113",
+  "archived_cases_checked": 4,
+  "created_utc": "2026-11-16T20:51:12.913859+00:00",
+  "independent_oos_score_performed": false,
+  "metric_absolute_tolerance": 1e-10,
+  "months_per_case": 468,
+  "new_strategy_backtest_performed": false,
+  "preflight_sha256": "b69424d61c3047ce059614dd98b6216b85f5c31eae398b7930c462485568eb7b",
+  "raw_input_count": 66,
+  "status": "ARCHIVED CONDITIONAL RESULTS \u2014 NO CORRECTED/FULL-SAMPLE RUN",
+  "verification": "reports/research_verification_20261116"
+}

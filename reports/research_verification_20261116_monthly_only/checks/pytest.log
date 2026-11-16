@@ -1,0 +1,9 @@
+COMMAND: /Users/raina/Documents/Quant Portfolio Strategies/managed_futures/.venv/bin/python -m pytest -q --junitxml /Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/research_verification_20261116/checks/test_results.xml
+
+........................................................................ [ 19%]
+........................................................................ [ 38%]
+........................................................................ [ 58%]
+........................................................................ [ 77%]
+........................................................................ [ 96%]
+............                                                             [100%]
+372 passed in 80.78s (0:01:20)

@@ -1,0 +1,5 @@
+period,requested_run,status,performance_available,reason
+1976-01–2025-05,Corrected full available strategy sample,NOT_COMPLETED_BLOCKED,False,Daily prices end 2014-12; historical endpoint gaps remain unresolved.
+1976-01–2014-12,Corrected historical comparison,NOT_COMPLETED,False,Current corrected strategy has not completed a full historical backtest; endpoint policy unresolved.
+2015-01–2025-05,Post-development comparison,BLOCKED_NO_DAILY_EXTENSION,False,Actual input preflight rejects insufficient daily coverage; monthly returns also contain gaps.
+1976-01–2014-12,Archived conditional comparison,ARCHIVED_PRE_FIX_ONLY,True,Four old ledgers independently reconciled; source/risk/data assumptions predate repairs.

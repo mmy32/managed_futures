@@ -8,8 +8,7 @@ import pandas as pd
 
 from src.data_loader import load_asset_map, load_daily_prices
 from src.data_processing.endpoints import close_frames, endpoints
-from src.data_processing.strategy_inputs import select_source
-from src.risk_model import daily_returns
+from src.data_processing.strategy_inputs import select_source, source_consistent_daily_returns
 
 PROVENANCE_FIELDS = {
     "vendor", "vintage", "timezone", "price_definition", "continuous_contract_adjustment",
@@ -148,7 +147,7 @@ def load_bundle(price_dir, asset_map_path, declaration, base, risk):
     return prices, meta.reindex(declaration["universe"]), files, coverage
 
 
-def strategy_inputs(prices, universe, settings, end):
+def strategy_inputs(prices, universe, settings, end, excluded=()):
     """Build point-in-time monthly sources and source-consistent daily risk returns."""
     prices = prices.loc[:end.end_time]
     months = pd.period_range(prices.index.min().to_period("M"), end, freq="M")
@@ -159,7 +158,6 @@ def strategy_inputs(prices, universe, settings, end):
     returns = monthly[universe].copy()
     source = pd.DataFrame({name: name for name in universe}, index=months)
     known = pd.Series([(month - 2).end_time for month in months], index=months, name="source_known_at")
-    risk_returns = daily_returns(prices)
     if "RL" in universe:
         rule = settings["source_selection"]
         selected, chosen, schedule = select_source(
@@ -169,7 +167,5 @@ def strategy_inputs(prices, universe, settings, end):
         source["RL"] = chosen
         known = pd.Series(pd.to_datetime(schedule.source_known_at).to_numpy(), index=months,
                           name="source_known_at")
-        use_er = chosen.reindex(risk_returns.index.to_period("M")).eq("ER").to_numpy()
-        # Use each source's own daily returns; never divide across RL and ER price levels.
-        risk_returns["RL"] = np.where(use_er, risk_returns.ER, risk_returns.RL)
-    return returns, source, known, risk_returns[universe]
+    daily = source_consistent_daily_returns(prices, source, universe, excluded)
+    return returns, source, known, daily

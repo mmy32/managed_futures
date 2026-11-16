@@ -1,0 +1,6 @@
+check,passed
+strict_daily_and_monthly_schema,True
+original_frozen_input_hashes,True
+all_missing_states_reproduced,True
+all_observed_values_within_stored_precision,True
+original_bytes_unchanged,True

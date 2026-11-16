@@ -19,7 +19,7 @@
   "primary_hac_lag": 6,
   "funding": "Primary: zero-interest synthetic futures-price-return proxy. RF-added results are conditional fully collateralized sensitivities, not verified vendor total returns.",
   "signal": "Sign of the sum of the preceding 12 monthly price returns; scaling that window by the same current positive risk estimate leaves its sign unchanged. Zero means flat.",
-  "execution": "Primary monthly endpoint execution is idealized: history through t-1 determines t exposure at the prior endpoint. A two-month information lag tests one extra full month of execution delay.",
+  "execution": "Primary monthly endpoint execution is idealized: history through t-1 determines t exposure at the prior endpoint. A two-month information lag uses one extra month of stale information, including a stale risk forecast; it is not a next-session execution simulation.",
   "missing_data": "Require complete trailing signal/risk windows. Never select assets using current/future returns. Raise on any nonzero held exposure with missing realized return; do not fill or silently drop P&L months.",
   "cost_model": "Illustrative linear bps per absolute traded notional divided by beginning-month NAV, including initial entry, drift-adjusted monthly rebalancing, RL-to-ER source transition and final liquidation. No bid/ask, market impact, margin, tax or contract-roll cost history is available.",
   "volatility_floor_annual": 0.02,

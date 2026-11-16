@@ -1,0 +1,129 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Strategy performance — archived conditional results</title><style>body{font:16px/1.6 system-ui,sans-serif;margin:32px auto;max-width:1400px;padding:0 24px;color:#1b2934}.notice{background:#fff0cf;border-left:6px solid #a66500;padding:16px;font-weight:700}h1,h2{line-height:1.25}table{border-collapse:collapse;font-size:14px;width:100%}.table{overflow:auto}td,th{border-bottom:1px solid #ccd5dc;padding:10px;text-align:right}td:nth-child(-n+2),th:nth-child(-n+2){text-align:left}thead{background:#edf2f6}pre{padding:18px;background:#edf2f6;overflow:auto}a{color:#12598b}</style><body><h1>Strategy performance</h1>
+<div class="notice">ARCHIVED CONDITIONAL RESULTS — NO CORRECTED/FULL-SAMPLE RUN</div>
+<p>No corrected strategy run through May 2025 has been completed. The table below contains old, conditional 1976–2014 results recalculated from archived ledgers. This report does not run a strategy or produce new out-of-sample scores.</p>
+<h2>Available archived table</h2>
+<p>January 1976–December 2014; 468 months in every row.</p>
+<div class="table"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Lag</th>
+      <th>Portfolio</th>
+      <th>Net mean / yr</th>
+      <th>CAGR</th>
+      <th>Volatility / yr</th>
+      <th>Sharpe (RF=0)</th>
+      <th>Max drawdown</th>
+      <th>Turnover / yr</th>
+      <th>Cost / yr</th>
+      <th>Positive months</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1 month (primary)</td>
+      <td>Inverse-vol baseline</td>
+      <td>11.07%</td>
+      <td>11.18%</td>
+      <td>9.23%</td>
+      <td>1.199</td>
+      <td>-11.64%</td>
+      <td>8.67×</td>
+      <td>0.17%</td>
+      <td>65.6%</td>
+    </tr>
+    <tr>
+      <td>1 month (primary)</td>
+      <td>Within-class HRP</td>
+      <td>11.19%</td>
+      <td>11.39%</td>
+      <td>8.47%</td>
+      <td>1.321</td>
+      <td>-10.13%</td>
+      <td>13.96×</td>
+      <td>0.28%</td>
+      <td>65.2%</td>
+    </tr>
+    <tr>
+      <td>2 months (sensitivity)</td>
+      <td>Inverse-vol baseline</td>
+      <td>7.35%</td>
+      <td>7.15%</td>
+      <td>9.18%</td>
+      <td>0.800</td>
+      <td>-23.78%</td>
+      <td>8.68×</td>
+      <td>0.17%</td>
+      <td>61.8%</td>
+    </tr>
+    <tr>
+      <td>2 months (sensitivity)</td>
+      <td>Within-class HRP</td>
+      <td>6.73%</td>
+      <td>6.44%</td>
+      <td>9.48%</td>
+      <td>0.710</td>
+      <td>-35.65%</td>
+      <td>13.89×</td>
+      <td>0.28%</td>
+      <td>63.0%</td>
+    </tr>
+  </tbody>
+</table></div>
+<p>Both archived arms use class-specific trend signals, DCC-GARCH risk with a shared inverse-volatility shadow rescale, 10% trading bands, 2 bps ordinary costs and zero cash interest. The baseline sizes by inverse volatility; the enhancement uses signed HRP within each asset class. Only the sizing comparison is isolated here; this is not a test of GARCH versus rolling covariance.</p>
+<p>These archived forecasts predate the repairs to RL/ER daily source consistency, missing daily observations, excluded-market risk estimation, optimizer failure handling and calibration timing. March 1997 returns for DT, GS, LX and SS use an unverified endpoint assumption. The archived monthly panel also accepts HS January/February 2006 returns that the current strict daily-endpoint rule leaves unknown. Recomputing statistics does not repair those forecasts or assumptions.</p>
+<p>The full monthly workbook spans February 1969–May 2025 (676 months, 58 markets). The restored daily files end in December 2014. The 125 post-2014 monthly calendar slots cannot reconstruct the daily innovations required by this GARCH model; there are also 226 missing market-month cells in that newer period.</p>
+<p>The actual matched-runner input preflight for January 2015–May 2025 stopped before fitting or scoring: &#x27;Price coverage must span at least 2006-11 through 2025-05&#x27;. The saved declaration uses a January 2010 shadow start. This is a readiness check, not an attempted or completed historical backtest.</p>
+<p>The archived primary lag-1 HRP Sharpe is higher, but turnover is higher. At lag 2 the HRP Sharpe is lower and the maximum drawdown is worse. These are inspected development results and do not establish a reliable enhancement or an independent out-of-sample advantage.</p>
+<h2>Run readiness</h2>
+<div class="table"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>period</th>
+      <th>requested_run</th>
+      <th>status</th>
+      <th>performance_available</th>
+      <th>reason</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1976-01–2025-05</td>
+      <td>Corrected full available strategy sample</td>
+      <td>NOT_COMPLETED_BLOCKED</td>
+      <td>False</td>
+      <td>Daily prices end 2014-12; historical endpoint gaps remain unresolved.</td>
+    </tr>
+    <tr>
+      <td>1976-01–2014-12</td>
+      <td>Corrected historical comparison</td>
+      <td>NOT_COMPLETED</td>
+      <td>False</td>
+      <td>Current corrected strategy has not completed a full historical backtest; endpoint policy unresolved.</td>
+    </tr>
+    <tr>
+      <td>2015-01–2025-05</td>
+      <td>Post-development comparison</td>
+      <td>BLOCKED_NO_DAILY_EXTENSION</td>
+      <td>False</td>
+      <td>Actual input preflight rejects insufficient daily coverage; monthly returns also contain gaps.</td>
+    </tr>
+    <tr>
+      <td>1976-01–2014-12</td>
+      <td>Archived conditional comparison</td>
+      <td>ARCHIVED_PRE_FIX_ONLY</td>
+      <td>True</td>
+      <td>Four old ledgers independently reconciled; source/risk/data assumptions predate repairs.</td>
+    </tr>
+  </tbody>
+</table></div>
+<h2>Definitions and checks</h2>
+<p>Annual net mean = 12 × mean monthly net return; volatility = √12 × sample standard deviation. Sharpe uses zero RF and equals annual mean / annual volatility. No missing months are dropped.</p>
+<p>CAGR compounds monthly net returns over 468 calendar months. Maximum drawdown includes the initial NAV of 1. Annual turnover and cost are 12 × their monthly arithmetic means; one-way absolute turnover is not halved.</p>
+<p>Costs include 2 bps × turnover, including recorded entries, source transitions and terminal liquidation. Regular futures rolls, bid/ask histories and executable fills remain unverified. Positive-month rate includes all 468 months, including flat months.</p>
+<p>All four ledgers passed the complete January 1976–December 2014 calendar, net = gross − cost, cost = turnover × 0.0002, NAV continuity and declared limit-flag checks. All independently recomputed archived metric fields match metrics.csv within absolute tolerance 1e-10. These checks verify archived arithmetic, not data provenance or current-model performance.</p>
+<h2>Reproduce or verify</h2>
+<p>Run from the repository root. Use a new output directory.</p>
+<pre>.venv/bin/python reports/strategy_performance_20261116/build_report.py --verify-existing reports/strategy_performance_20261116
+
+.venv/bin/python reports/strategy_performance_20261116/build_report.py --output reports/my_strategy_performance</pre>
+<p><a href="archived_metrics.csv">Metrics CSV</a> · <a href="checks.csv">Checks</a> · <a href="run_readiness.csv">Run readiness</a> · <a href="full_sample_preflight.json">Actual preflight</a> · <a href="provenance.json">Provenance</a> · <a href="manifest.json">Hash manifest</a></p></body></html>

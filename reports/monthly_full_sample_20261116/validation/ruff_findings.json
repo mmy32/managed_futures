@@ -1,0 +1,4706 @@
+[
+  {
+    "cell": 2,
+    "code": "F401",
+    "end_location": {
+      "column": 12,
+      "row": 1
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/experiment_1_band.ipynb",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 2
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Remove unused import: `json`"
+    },
+    "location": {
+      "column": 8,
+      "row": 1
+    },
+    "message": "`json` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": 8,
+    "code": "I001",
+    "end_location": {
+      "column": 53,
+      "row": 5
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/portfolio_construction_3_trade.ipynb",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import numpy as np\n\nfrom src.backtest.engine import simulate\nfrom src.backtest.qps_baseline import forecasts_from\nfrom src.portfolio_construction import BandPolicy\nfrom src.transaction_cost_model import LinearBpsCost\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 7
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": 8,
+    "code": "F401",
+    "end_location": {
+      "column": 32,
+      "row": 4
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/risk_model_estimators.ipynb",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `matplotlib.pyplot`"
+    },
+    "location": {
+      "column": 29,
+      "row": 4
+    },
+    "message": "`matplotlib.pyplot` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 4,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": 8,
+    "code": "F401",
+    "end_location": {
+      "column": 19,
+      "row": 5
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/risk_model_estimators.ipynb",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 6
+          },
+          "location": {
+            "column": 1,
+            "row": 5
+          }
+        }
+      ],
+      "message": "Remove unused import: `numpy`"
+    },
+    "location": {
+      "column": 17,
+      "row": 5
+    },
+    "message": "`numpy` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 5,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": 8,
+    "code": "I001",
+    "end_location": {
+      "column": 2,
+      "row": 25
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/risk_model_estimators.ipynb",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from risk_model_study import (\n    compare_models,\n    daily_model,\n    garch_model,\n    load_study,\n    mean_correlation,\n    paired_sharpe_difference,\n    rescaled_run,\n    rolling_model,\n    separate_window_models,\n    shrinkage_cpcv,\n    summarize,\n    variance_ratio,\n    wide,\n)\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 27
+          },
+          "location": {
+            "column": 1,
+            "row": 11
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 11
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 11,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": 30,
+    "code": "I001",
+    "end_location": {
+      "column": 28,
+      "row": 1
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/risk_model_estimators.ipynb",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from itertools import chain\n\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 3
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": 30,
+    "code": "F401",
+    "end_location": {
+      "column": 28,
+      "row": 1
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/risk_model_estimators.ipynb",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 2
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Remove unused import: `itertools.chain`"
+    },
+    "location": {
+      "column": 23,
+      "row": 1
+    },
+    "message": "`itertools.chain` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": 7,
+    "code": "C408",
+    "end_location": {
+      "column": 91,
+      "row": 23
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"title\": f\"Trailing {LOOKBACK}m return\", \"score\": level.diff(LOOKBACK)}",
+          "end_location": {
+            "column": 91,
+            "row": 23
+          },
+          "location": {
+            "column": 21,
+            "row": 23
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 21,
+      "row": 23
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 23,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": 7,
+    "code": "C408",
+    "end_location": {
+      "column": 125,
+      "row": 24
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"title\": f\"Skip-month ({LOOKBACK}-{SKIP_MONTHS})\", \"score\": level.shift(SKIP_MONTHS) - level.shift(LOOKBACK)}",
+          "end_location": {
+            "column": 125,
+            "row": 24
+          },
+          "location": {
+            "column": 17,
+            "row": 24
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 17,
+      "row": 24
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 24,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": 7,
+    "code": "C408",
+    "end_location": {
+      "column": 153,
+      "row": 25
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"title\": f\"Multi-horizon blend {BLEND_LOOKBACKS}\", \"score\": sum(np.sign(level.diff(k)) for k in BLEND_LOOKBACKS) / len(BLEND_LOOKBACKS)}",
+          "end_location": {
+            "column": 153,
+            "row": 25
+          },
+          "location": {
+            "column": 18,
+            "row": 25
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 18,
+      "row": 25
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 25,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": 7,
+    "code": "C408",
+    "end_location": {
+      "column": 123,
+      "row": 26
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"title\": f\"Return t-stat ({LOOKBACK}m)\", \"score\": np.tanh(roll.mean() / (roll.std() / np.sqrt(LOOKBACK)))}",
+          "end_location": {
+            "column": 123,
+            "row": 26
+          },
+          "location": {
+            "column": 18,
+            "row": 26
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 18,
+      "row": 26
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 26,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": 7,
+    "code": "C408",
+    "end_location": {
+      "column": 104,
+      "row": 27
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"title\": f\"Price vs {LOOKBACK}m MA\", \"lines\": {\"MA\": ma}, \"score\": level - ma, \"on_price\": True}",
+          "end_location": {
+            "column": 104,
+            "row": 27
+          },
+          "location": {
+            "column": 15,
+            "row": 27
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 15,
+      "row": 27
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 27,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": 7,
+    "code": "C408",
+    "end_location": {
+      "column": 135,
+      "row": 28
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"title\": f\"MA crossover {FAST}/{SLOW}\", \"lines\": {\"fast MA\": fast, \"slow MA\": slow}, \"score\": fast - slow, \"on_price\": True}",
+          "end_location": {
+            "column": 135,
+            "row": 28
+          },
+          "location": {
+            "column": 18,
+            "row": 28
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 18,
+      "row": 28
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 28,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": 7,
+    "code": "C408",
+    "end_location": {
+      "column": 122,
+      "row": 29
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"title\": f\"EWMAC {FAST}/{SLOW}\", \"lines\": {\"fast EMA\": ef, \"slow EMA\": es}, \"score\": ef - es, \"on_price\": True}",
+          "end_location": {
+            "column": 122,
+            "row": 29
+          },
+          "location": {
+            "column": 18,
+            "row": 29
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 18,
+      "row": 29
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 29,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": 7,
+    "code": "C408",
+    "end_location": {
+      "column": 157,
+      "row": 30
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"title\": f\"Breakout ({BREAKOUT_N}m range)\", \"lines\": {\"high\": high, \"low\": low}, \"score\": (level - low) / (high - low) - 0.5, \"on_price\": True}",
+          "end_location": {
+            "column": 157,
+            "row": 30
+          },
+          "location": {
+            "column": 21,
+            "row": 30
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 21,
+      "row": 30
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 30,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": 7,
+    "code": "C408",
+    "end_location": {
+      "column": 125,
+      "row": 31
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"title\": f\"Regression slope t-stat ({SLOPE_N}m)\", \"lines\": {\"fitted\": fitted}, \"score\": slope_t, \"on_price\": True}",
+          "end_location": {
+            "column": 125,
+            "row": 31
+          },
+          "location": {
+            "column": 18,
+            "row": 31
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 18,
+      "row": 31
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 31,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": 7,
+    "code": "C408",
+    "end_location": {
+      "column": 126,
+      "row": 32
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"title\": f\"Variance ratio VR({VR_Q}), {VR_WINDOW}m window\", \"score\": var_ratio, \"ref\": 1.0, \"no_shade\": True}",
+          "end_location": {
+            "column": 126,
+            "row": 32
+          },
+          "location": {
+            "column": 24,
+            "row": 32
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 24,
+      "row": 32
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 32,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": 39,
+    "code": "I001",
+    "end_location": {
+      "column": 34,
+      "row": 2
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import json\n\nfrom src.config import CONFIG_DIR\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": 41,
+    "code": "I001",
+    "end_location": {
+      "column": 16,
+      "row": 2
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import warnings\nfrom itertools import combinations\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": 41,
+    "code": "RUF007",
+    "end_location": {
+      "column": 44,
+      "row": 12
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/notebooks/trend_measures.ipynb",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "from itertools import combinations, pairwise",
+          "end_location": {
+            "column": 35,
+            "row": 1
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        },
+        {
+          "content": "pairwise(edges)",
+          "end_location": {
+            "column": 67,
+            "row": 12
+          },
+          "location": {
+            "column": 41,
+            "row": 12
+          }
+        }
+      ],
+      "message": "Replace `zip()` with `itertools.pairwise()`"
+    },
+    "location": {
+      "column": 41,
+      "row": 12
+    },
+    "message": "Prefer `itertools.pairwise()` over `zip()` when iterating over successive pairs",
+    "name": "zip-instead-of-pairwise",
+    "noqa_row": 12,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/zip-instead-of-pairwise"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 20,
+      "row": 4
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/check_reversals.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import sys\nfrom pathlib import Path\n\nimport pandas as pd\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 2
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 2
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 2,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 101,
+      "row": 15
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/check_reversals.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"run\": file.name.removesuffix(\"_exposure.csv\"), \"target_reversals\": count,\n                     \"same_month_direction_matches\": count-mismatches, \"direction_mismatches\": mismatches}",
+          "end_location": {
+            "column": 101,
+            "row": 15
+          },
+          "location": {
+            "column": 17,
+            "row": 14
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 17,
+      "row": 14
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 14,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 20,
+      "row": 4
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/generate_report_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import json\nimport os\nfrom pathlib import Path\n\nimport numpy as np\nimport pandas as pd\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 5
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 18,
+      "row": 6
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/generate_report_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import matplotlib\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 7
+          },
+          "location": {
+            "column": 1,
+            "row": 6
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 6
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 6,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 310,
+      "row": 130
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/generate_report_record.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'primary_band': .1,'primary_cost_bps': 2,'adopted_change': False,'reason': 'Neither candidate satisfies the frozen uncertainty screen; narrower bands have lower Sharpe and worse drawdown despite small historical return gains.','step_3_complete': True,'step_4_started': False}",
+          "end_location": {
+            "column": 310,
+            "row": 130
+          },
+          "location": {
+            "column": 48,
+            "row": 130
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 48,
+      "row": 130
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 130,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 44,
+      "row": 5
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import hashlib\nimport json\nimport os\nimport platform\nimport re\nimport shutil\nimport subprocess\nimport sys\nimport zipfile\nfrom datetime import datetime, timezone\nfrom pathlib import Path\nfrom xml.etree import ElementTree\n\nimport numpy as np\nimport pandas as pd\nimport statsmodels\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 6
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 23,
+      "row": 1
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import hashlib,json,platform,re,shutil,subprocess,sys,zipfile",
+          "end_location": {
+            "column": 65,
+            "row": 1
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Remove unused import: `os`"
+    },
+    "location": {
+      "column": 21,
+      "row": 1
+    },
+    "message": "`os` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 971,
+      "row": 62
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'created_utc': datetime.now(timezone.utc).isoformat(),'git_head': subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'working_tree_changes': True,'command': 'PYTHONPATH=. /opt/anaconda3/bin/python -u scripts/run_band_experiment.py --reference reports/cost_revision_20261026 --output reports/band_experiment_20261026/output','reference_manifest_sha256': digest(reference/'ARTIFACT_SHA256.json'),'inputs': {k:dict(source=str(p.relative_to(root)),sha256=digest(p)) for k,p in input_files.items()},'versions': dict(python=platform.python_version(),numpy=np.__version__,pandas=pd.__version__,statsmodels=statsmodels.__version__),'production_config_unchanged': True,'raw_files_unchanged': 65,'historical_report_files_unchanged': 241,'step2_artifacts_unchanged': True,'scope': 'Step 3 only; frozen v2 inputs, 12 runs, no roll-cost work','specification_written_utc': datetime.fromtimestamp((dest/'output/trial_specification.json').stat().st_mtime,timezone.utc).isoformat()}",
+          "end_location": {
+            "column": 971,
+            "row": 62
+          },
+          "location": {
+            "column": 12,
+            "row": 62
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 62
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 62,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "UP017",
+    "end_location": {
+      "column": 54,
+      "row": 62
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from datetime import datetime,timezone, UTC",
+          "end_location": {
+            "column": 39,
+            "row": 2
+          },
+          "location": {
+            "column": 1,
+            "row": 2
+          }
+        },
+        {
+          "content": "UTC",
+          "end_location": {
+            "column": 54,
+            "row": 62
+          },
+          "location": {
+            "column": 42,
+            "row": 62
+          }
+        }
+      ],
+      "message": "Convert to `datetime.UTC` alias"
+    },
+    "location": {
+      "column": 42,
+      "row": 62
+    },
+    "message": "Use `datetime.UTC` alias",
+    "name": "datetime-timezone-utc",
+    "noqa_row": 62,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/datetime-timezone-utc"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 488,
+      "row": 62
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'source': str(p.relative_to(root)),'sha256': digest(p)}",
+          "end_location": {
+            "column": 488,
+            "row": 62
+          },
+          "location": {
+            "column": 434,
+            "row": 62
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 434,
+      "row": 62
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 62,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 647,
+      "row": 62
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'python': platform.python_version(),'numpy': np.__version__,'pandas': pd.__version__,'statsmodels': statsmodels.__version__}",
+          "end_location": {
+            "column": 647,
+            "row": 62
+          },
+          "location": {
+            "column": 530,
+            "row": 62
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 530,
+      "row": 62
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 62,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "UP017",
+    "end_location": {
+      "column": 957,
+      "row": 62
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from datetime import datetime,timezone, UTC",
+          "end_location": {
+            "column": 39,
+            "row": 2
+          },
+          "location": {
+            "column": 1,
+            "row": 2
+          }
+        },
+        {
+          "content": "UTC",
+          "end_location": {
+            "column": 957,
+            "row": 62
+          },
+          "location": {
+            "column": 945,
+            "row": 62
+          }
+        }
+      ],
+      "message": "Convert to `datetime.UTC` alias"
+    },
+    "location": {
+      "column": 945,
+      "row": 62
+    },
+    "message": "Use `datetime.UTC` alias",
+    "name": "datetime-timezone-utc",
+    "noqa_row": 62,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/datetime-timezone-utc"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 21,
+      "row": 92
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/band_experiment_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import export_report\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 93
+          },
+          "location": {
+            "column": 1,
+            "row": 92
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 92
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 92,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 69,
+      "row": 16
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from compare_risk_models import compare, load_inputs\nfrom run_risk_research import evaluate, strategy_builders, write_attribution\n\nfrom src.backtest.research_spec import primary_key\nfrom src.config import CONFIG_DIR, QPS_OUTPUT_DIR\nfrom src.data_loader import load_asset_map\nfrom src.data_processing.strategy_inputs import load_strategy_inputs\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 18
+          },
+          "location": {
+            "column": 1,
+            "row": 11
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 11
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 11,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 125,
+      "row": 48
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'variant': variant,'run': key,'months': len(ledger),'accounting': True,'linear_cost': True,'nav': True,'limits': True}",
+          "end_location": {
+            "column": 125,
+            "row": 48
+          },
+          "location": {
+            "column": 23,
+            "row": 48
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 23,
+      "row": 48
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 48,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 259,
+      "row": 60
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'variant': variant,'cost_bps': cost,'band': .1,'strategy': strategy,'asset_class': group,'gross_mean_ann': class_gross[group].mean()*12,'cost_mean_ann': class_cost[group].mean()*12,'net_mean_ann': (class_gross[group]-class_cost[group]).mean()*12}",
+          "end_location": {
+            "column": 259,
+            "row": 60
+          },
+          "location": {
+            "column": 32,
+            "row": 60
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 32,
+      "row": 60
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 60,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 135,
+      "row": 65
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_diagnostics.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'runs': checks,'all_32_passed': True,'class_contributions_reconciled': True}",
+          "end_location": {
+            "column": 135,
+            "row": 65
+          },
+          "location": {
+            "column": 63,
+            "row": 65
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 63,
+      "row": 65
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 65,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 25,
+      "row": 2
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_package.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import hashlib\nimport json\nimport os\nimport re\nimport shutil\nimport zipfile\nfrom pathlib import Path\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 3
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "B023",
+    "end_location": {
+      "column": 47,
+      "row": 26
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_package.py",
+    "fix": null,
+    "location": {
+      "column": 46,
+      "row": 26
+    },
+    "message": "Function definition does not bind loop variable `p`",
+    "name": "function-uses-loop-variable",
+    "noqa_row": 26,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/function-uses-loop-variable"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 20,
+      "row": 4
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_publish.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import hashlib\nimport json\nimport shutil\nimport subprocess\nfrom datetime import datetime, timezone\nfrom pathlib import Path\n\nimport pandas as pd\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 6
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 15,
+      "row": 1
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_publish.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import json,shutil,subprocess",
+          "end_location": {
+            "column": 38,
+            "row": 1
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Remove unused import: `hashlib`"
+    },
+    "location": {
+      "column": 8,
+      "row": 1
+    },
+    "message": "`hashlib` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 826,
+      "row": 33
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_publish.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'run_id': dest.name,'created_utc': datetime.now(timezone.utc).isoformat(),'git_head': subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'working_tree_changes': True,'stage': str(stage),'raw_source': state['source'],'raw_hashes': state['raw_hashes'],'preserved_historical_hashes': state['historical_hashes'],'required_raw_files_matching_original_manifest': 65,'missing_optional_archive': 'FuturesUnderlyingData.zip (extracted files verified; archive not consumed)','grid': dict(variants=['baseline','v2'],strategies=['trend','static'],bands=[0,.1],costs_bps=[0,1,2,5]),'primary': dict(band=.1,cost_bps=2),'conditional_endpoint_assumption': True,'legacy_2000_2014_replay': 'Historical record retained; not rerun because archived input configs are absent. The 1976–2014 baseline/v2 reference was reproduced in this release.'}",
+          "end_location": {
+            "column": 826,
+            "row": 33
+          },
+          "location": {
+            "column": 12,
+            "row": 33
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 33
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 33,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "UP017",
+    "end_location": {
+      "column": 71,
+      "row": 33
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_publish.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from datetime import datetime,timezone, UTC",
+          "end_location": {
+            "column": 39,
+            "row": 2
+          },
+          "location": {
+            "column": 1,
+            "row": 2
+          }
+        },
+        {
+          "content": "UTC",
+          "end_location": {
+            "column": 71,
+            "row": 33
+          },
+          "location": {
+            "column": 59,
+            "row": 33
+          }
+        }
+      ],
+      "message": "Convert to `datetime.UTC` alias"
+    },
+    "location": {
+      "column": 59,
+      "row": 33
+    },
+    "message": "Use `datetime.UTC` alias",
+    "name": "datetime-timezone-utc",
+    "noqa_row": 33,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/datetime-timezone-utc"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 580,
+      "row": 33
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_publish.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'variants': ['baseline','v2'],'strategies': ['trend','static'],'bands': [0,.1],'costs_bps': [0,1,2,5]}",
+          "end_location": {
+            "column": 580,
+            "row": 33
+          },
+          "location": {
+            "column": 485,
+            "row": 33
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 485,
+      "row": 33
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 33,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 613,
+      "row": 33
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_publish.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'band': .1,'cost_bps': 2}",
+          "end_location": {
+            "column": 613,
+            "row": 33
+          },
+          "location": {
+            "column": 589,
+            "row": 33
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 589,
+      "row": 33
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 33,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 20,
+      "row": 3
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_refresh.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import json\nimport os\nimport subprocess\nimport sys\nfrom pathlib import Path\n\nimport pandas as pd\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 15,
+      "row": 1
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_refresh.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import json,sys",
+          "end_location": {
+            "column": 30,
+            "row": 1
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 13,
+      "row": 1
+    },
+    "message": "`os` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 26,
+      "row": 1
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_refresh.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import json,sys",
+          "end_location": {
+            "column": 30,
+            "row": 1
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 16,
+      "row": 1
+    },
+    "message": "`subprocess` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 34,
+      "row": 10
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_refresh.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from export_report import main as export\nfrom research_report import write_report\nfrom run_research import validate\nfrom run_risk_research import write_manifest\n\nfrom src.config import CONFIG_DIR, QPS_OUTPUT_DIR, QPS_REPORT_DIR\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 11
+          },
+          "location": {
+            "column": 1,
+            "row": 6
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 6
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 6,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "B023",
+    "end_location": {
+      "column": 34,
+      "row": 17
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_refresh.py",
+    "fix": null,
+    "location": {
+      "column": 31,
+      "row": 17
+    },
+    "message": "Function definition does not bind loop variable `out`",
+    "name": "function-uses-loop-variable",
+    "noqa_row": 17,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/function-uses-loop-variable"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 15,
+      "row": 2
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_run.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 3
+          },
+          "location": {
+            "column": 1,
+            "row": 2
+          }
+        }
+      ],
+      "message": "Remove unused import: `hashlib`"
+    },
+    "location": {
+      "column": 8,
+      "row": 2
+    },
+    "message": "`hashlib` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 2,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "PLW1510",
+    "end_location": {
+      "column": 32,
+      "row": 27
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_run.py",
+    "fix": {
+      "applicability": "displayonly",
+      "edits": [
+        {
+          "content": "check=False, ",
+          "end_location": {
+            "column": 42,
+            "row": 27
+          },
+          "location": {
+            "column": 42,
+            "row": 27
+          }
+        }
+      ],
+      "message": "Add explicit `check=False`"
+    },
+    "location": {
+      "column": 18,
+      "row": 27
+    },
+    "message": "`subprocess.run` without explicit `check` argument",
+    "name": "subprocess-run-without-check",
+    "noqa_row": 27,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/subprocess-run-without-check"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 111,
+      "row": 29
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_run.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'name': name, 'command': command, 'cwd': str(STAGE), 'returncode': result.returncode}",
+          "end_location": {
+            "column": 111,
+            "row": 29
+          },
+          "location": {
+            "column": 33,
+            "row": 29
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 33,
+      "row": 29
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 29,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 124,
+      "row": 56
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_run.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'variant': variant, 'file': name, 'max_abs_difference': compare_file(OUT/folder/name, original/name)}",
+          "end_location": {
+            "column": 124,
+            "row": 56
+          },
+          "location": {
+            "column": 27,
+            "row": 56
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 27,
+      "row": 56
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 56,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 193,
+      "row": 61
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/cost_revision_20261026/reproduction/qps_step2_run.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'construction_max_abs_difference': construction_delta, 'relative_tolerance': 1e-10, 'absolute_tolerance': 1e-12, 'checks': checks}",
+          "end_location": {
+            "column": 193,
+            "row": 61
+          },
+          "location": {
+            "column": 70,
+            "row": 61
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 70,
+      "row": 61
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 61,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 32,
+      "row": 3
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/roll_sensitivity_20261026/reproduction/generate_report_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import json\nimport os\nfrom pathlib import Path\n\nimport numpy as np\nimport pandas as pd\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 18,
+      "row": 5
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/roll_sensitivity_20261026/reproduction/generate_report_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import matplotlib\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 6
+          },
+          "location": {
+            "column": 1,
+            "row": 5
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 5
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 5,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 47,
+      "row": 8
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/roll_sensitivity_20261026/reproduction/generate_report_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import matplotlib.pyplot as plt\nfrom matplotlib.ticker import PercentFormatter\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 9
+          },
+          "location": {
+            "column": 1,
+            "row": 7
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 7
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 7,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 252,
+      "row": 100
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/roll_sensitivity_20261026/reproduction/generate_report_record.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'step_4_complete': True,'implementation': 'assumption_based_roll_sensitivity','actual_roll_history_supported': False,'production_roll_model_adopted': False,'primary_trade_bps': 2,'primary_band': .1,'step_5_started': False}",
+          "end_location": {
+            "column": 252,
+            "row": 100
+          },
+          "location": {
+            "column": 46,
+            "row": 100
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 46,
+      "row": 100
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 100,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 44,
+      "row": 5
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/roll_sensitivity_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import hashlib\nimport json\nimport platform\nimport re\nimport shutil\nimport subprocess\nimport sys\nimport zipfile\nfrom datetime import datetime, timezone\nfrom pathlib import Path\nfrom xml.etree import ElementTree\n\nimport numpy as np\nimport pandas as pd\nimport statsmodels\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 6
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 969,
+      "row": 46
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/roll_sensitivity_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'created_utc': datetime.now(timezone.utc).isoformat(),'git_head': subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'working_tree_changes': True,'command': 'PYTHONPATH=. /opt/anaconda3/bin/python -u scripts/run_roll_sensitivity.py --reference reports/cost_revision_20261026 --output reports/roll_sensitivity_20261026/output','reference_manifest_sha256': digest(ref/'ARTIFACT_SHA256.json'),'band_manifest_sha256': digest(band/'ARTIFACT_SHA256.json'),'inputs': {name:dict(source=str(p.relative_to(root)),sha256=digest(p)) for name,p in paths.items()},'versions': dict(python=platform.python_version(),numpy=np.__version__,pandas=pd.__version__,statsmodels=statsmodels.__version__),'raw_files_unchanged': 65,'historical_report_files_unchanged': 241,'earlier_experiment_packages_unchanged': True,'production_config_unchanged': True,'observed_roll_history_available': False,'scope': 'Step 4 only; 36 hypothetical roll-calendar scenarios, no liquidity/funding extension'}",
+          "end_location": {
+            "column": 969,
+            "row": 46
+          },
+          "location": {
+            "column": 12,
+            "row": 46
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 46
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 46,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "UP017",
+    "end_location": {
+      "column": 54,
+      "row": 46
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/roll_sensitivity_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from datetime import datetime,timezone, UTC",
+          "end_location": {
+            "column": 39,
+            "row": 2
+          },
+          "location": {
+            "column": 1,
+            "row": 2
+          }
+        },
+        {
+          "content": "UTC",
+          "end_location": {
+            "column": 54,
+            "row": 46
+          },
+          "location": {
+            "column": 42,
+            "row": 46
+          }
+        }
+      ],
+      "message": "Convert to `datetime.UTC` alias"
+    },
+    "location": {
+      "column": 42,
+      "row": 46
+    },
+    "message": "Use `datetime.UTC` alias",
+    "name": "datetime-timezone-utc",
+    "noqa_row": 46,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/datetime-timezone-utc"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 544,
+      "row": 46
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/roll_sensitivity_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'source': str(p.relative_to(root)),'sha256': digest(p)}",
+          "end_location": {
+            "column": 544,
+            "row": 46
+          },
+          "location": {
+            "column": 490,
+            "row": 46
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 490,
+      "row": 46
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 46,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 700,
+      "row": 46
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/roll_sensitivity_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{'python': platform.python_version(),'numpy': np.__version__,'pandas': pd.__version__,'statsmodels': statsmodels.__version__}",
+          "end_location": {
+            "column": 700,
+            "row": 46
+          },
+          "location": {
+            "column": 583,
+            "row": 46
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 583,
+      "row": 46
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 46,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 21,
+      "row": 74
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/roll_sensitivity_20261026/reproduction/package_record.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import export_report\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 75
+          },
+          "location": {
+            "column": 1,
+            "row": 74
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 74
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 74,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 53,
+      "row": 23
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/audit_timing.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import copy\nimport hashlib\nimport json\n\nimport numpy as np\nimport pandas as pd\n\nfrom src.backtest.engine import simulate\nfrom src.backtest.performance import performance, regression_alpha\nfrom src.backtest.qps_baseline import (\n    configured_components,\n    forecasts_from,\n    portfolio_limits,\n    rescaled_components,\n)\nfrom src.backtest.research_spec import validate_research_settings\nfrom src.config import CONFIG_DIR, DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR\nfrom src.data_loader import load_asset_map\nfrom src.data_processing.strategy_inputs import load_daily_returns, load_strategy_inputs\nfrom src.portfolio_construction import BandPolicy\nfrom src.transaction_cost_model import LinearBpsCost\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 25
+          },
+          "location": {
+            "column": 1,
+            "row": 3
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 3
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 3,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 95,
+      "row": 42
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/audit_timing.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"cost_bps\": settings[\"primary_cost_bps\"], \"band\": settings[\"primary_band\"]}",
+          "end_location": {
+            "column": 95,
+            "row": 42
+          },
+          "location": {
+            "column": 21,
+            "row": 42
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 21,
+      "row": 42
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 42,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 53,
+      "row": 21
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/compare_risk_models.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import json\n\nimport pandas as pd\nfrom run_risk_research import load_returns\n\nfrom src.backtest.engine import simulate\nfrom src.backtest.performance import performance\nfrom src.backtest.qps_baseline import forecasts_from, portfolio_limits, qps_components\nfrom src.backtest.research_spec import primary_key, validate_research_settings\nfrom src.backtest.sample_diagnostics import risk_diagnostics\nfrom src.config import CONFIG_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR\nfrom src.data_loader import load_asset_map\nfrom src.portfolio_construction import BandPolicy\nfrom src.risk_model import RollingCovarianceRiskModel\nfrom src.transaction_cost_model import LinearBpsCost\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 23
+          },
+          "location": {
+            "column": 1,
+            "row": 7
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 7
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 7,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 86
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/freeze_prospective.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"created_utc\": datetime.now(timezone.utc).isoformat(),\n        \"git_head\": subprocess.check_output([\"git\", \"rev-parse\", \"HEAD\"], cwd=root, text=True).strip(),\n        \"includes_uncommitted_changes\": True,\n        \"protocol\": protocol,\n        \"files\": files,\n        \"source_snapshot_sha256\": digest(output / \"source_snapshot.zip\"),\n        \"reference_manifests\": references,\n        \"raw_inputs\": raw,\n        \"python\": platform.python_version(),\n        \"package_versions\": versions,\n        \"prospective_observations\": 0,\n        \"independent_validation_complete\": False,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 86
+          },
+          "location": {
+            "column": 14,
+            "row": 73
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 14,
+      "row": 73
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 73,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "UP017",
+    "end_location": {
+      "column": 46,
+      "row": 74
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/freeze_prospective.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from datetime import datetime, timezone, UTC",
+          "end_location": {
+            "column": 40,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        },
+        {
+          "content": "UTC",
+          "end_location": {
+            "column": 46,
+            "row": 74
+          },
+          "location": {
+            "column": 34,
+            "row": 74
+          }
+        }
+      ],
+      "message": "Convert to `datetime.UTC` alias"
+    },
+    "location": {
+      "column": 34,
+      "row": 74
+    },
+    "message": "Use `datetime.UTC` alias",
+    "name": "datetime-timezone-utc",
+    "noqa_row": 74,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/datetime-timezone-utc"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 14,
+      "row": 127
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/freeze_prospective.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                \"status\": \"verified\",\n                \"source_files\": len(result[\"files\"]),\n                \"raw_inputs\": len(result[\"raw_inputs\"]),\n                \"independent_validation_complete\": False,\n            }",
+          "end_location": {
+            "column": 14,
+            "row": 127
+          },
+          "location": {
+            "column": 13,
+            "row": 122
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 122
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 122,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 93,
+      "row": 20
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/research_report.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import matplotlib.pyplot as plt\nimport numpy as np\nfrom matplotlib.ticker import PercentFormatter\n\nfrom src.backtest.attribution import CLASS_NAMES\nfrom src.backtest.qps_baseline import trend_rules\nfrom src.backtest.research_spec import primary_key, select_results, validate_research_settings\nfrom src.backtest.sample_diagnostics import risk_diagnostics\nfrom src.config import DOCS_DIR, PROJECT_ROOT, QPS_OUTPUT_DIR, QPS_REPORT_DIR, QPS_RUN_NAMES\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 22
+          },
+          "location": {
+            "column": 1,
+            "row": 12
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 12
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 12,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 18,
+      "row": 99
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_band_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                    \"band\": row.band,\n                    \"cost_bps\": row.cost_bps,\n                    \"strategy\": row.strategy,\n                    \"category\": category,\n                    \"turnover_ann\": trades[category].mean() * 12,\n                }",
+          "end_location": {
+            "column": 18,
+            "row": 99
+          },
+          "location": {
+            "column": 17,
+            "row": 93
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 17,
+      "row": 93
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 93,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 14,
+      "row": 115
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_band_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                \"runs\": len(ledgers), \"accounting_and_limits_passed\": True, \"reference_band\": reference_band\n            }",
+          "end_location": {
+            "column": 14,
+            "row": 115
+          },
+          "location": {
+            "column": 13,
+            "row": 113
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 113
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 113,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 22,
+      "row": 146
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_band_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                        \"run\": name,\n                        \"band\": band,\n                        \"cost_bps\": cost,\n                        \"strategy\": strategy,\n                        \"gross_difference_ann\": gross,\n                        \"cost_savings_ann\": savings,\n                        \"net_difference_ann\": delta.mean() * 12,\n                    }",
+          "end_location": {
+            "column": 22,
+            "row": 146
+          },
+          "location": {
+            "column": 21,
+            "row": 138
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 21,
+      "row": 138
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 138,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 18,
+      "row": 203
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_band_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                    \"run\": name,\n                    \"relative_month\": offset,\n                    \"event_months\": len(selected),\n                    \"mean_monthly_net_difference\": selected[name].mean(),\n                }",
+          "end_location": {
+            "column": 18,
+            "row": 203
+          },
+          "location": {
+            "column": 17,
+            "row": 198
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 17,
+      "row": 198
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 198,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 14,
+      "row": 232
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_band_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                \"band\": band,\n                \"material_gain_at_both_costs\": bool(\n                    chosen.net_difference_ann.ge(specification[\"minimum_mean_gain_annual\"]).all()\n                ),\n                \"adjusted_intervals_positive_all_blocks\": bool(ci.family_ci_low.gt(0).all()),\n                \"stable_at_both_costs\": bool(\n                    positive.ge(specification[\"minimum_positive_subperiods\"]).all()\n                ),\n                \"positive_subperiods\": {str(k): int(v) for k, v in positive.items()},\n            }",
+          "end_location": {
+            "column": 14,
+            "row": 232
+          },
+          "location": {
+            "column": 13,
+            "row": 222
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 222
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 222,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 61
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_implementation_feasibility.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"events\": len(group),\n        \"event_coverage\": float(passed.mean()),\n        \"notional_coverage\": float(group.loc[passed, \"notional_nav\"].sum() / group.notional_nav.sum()),\n        \"incomplete\": int((~group.complete_nonnegative_window).sum()),\n        \"zero_mean_volume\": int(group.mean_reported_volume.eq(0).sum()),\n        \"stale\": int(group.stale.sum()),\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 61
+          },
+          "location": {
+            "column": 12,
+            "row": 54
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 54
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 54,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 185
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_implementation_feasibility.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"supported\": [\n            \"lagged reported-series activity diagnostics\",\n            \"conditional fully collateralized RF sensitivity\",\n        ],\n        \"unsupported\": {\n            \"capacity_and_participation\": [\n                \"AUM\",\n                \"dated delivery-contract IDs\",\n                \"multipliers and quote units\",\n                \"FX conversion\",\n                \"verified contract volume\",\n            ],\n            \"market_impact\": [\n                \"spreads\",\n                \"execution horizon\",\n                \"fills/benchmarks\",\n                \"futures-specific coefficient calibration\",\n            ],\n            \"margin_and_borrowing\": [\n                \"contract margin schedules\",\n                \"cash balances\",\n                \"cash buffers\",\n                \"actual collateral yield and financing terms\",\n            ],\n        },\n        \"adopted_strategy_change\": False,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 185
+          },
+          "location": {
+            "column": 12,
+            "row": 158
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 158
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 158,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 53,
+      "row": 33
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import argparse\nimport importlib.metadata\nimport json\nimport platform\nimport zipfile\nfrom dataclasses import replace\nfrom datetime import datetime, timezone\nfrom pathlib import Path\nfrom time import perf_counter\n\nimport numpy as np\nimport pandas as pd\nfrom freeze_prospective import digest, frozen_files, verify\nfrom run_band_experiment import load_inputs, read_panel\n\nfrom src.backtest.attribution import class_attribution\nfrom src.backtest.band_diagnostics import paired_bootstrap, turnover_components\nfrom src.backtest.engine import simulate\nfrom src.backtest.pc_experiment import (\n    CommonRiskPolicy,\n    ScheduledPolicy,\n    case_metrics,\n    common_risk_targets,\n    paired_results,\n    policies,\n    run_case,\n    select_policy,\n    selection_schedule,\n    validate_specification,\n)\nfrom src.backtest.qps_baseline import (\n    configured_components,\n    forecasts_from,\n    portfolio_limits,\n    rescaled_components,\n)\nfrom src.backtest.sample_diagnostics import risk_diagnostics\nfrom src.config import CONFIG_DIR, PROJECT_ROOT\nfrom src.data_processing.strategy_inputs import load_daily_returns\nfrom src.portfolio_construction import BandPolicy\nfrom src.portfolio_construction.trade.cost_aware import CostAwarePolicy\nfrom src.transaction_cost_model import LinearBpsCost\n\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 36
+          },
+          "location": {
+            "column": 1,
+            "row": 3
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 3
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 3,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 94,
+      "row": 55
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"experiment\": spec, \"baseline\": base, \"risk\": risk}",
+          "end_location": {
+            "column": 94,
+            "row": 55
+          },
+          "location": {
+            "column": 47,
+            "row": 55
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 47,
+      "row": 55
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 55,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 62
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"created_utc\": datetime.now(timezone.utc).isoformat(), \"files\": files, \"raw_inputs\": inputs[-1],\n        \"reference_manifest_sha256\": digest(reference / \"ARTIFACT_SHA256.json\"),\n        \"package_versions\": {n: importlib.metadata.version(n) for n in\n                          [\"numpy\", \"pandas\", \"scipy\", \"cvxpy\", \"clarabel\", \"pytest\"]},\n        \"python\": platform.python_version(),\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 62
+          },
+          "location": {
+            "column": 48,
+            "row": 56
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 48,
+      "row": 56
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 56,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "UP017",
+    "end_location": {
+      "column": 46,
+      "row": 57
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from datetime import datetime, timezone, UTC",
+          "end_location": {
+            "column": 40,
+            "row": 9
+          },
+          "location": {
+            "column": 1,
+            "row": 9
+          }
+        },
+        {
+          "content": "UTC",
+          "end_location": {
+            "column": 46,
+            "row": 57
+          },
+          "location": {
+            "column": 34,
+            "row": 57
+          }
+        }
+      ],
+      "message": "Convert to `datetime.UTC` alias"
+    },
+    "location": {
+      "column": 34,
+      "row": 57
+    },
+    "message": "Use `datetime.UTC` alias",
+    "name": "datetime-timezone-utc",
+    "noqa_row": 57,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/datetime-timezone-utc"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 81,
+      "row": 85
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"base\": base, \"risk\": settings}",
+          "end_location": {
+            "column": 81,
+            "row": 85
+          },
+          "location": {
+            "column": 51,
+            "row": 85
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 51,
+      "row": 85
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 85,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 92
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"elapsed_seconds\": perf_counter() - started, \"covariance_months\": len(covariance),\n        \"reused_across_policies\": True,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 92
+          },
+          "location": {
+            "column": 50,
+            "row": 89
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 50,
+      "row": 89
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 89,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "RUF059",
+    "end_location": {
+      "column": 19,
+      "row": 102
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "_target",
+          "end_location": {
+            "column": 19,
+            "row": 102
+          },
+          "location": {
+            "column": 13,
+            "row": 102
+          }
+        }
+      ],
+      "message": "Prefix it with an underscore or any other dummy variable pattern"
+    },
+    "location": {
+      "column": 13,
+      "row": 102
+    },
+    "message": "Unpacked variable `target` is never used",
+    "name": "unused-unpacked-variable",
+    "noqa_row": 102,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-unpacked-variable"
+  },
+  {
+    "cell": null,
+    "code": "RUF059",
+    "end_location": {
+      "column": 46,
+      "row": 102
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "_known",
+          "end_location": {
+            "column": 46,
+            "row": 102
+          },
+          "location": {
+            "column": 41,
+            "row": 102
+          }
+        }
+      ],
+      "message": "Prefix it with an underscore or any other dummy variable pattern"
+    },
+    "location": {
+      "column": 41,
+      "row": 102
+    },
+    "message": "Unpacked variable `known` is never used",
+    "name": "unused-unpacked-variable",
+    "noqa_row": 102,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-unpacked-variable"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 10,
+      "row": 133
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n            \"run\": name, \"error\": repr(error), \"inputs\": getattr(policy, \"failure\", None)\n        }",
+          "end_location": {
+            "column": 10,
+            "row": 133
+          },
+          "location": {
+            "column": 45,
+            "row": 131
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 45,
+      "row": 131
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 131,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 85,
+      "row": 176
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"selected\": choice, \"scores\": scores}",
+          "end_location": {
+            "column": 85,
+            "row": 176
+          },
+          "location": {
+            "column": 49,
+            "row": 176
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 49,
+      "row": 176
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 176,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 202
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"passed\": True, \"cost_bps\": 2, \"information_lag_months\": 1,\n        \"maximum_difference\": float(np.abs(ledger[fields] - expected[fields]).to_numpy().max()),\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 202
+          },
+          "location": {
+            "column": 56,
+            "row": 199
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 56,
+      "row": 199
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 199,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 10,
+      "row": 237
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n            \"status\": \"frozen_development_decision_awaiting_untouched_data\", \"selected_policy\": selected,\n            \"development_end\": \"2014-12\", \"cost_bps\": spec[\"cost_bps\"],\n            \"information_lag_months\": spec[\"primary_information_lag_months\"],\n            \"solver\": spec[\"solver\"], \"evaluation_start\": None, \"evaluation_months\": 36,\n            \"initial_positions\": \"flat\", \"primary_comparator\": \"configured DCC-GARCH TREND, 10% bands\",\n            \"primary_endpoint\": \"Annualized paired mean net return: frozen selected policy minus configured DCC-GARCH TREND with 10% bands at 1.5 bps and lag 2. No calibration-period exclusion in the fresh evaluation.\",\n            \"activation\": \"Declare dates, warmup, data provenance and execution convention before outcomes.\",\n            \"early_stopping\": \"No performance-based stopping, retuning or calendar deletion.\",\n        }",
+          "end_location": {
+            "column": 10,
+            "row": 237
+          },
+          "location": {
+            "column": 18,
+            "row": 228
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 18,
+      "row": 228
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 228,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 10,
+      "row": 299
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n            \"status\": \"complete\", \"accounting_and_limits_passed\": True, \"reference_hashes_verified\": True,\n            \"common_risk_matched\": True, \"source_freeze_verified\": True,\n            \"independent_validation_complete\": False, \"elapsed_seconds\": perf_counter() - started,\n        }",
+          "end_location": {
+            "column": 10,
+            "row": 299
+          },
+          "location": {
+            "column": 48,
+            "row": 295
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 48,
+      "row": 295
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 295,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 85,
+      "row": 301
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"status\": \"failed\", \"error\": repr(error)}",
+          "end_location": {
+            "column": 85,
+            "row": 301
+          },
+          "location": {
+            "column": 45,
+            "row": 301
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 45,
+      "row": 301
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 301,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 53,
+      "row": 51
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_risk_research.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import argparse\nimport hashlib\nimport json\nimport platform\nimport shutil\nfrom datetime import UTC, datetime\n\nimport numpy as np\nimport pandas as pd\nimport statsmodels\nfrom research_report import make_charts, trend_text, write_blocked_report, write_report\n\nfrom src.backtest.attribution import class_attribution\nfrom src.backtest.engine import simulate\nfrom src.backtest.performance import performance, regression_alpha\nfrom src.backtest.qps_baseline import (\n    configured_components,\n    eligibility_from,\n    forecasts_from,\n    portfolio_limits,\n    rescaled_components,\n)\nfrom src.backtest.research_spec import (\n    primary_key,\n    select_results,\n    validate_research_settings,\n)\nfrom src.backtest.research_spec import (\n    run_key as key,\n)\nfrom src.backtest.sample_diagnostics import (\n    class_portfolios,\n    rank_autocorrelation,\n    risk_diagnostics,\n    sample_audit,\n    stability_summary,\n)\nfrom src.config import (\n    CONFIG_DIR,\n    PROJECT_ROOT,\n    QPS_OUTPUT_DIR,\n    QPS_REPORT_DIR,\n    QPS_RUN_NAMES,\n    RAW_DATA_DIR,\n)\nfrom src.data_loader import load_asset_map, load_daily_prices\nfrom src.data_processing.endpoint_sensitivity import apply_endpoint_assumption\nfrom src.data_processing.endpoints import close_frames\nfrom src.data_processing.strategy_inputs import load_daily_returns, load_strategy_inputs\nfrom src.portfolio_construction import BandPolicy\nfrom src.transaction_cost_model import LinearBpsCost\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 53
+          },
+          "location": {
+            "column": 1,
+            "row": 3
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 3
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 3,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 14,
+      "row": 43
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_roll_sensitivity.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                \"market\": path.stem,\n                \"rows\": len(frame),\n                \"first_date\": frame.iloc[0, 0],\n                \"last_date\": frame.iloc[-1, 0],\n                \"fields\": \",\".join(frame.columns),\n                \"underlying_map_available\": path.stem in meta.index,\n                \"contract_id_available\": False,\n                \"expiry_available\": False,\n                \"roll_date_available\": False,\n                \"multiplier_available\": False,\n                \"adjustment_method_available\": False,\n            }",
+          "end_location": {
+            "column": 14,
+            "row": 43
+          },
+          "location": {
+            "column": 13,
+            "row": 31
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 31
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 31,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 70
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_roll_sensitivity.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"daily_series\": len(rows),\n        \"asset_map_fields\": [meta.index.name, *meta.columns],\n        \"workbook_fields\": sheets,\n        \"actual_roll_history_supported\": False,\n        \"assumption_sensitivity_supported\": True,\n        \"missing\": [\n            \"dated delivery-contract identities\",\n            \"expiry/actual roll schedules\",\n            \"contract multipliers and quote units\",\n            \"dated currency conversion conventions\",\n            \"vendor continuous-price adjustment lineage\",\n            \"execution cost coverage in supplied returns\",\n        ],\n        \"interpretation\": \"Underlying IDs and currencies are available, but not a dated contract chain. Repository endpoint notes describe already-rolled inputs without a verified adjustment method. OHLC/volume/OI do not establish roll dates.\",\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 70
+          },
+          "location": {
+            "column": 14,
+            "row": 55
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 14,
+      "row": 55
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 55,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 153
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_roll_sensitivity.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"run\": name,\n        \"calendar\": calendar,\n        \"trade_bps\": trade_bps,\n        \"roll_bps\": roll_bps,\n        \"strategy\": strategy,\n        \"assumed_rolls_per_year\": len(months),\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 153
+          },
+          "location": {
+            "column": 16,
+            "row": 146
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 16,
+      "row": 146
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 146,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 14,
+      "row": 200
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_roll_sensitivity.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                \"runs\": 36,\n                \"all_accounting_and_limits_passed\": True,\n                \"event_journals_reconciled\": True,\n                \"class_attribution_reconciled\": True,\n            }",
+          "end_location": {
+            "column": 14,
+            "row": 200
+          },
+          "location": {
+            "column": 13,
+            "row": 195
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 195
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 195,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 48
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_transaction_costs.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"sample\": sample,\n        \"source\": source.loc[sample.index],\n        \"known\": known.loc[sample.index],\n        \"targets\": targets[\"trend\"],\n        \"covariance\": covariance,\n        \"limits\": portfolio_limits(settings),\n        \"asset_class\": pd.read_csv(ASSET_MAP_PATH, index_col=0).AssetClass.reindex(sample.columns),\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 48
+          },
+          "location": {
+            "column": 12,
+            "row": 40
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 40
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 40,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 73
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_transaction_costs.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"mean_ann\": net.mean() * MONTHS_PER_YEAR,\n        \"sharpe\": sharpe_ratio(net),\n        \"cagr\": wealth ** (MONTHS_PER_YEAR / len(net)) - 1 if wealth > 0 else np.nan,\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 73
+          },
+          "location": {
+            "column": 12,
+            "row": 69
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 69
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 69,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 10,
+      "row": 396
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/scripts/run_transaction_costs.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n            \"group\": label,\n            \"coverage\": units / attempted.loc[window].sum().sum(),\n            \"slippage_bps_per_unit\": fill.loc[window].sum().sum() / units * BPS,\n            \"other_days_bps_per_unit\": other.loc[window].sum().sum() / units * BPS,\n            \"excess_t\": difference.mean() / (difference.std() / np.sqrt(len(difference))),\n            \"slippage_ann_bps\": fill.loc[window].sum(axis=1).mean() * MONTHS_PER_YEAR * BPS,\n        }",
+          "end_location": {
+            "column": 10,
+            "row": 396
+          },
+          "location": {
+            "column": 16,
+            "row": 389
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 16,
+      "row": 389
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 389,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 26
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/backtest/implementation_diagnostics.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"observations\": len(frame),\n        \"start\": str(frame.index.min().date()),\n        \"end\": str(frame.index.max().date()),\n        \"zero_volume\": int(volume.eq(0).sum()),\n        \"negative_volume\": int(volume.lt(0).sum()),\n        \"zero_open_interest\": int(oi.eq(0).sum()),\n        \"negative_open_interest\": int(oi.lt(0).sum()),\n        \"fractional_volume\": int(volume.mod(1).ne(0).sum()),\n        \"repeated_full_bars\": int(repeated.sum()),\n        \"longest_identical_bar_run\": int(sizes.max()),\n        \"rows_in_long_identical_runs\": int(sizes.ge(repeat_screen).sum()),\n        \"median_reported_volume\": float(volume.median()),\n        \"median_reported_oi\": float(oi.median()),\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 26
+          },
+          "location": {
+            "column": 12,
+            "row": 12
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 12
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 12,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 14,
+      "row": 63
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/backtest/implementation_diagnostics.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                \"month\": month,\n                \"latest_pre_month_bar\": latest,\n                \"history_through\": last,\n                \"observations\": len(window),\n                \"history_age_days\": age,\n                \"history_span_days\": (last - window.index[0]).days if len(window) else np.nan,\n                \"mean_reported_volume\": mean,\n                \"zero_volume_bars\": int(window.Volume.eq(0).sum()),\n                \"latest_reported_oi\": float(window.OpenInterest.iloc[-1]) if len(window) else np.nan,\n                \"complete_nonnegative_window\": bool(valid),\n                \"stale\": bool(len(window) and age > stale_days),\n                \"positive_recent_volume_screen\": bool(valid and mean > 0 and age <= stale_days),\n            }",
+          "end_location": {
+            "column": 14,
+            "row": 63
+          },
+          "location": {
+            "column": 13,
+            "row": 50
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 50
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 50,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "UP017",
+    "end_location": {
+      "column": 50,
+      "row": 86
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/backtest/oos_runner.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from datetime import datetime, timezone, UTC",
+          "end_location": {
+            "column": 40,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        },
+        {
+          "content": "UTC",
+          "end_location": {
+            "column": 50,
+            "row": 86
+          },
+          "location": {
+            "column": 38,
+            "row": 86
+          }
+        }
+      ],
+      "message": "Convert to `datetime.UTC` alias"
+    },
+    "location": {
+      "column": 38,
+      "row": 86
+    },
+    "message": "Use `datetime.UTC` alias",
+    "name": "datetime-timezone-utc",
+    "noqa_row": 86,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/datetime-timezone-utc"
+  },
+  {
+    "cell": null,
+    "code": "ISC004",
+    "end_location": {
+      "column": 60,
+      "row": 238
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/backtest/oos_runner.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "(",
+          "end_location": {
+            "column": 9,
+            "row": 236
+          },
+          "location": {
+            "column": 9,
+            "row": 236
+          }
+        },
+        {
+          "content": ")",
+          "end_location": {
+            "column": 60,
+            "row": 238
+          },
+          "location": {
+            "column": 60,
+            "row": 238
+          }
+        }
+      ],
+      "message": "Did you forget a comma?"
+    },
+    "location": {
+      "column": 9,
+      "row": 236
+    },
+    "message": "Unparenthesized implicit string concatenation in collection",
+    "name": "implicit-string-concatenation-in-collection-literal",
+    "noqa_row": 236,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/implicit-string-concatenation-in-collection-literal"
+  },
+  {
+    "cell": null,
+    "code": "ISC004",
+    "end_location": {
+      "column": 53,
+      "row": 241
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/backtest/oos_runner.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "(",
+          "end_location": {
+            "column": 9,
+            "row": 240
+          },
+          "location": {
+            "column": 9,
+            "row": 240
+          }
+        },
+        {
+          "content": ")",
+          "end_location": {
+            "column": 53,
+            "row": 241
+          },
+          "location": {
+            "column": 53,
+            "row": 241
+          }
+        }
+      ],
+      "message": "Did you forget a comma?"
+    },
+    "location": {
+      "column": 9,
+      "row": 240
+    },
+    "message": "Unparenthesized implicit string concatenation in collection",
+    "name": "implicit-string-concatenation-in-collection-literal",
+    "noqa_row": 240,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/implicit-string-concatenation-in-collection-literal"
+  },
+  {
+    "cell": null,
+    "code": "ISC004",
+    "end_location": {
+      "column": 96,
+      "row": 266
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/backtest/oos_runner.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "(",
+          "end_location": {
+            "column": 15,
+            "row": 265
+          },
+          "location": {
+            "column": 15,
+            "row": 265
+          }
+        },
+        {
+          "content": ")",
+          "end_location": {
+            "column": 96,
+            "row": 266
+          },
+          "location": {
+            "column": 96,
+            "row": 266
+          }
+        }
+      ],
+      "message": "Did you forget a comma?"
+    },
+    "location": {
+      "column": 15,
+      "row": 265
+    },
+    "message": "Unparenthesized implicit string concatenation in collection",
+    "name": "implicit-string-concatenation-in-collection-literal",
+    "noqa_row": 265,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/implicit-string-concatenation-in-collection-literal"
+  },
+  {
+    "cell": null,
+    "code": "UP017",
+    "end_location": {
+      "column": 55,
+      "row": 307
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/backtest/oos_runner.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from datetime import datetime, timezone, UTC",
+          "end_location": {
+            "column": 40,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 10
+          }
+        },
+        {
+          "content": "UTC",
+          "end_location": {
+            "column": 55,
+            "row": 307
+          },
+          "location": {
+            "column": 43,
+            "row": 307
+          }
+        }
+      ],
+      "message": "Convert to `datetime.UTC` alias"
+    },
+    "location": {
+      "column": 43,
+      "row": 307
+    },
+    "message": "Use `datetime.UTC` alias",
+    "name": "datetime-timezone-utc",
+    "noqa_row": 307,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/datetime-timezone-utc"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 10,
+      "row": 82
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/backtest/pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n            \"policy\": name, \"gamma\": gamma, \"information_through\": str(reference.index[-1]),\n            \"validation_start\": str(reference.index[0]), \"validation_months\": len(reference),\n            \"net_difference_ann\": float(delta.mean() * 12),\n            \"turnover_ann\": float(candidate.rebalance_turnover.mean() * 12),\n        }",
+          "end_location": {
+            "column": 10,
+            "row": 82
+          },
+          "location": {
+            "column": 23,
+            "row": 77
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 23,
+      "row": 77
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 77,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 95,
+      "row": 166
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/backtest/pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"run\": name, \"months\": len(delta), \"gross_difference_ann\": gross,\n                         \"cost_savings_ann\": saving, \"net_difference_ann\": float(delta.mean() * 12)}",
+          "end_location": {
+            "column": 95,
+            "row": 166
+          },
+          "location": {
+            "column": 21,
+            "row": 165
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 21,
+      "row": 165
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 165,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 89,
+      "row": 45
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/backtest/research_spec.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"band\": settings[\"primary_band\"], \"cost_bps\": settings[\"primary_cost_bps\"]}",
+          "end_location": {
+            "column": 89,
+            "row": 45
+          },
+          "location": {
+            "column": 15,
+            "row": 45
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 15,
+      "row": 45
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 45,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 37
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/portfolio_construction/trade/cost_aware.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"factor\": cp.Parameter((size, size)), \"desired\": cp.Parameter(size),\n        \"prior\": cp.Parameter(size), \"rate\": cp.Parameter(nonneg=True),\n        \"exit_fee\": cp.Parameter(nonneg=True),\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 37
+          },
+          "location": {
+            "column": 14,
+            "row": 33
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 14,
+      "row": 33
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 33,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 95,
+      "row": 111
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/portfolio_construction/trade/cost_aware.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"solver_status\": \"flat\", \"solver_iterations\": 0, \"solver_seconds\": 0.0}",
+          "end_location": {
+            "column": 95,
+            "row": 111
+          },
+          "location": {
+            "column": 28,
+            "row": 111
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 28,
+      "row": 111
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 111,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 14,
+      "row": 131
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/portfolio_construction/trade/cost_aware.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n                \"month\": str(month), \"gamma\": self.gamma, \"solver_status\": problem.status,\n                \"previous\": previous.tolist(), \"target\": target.tolist(),\n                \"covariance\": matrix.tolist(), \"switched\": switched.tolist(), \"cost_bps\": cost_model.rate * BPS,\n            }",
+          "end_location": {
+            "column": 14,
+            "row": 131
+          },
+          "location": {
+            "column": 28,
+            "row": 127
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 28,
+      "row": 127
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 127,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 10,
+      "row": 137
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/src/portfolio_construction/trade/cost_aware.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n            \"solver_status\": problem.status, \"solver_iterations\": problem.solver_stats.num_iters,\n            \"solver_seconds\": problem.solver_stats.solve_time,\n        }",
+          "end_location": {
+            "column": 10,
+            "row": 137
+          },
+          "location": {
+            "column": 24,
+            "row": 134
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 24,
+      "row": 134
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 134,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 53,
+      "row": 15
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_implementation_diagnostics.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import numpy as np\nimport pandas as pd\nimport pytest\n\nfrom src.backtest.engine import simulate\nfrom src.backtest.implementation_diagnostics import (\n    activity_summary,\n    collateral_rates,\n    lagged_activity,\n    map_trade_sources,\n)\nfrom src.backtest.performance import performance\nfrom src.portfolio_construction import BandPolicy, PortfolioLimits\nfrom src.transaction_cost_model import LinearBpsCost\n\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 18
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 10,
+      "row": 65
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_implementation_diagnostics.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n            \"month\": [\"2000-02\"] * 3,\n            \"market\": [\"RL\"] * 3,\n            \"event\": [\"source_close\", \"source_open\", \"liquidation\"],\n            \"timing\": [\"beginning\", \"beginning\", \"end\"],\n        }",
+          "end_location": {
+            "column": 10,
+            "row": 65
+          },
+          "location": {
+            "column": 9,
+            "row": 60
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 9,
+      "row": 60
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 60,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 48,
+      "row": 21
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_pc_experiment.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from src.backtest.engine import simulate\nfrom src.backtest.pc_experiment import (\n    CommonRiskPolicy,\n    ScheduledPolicy,\n    common_risk_targets,\n    policies,\n    select_policy,\n    selection_schedule,\n    validate_specification,\n)\nfrom src.backtest.qps_baseline import (\n    build_forecasts,\n    configured_components,\n    forecasts_from,\n    portfolio_limits,\n    rescaled_components,\n)\nfrom src.data_processing.strategy_inputs import select_source\nfrom src.portfolio_construction.trade.cost_aware import CostAwarePolicy\nfrom src.transaction_cost_model import LinearBpsCost\nfrom tests.backtest.test_lookahead import setup\n\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 24
+          },
+          "location": {
+            "column": 1,
+            "row": 11
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 11
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 11,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "RUF059",
+    "end_location": {
+      "column": 21,
+      "row": 50
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "_trail",
+          "end_location": {
+            "column": 21,
+            "row": 50
+          },
+          "location": {
+            "column": 16,
+            "row": 50
+          }
+        }
+      ],
+      "message": "Prefix it with an underscore or any other dummy variable pattern"
+    },
+    "location": {
+      "column": 16,
+      "row": 50
+    },
+    "message": "Unpacked variable `trail` is never used",
+    "name": "unused-unpacked-variable",
+    "noqa_row": 50,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-unpacked-variable"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 57,
+      "row": 94
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"net_return\": 0.0, \"liquidation_cost\": 0.0,\n                                 \"rebalance_turnover\": 1.0}",
+          "end_location": {
+            "column": 57,
+            "row": 94
+          },
+          "location": {
+            "column": 29,
+            "row": 93
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 29,
+      "row": 93
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 93,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 98,
+      "row": 171
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"start\": \"2003-03\", \"end\": \"2005-04\", \"signal_months\": 12, \"information_lag_months\": 2,\n                \"instrument_volatility_scale\": 0.4, \"minimum_instruments\": 2, \"exclude_from_strategy\": {}}",
+          "end_location": {
+            "column": 98,
+            "row": 171
+          },
+          "location": {
+            "column": 12,
+            "row": 170
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 170
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 170,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 69,
+      "row": 175
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"volatility_months\": 36, \"volatility_floor_annual\": 0.02, \"correlation_shrinkage\": 0.5,\n                \"gross_cap\": 3, \"portfolio_risk_ceiling\": 0.1, \"primary_cost_bps\": 1.5, \"primary_band\": 0.1,\n                \"risk_model\": dict(type=\"dcc_garch\", correlation_shrinkage=0.1,\n                                rescale=dict(window=12, minimum=6))}",
+          "end_location": {
+            "column": 69,
+            "row": 175
+          },
+          "location": {
+            "column": 12,
+            "row": 172
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 12,
+      "row": 172
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 172,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 68,
+      "row": 175
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"type\": \"dcc_garch\", \"correlation_shrinkage\": 0.1,\n                                \"rescale\": dict(window=12, minimum=6)}",
+          "end_location": {
+            "column": 68,
+            "row": 175
+          },
+          "location": {
+            "column": 28,
+            "row": 174
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 28,
+      "row": 174
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 174,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 67,
+      "row": 175
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_pc_experiment.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"window\": 12, \"minimum\": 6}",
+          "end_location": {
+            "column": 67,
+            "row": 175
+          },
+          "location": {
+            "column": 41,
+            "row": 175
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 41,
+      "row": 175
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 175,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 66,
+      "row": 7
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_prospective_freeze.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import hashlib\nimport json\nimport zipfile\n\nimport pytest\nfrom freeze_prospective import digest, frozen_files, seal, verify\n\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 10
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 6,
+      "row": 36
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_prospective_freeze.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\n        \"files\": files,\n        \"source_snapshot_sha256\": digest(release / \"source_snapshot.zip\"),\n        \"raw_inputs\": {\"raw.csv\": digest(root / \"raw.csv\")},\n        \"reference_manifests\": {\n            \"reference/ARTIFACT_SHA256.json\": digest(root / \"reference/ARTIFACT_SHA256.json\")\n        },\n    }",
+          "end_location": {
+            "column": 6,
+            "row": 36
+          },
+          "location": {
+            "column": 14,
+            "row": 29
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 14,
+      "row": 29
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 29,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 50,
+      "row": 28
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_research_spec.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import json\n\nimport numpy as np\nimport pandas as pd\nimport pytest\nimport research_report as report\nimport run_risk_research\nfrom run_risk_research import evaluate\n\nfrom src.backtest.attribution import class_attribution\nfrom src.backtest.performance import performance\nfrom src.backtest.qps_baseline import build_forecasts, eligibility\nfrom src.backtest.research_spec import (\n    primary_key,\n    run_key,\n    select_results,\n    validate_research_settings,\n)\nfrom src.backtest.sample_diagnostics import (\n    class_portfolios,\n    rank_autocorrelation,\n    sample_audit,\n    stability_summary,\n)\nfrom src.config import CONFIG_DIR\nfrom tests.risk_model.test_risk_model import data\n\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 31
+          },
+          "location": {
+            "column": 1,
+            "row": 3
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 3
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 3,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 78,
+      "row": 100
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_research_spec.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"model\": \"correlated\", \"band\": 0.05, \"cost_bps\": 2, \"strategy\": \"trend\"}",
+          "end_location": {
+            "column": 78,
+            "row": 100
+          },
+          "location": {
+            "column": 13,
+            "row": 100
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 100
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 100,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "C408",
+    "end_location": {
+      "column": 79,
+      "row": 101
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/backtest/test_research_spec.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "{\"model\": \"correlated\", \"band\": 0.05, \"cost_bps\": 2, \"strategy\": \"static\"}",
+          "end_location": {
+            "column": 79,
+            "row": 101
+          },
+          "location": {
+            "column": 13,
+            "row": 101
+          }
+        }
+      ],
+      "message": "Rewrite as a literal"
+    },
+    "location": {
+      "column": 13,
+      "row": 101
+    },
+    "message": "Unnecessary `dict()` call (rewrite as a literal)",
+    "name": "unnecessary-collection-call",
+    "noqa_row": 101,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-collection-call"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 93,
+      "row": 5
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/data_processing/test_endpoints.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import pandas as pd\nimport pytest\nfrom construct_returns import assemble\n\nfrom src.data_processing.endpoints import close_frames, endpoints, historical_span_endpoints\n\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 8
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 80,
+      "row": 8
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/portfolio_construction/test_cost_aware.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from src.portfolio_construction.scale import PortfolioLimits\nfrom src.portfolio_construction.trade.cost_aware import CostAwarePolicy, SolverSettings\nfrom src.transaction_cost_model import LinearBpsCost, ZeroCost, traded_exposure\n\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 11
+          },
+          "location": {
+            "column": 1,
+            "row": 6
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 6
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 6,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "B008",
+    "end_location": {
+      "column": 58,
+      "row": 11
+    },
+    "filename": "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/tests/portfolio_construction/test_cost_aware.py",
+    "fix": null,
+    "location": {
+      "column": 37,
+      "row": 11
+    },
+    "message": "Do not perform function call `PortfolioLimits` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable",
+    "name": "function-call-in-default-argument",
+    "noqa_row": 11,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/function-call-in-default-argument"
+  }
+]

@@ -7,13 +7,24 @@ from src.models import MarketData
 from src.risk_model.base import check_lag, check_monthly_calendar
 
 TRADING_DAYS_PER_YEAR = 252
-MAX_FILL_DAYS = 5
+def daily_returns(prices: pd.DataFrame) -> pd.DataFrame:
+    """Return close ratios only where adjacent observation-grid prices are known.
 
-
-def daily_returns(prices: pd.DataFrame, max_fill_days: int = MAX_FILL_DAYS) -> pd.DataFrame:
-    """Simple daily returns; a holiday gap of up to `max_fill_days` carries the last close."""
-    filled = prices.ffill(limit=max_fill_days)
-    return filled / filled.shift(1) - 1
+    Missing quotes are not proof of a holiday or a zero return. Leave both the
+    missing observation and the first ratio after it unknown; the latter spans
+    an unverified interval. A verified session-calendar adapter can supply its
+    own observations before this boundary, without changing the raw prices.
+    """
+    if not isinstance(prices.index, pd.DatetimeIndex) or not (
+        prices.index.is_unique and prices.index.is_monotonic_increasing
+    ):
+        raise ValueError("Daily prices require ordered, unique dates")
+    if not prices.columns.is_unique:
+        raise ValueError("Daily prices require unique market IDs")
+    values = prices.to_numpy(dtype=float)
+    if np.isinf(values).any() or (values[np.isfinite(values)] <= 0).any():
+        raise ValueError("Observed daily prices must be positive and finite")
+    return prices / prices.shift(1) - 1
 
 
 def shrunk_covariance(
@@ -81,6 +92,7 @@ class DailyCovarianceRiskModel:
         eligible = complete_monthly_window(data.returns, self.window).shift(
             self.lag, fill_value=False
         )
+        eligible.loc[:, ~eligible.columns.isin(self.daily.columns)] = False
         vol = pd.DataFrame(np.nan, index=data.returns.index, columns=data.returns.columns)
         for month in data.returns.index[eligible.any(axis=1)]:
             markets = list(eligible.columns[eligible.loc[month]])

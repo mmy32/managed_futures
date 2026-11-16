@@ -1,0 +1,5 @@
+COMMAND: '/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/.venv/bin/python' -m mypy src
+
+src/backtest/pc_experiment.py:44: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+src/backtest/pc_experiment.py:115: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+Success: no issues found in 66 source files

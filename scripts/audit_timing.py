@@ -35,7 +35,7 @@ def main():
     sample = returns.loc[base["start"] : base["end"]]
     meta = load_asset_map()
     daily = (
-        load_daily_returns(returns.columns)
+        load_daily_returns(returns.columns, settings, base["exclude_from_strategy"])
         if settings.get("risk_model", {}).get("type") == "dcc_garch"
         else None
     )

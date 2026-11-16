@@ -1,0 +1,16 @@
+check,passed,detail
+Original daily inputs match the frozen reference,True,62/62 original daily CSV hashes match; no raw input is modified.
+Unavailable daily quotes remain unknown,True,"236,014 unavailable quote intervals inspected; none was assigned an observed or zero return."
+ER supplies risk returns after original RL terminates,True,"RL's last quote is 2008-12-10; 1,521 subsequent ER risk returns retained."
+Excluded/unused markets and their extra dates cannot change risk returns,True,Perturbed excluded/unused price levels and an excluded-only Saturday; the complete retained risk-return panel is identical.
+Actual pooled GARCH and DCC annual fits converge,True,"2 fitted annual models; diagnostics include optimizer objectives, iteration counts and elapsed fitting time."
+EC and YM are excluded before parameter estimation,True,56 retained estimation series; excluded markets absent from every fitted annual parameter set.
+Actual lag-1 future mutation preserves earlier forecasts,True,Independent estimation/filtering; maximum covariance difference through 2014-02: 0.
+Actual lag-1 truncated history preserves earlier forecasts,True,Independent estimation/filtering; maximum covariance difference through 2014-02: 0.
+"Lag 1, 2014-01: active covariance is positive definite",True,56 eligible markets; minimum eigenvalue 7.18228e-05.
+"Lag 1, 2014-02: active covariance is positive definite",True,56 eligible markets; minimum eigenvalue 8.03787e-05.
+"Lag 1, 2014-12: active covariance is positive definite",True,56 eligible markets; minimum eigenvalue 7.11163e-05.
+"Lag 2, 2014-01: active covariance is positive definite",True,56 eligible markets; minimum eigenvalue 6.83378e-05.
+"Lag 2, 2014-02: active covariance is positive definite",True,56 eligible markets; minimum eigenvalue 7.18228e-05.
+"Lag 2, 2014-12: active covariance is positive definite",True,56 eligible markets; minimum eigenvalue 7.92363e-05.
+Input and implementation hashes remain unchanged,True,Input files are immutable; hashes are checked before and after the calculations.

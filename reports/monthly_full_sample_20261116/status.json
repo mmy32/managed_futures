@@ -1,0 +1,37 @@
+{
+  "common_eligible_at_start": 6,
+  "coverage_markets": 48,
+  "development_end": "2014-12",
+  "eligible_at_start": 6,
+  "end": "2025-05",
+  "first_active_months": {
+    "monthly_dcc_garch_hrp_within_class": "1979-01",
+    "monthly_dcc_garch_inverse_vol": "1979-01",
+    "rolling_hrp_within_class": "1979-01",
+    "rolling_inverse_vol": "1979-01"
+  },
+  "independent_oos_proof": false,
+  "new_strategy_backtest_performed": true,
+  "predeclared_exclusions": 2,
+  "scope_note": "Universe selected using return availability through the full sample end; leading pre-inception blanks are allowed. This is a retrospective coverage condition with possible survivorship bias, not an ex-ante universe.",
+  "start": "1976-01",
+  "status": "COMPLETED_CONDITIONAL_ON_COVERAGE",
+  "strict_checks": [
+    {
+      "case": "full_sample_rolling_inverse_vol_shadow",
+      "end": "2025-05",
+      "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']",
+      "start": "1976-01",
+      "status": "BLOCKED"
+    },
+    {
+      "case": "test_period_rolling_inverse_vol_shadow",
+      "end": "2025-05",
+      "error": "Missing held return at 2015-06: ['ZD']",
+      "start": "2015-01",
+      "status": "BLOCKED"
+    }
+  ],
+  "strict_markets": 56,
+  "workbook_markets": 58
+}

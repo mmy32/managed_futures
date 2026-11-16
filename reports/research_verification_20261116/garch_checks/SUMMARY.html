@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Research verification</title>
+<style>body{font:17px/1.55 system-ui,sans-serif;max-width:1050px;margin:36px auto;padding:0 24px;color:#172b3a}
+table{border-collapse:collapse;width:100%;font-size:15px}th,td{padding:9px;border:1px solid #cad5dc;text-align:left}
+th{background:#edf3f7}img{max-width:100%}pre{overflow:auto;background:#f2f5f7;padding:16px}a{color:#075c9b}
+h1,h2{line-height:1.2}h2{margin-top:32px}</style><body><h1>GARCH correction verification</h1>
+<p><strong>PASS: 17/17 numerical checks passed.</strong></p>
+<p>All observations in this package are explicitly synthetic. No uploaded monthly file or real daily futures history was fitted or scored. These checks verify code behavior; they do not establish a historical strategy advantage or validate actual market calendars.</p>
+<p>Seed: 20261116. Runtime: 11.22 seconds. The short fixture uses a 12-month eligibility window and a six-month source-selection history to exercise actual production functions quickly. Production configuration and sealed reports are unchanged.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Result</th>
+<th>Numerical evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Missing GARCH dates advance expected variance</td>
+<td>PASS</td>
+<td>Maximum difference from the independent recurrence: 2.71e-20.</td>
+</tr>
+<tr>
+<td>Missing observations differ from zeros and compressed time</td>
+<td>PASS</td>
+<td>See variance_trace.csv; counterfactual paths are illustrative failure modes.</td>
+</tr>
+<tr>
+<td>DCC missing residuals use conditional second moments</td>
+<td>PASS</td>
+<td>Maximum error across fully/partly/unobserved cases: 0.</td>
+</tr>
+<tr>
+<td>Unavailable DCC shocks do not become observed zeros</td>
+<td>PASS</td>
+<td>After 250 missing updates: fixed Q diagonal 1.000000; zero-shock counterfactual 0.600001. These are filter states, not portfolio returns.</td>
+</tr>
+<tr>
+<td>GARCH rejects an unsuccessful optimizer</td>
+<td>PASS</td>
+<td>A scoped mock supplies success=False and a NaN objective.</td>
+</tr>
+<tr>
+<td>DCC rejects an unsuccessful optimizer</td>
+<td>PASS</td>
+<td>A scoped mock supplies success=False and a NaN objective.</td>
+</tr>
+<tr>
+<td>Real optimizer restored after failure checks</td>
+<td>PASS</td>
+<td>All later forecast fits call the actual SciPy optimizers.</td>
+</tr>
+<tr>
+<td>RL risk uses ER after RL quotes end</td>
+<td>PASS</td>
+<td>107 nonmissing synthetic ER risk returns remain after RL ends.</td>
+</tr>
+<tr>
+<td>Lag 1: future mutation preserves earlier covariance</td>
+<td>PASS</td>
+<td>Maximum covariance difference through 2002-02: 0.</td>
+</tr>
+<tr>
+<td>Lag 1: truncated history preserves earlier covariance</td>
+<td>PASS</td>
+<td>Maximum covariance difference through 2002-02: 0.</td>
+</tr>
+<tr>
+<td>Excluded markets and their extra dates leave forecasts unchanged</td>
+<td>PASS</td>
+<td>Maximum covariance difference: 0; retained daily grids equal.</td>
+</tr>
+<tr>
+<td>Lag 1: actual annual GARCH/DCC fits converge</td>
+<td>PASS</td>
+<td>Verified 1 annual refit(s), including January information timing.</td>
+</tr>
+<tr>
+<td>Lag 1: retained forecast block is positive definite</td>
+<td>PASS</td>
+<td>Smallest eigenvalue across exported months: 0.00887365.</td>
+</tr>
+<tr>
+<td>Lag 2: future mutation preserves earlier covariance</td>
+<td>PASS</td>
+<td>Maximum covariance difference through 2002-02: 0.</td>
+</tr>
+<tr>
+<td>Lag 2: truncated history preserves earlier covariance</td>
+<td>PASS</td>
+<td>Maximum covariance difference through 2002-02: 0.</td>
+</tr>
+<tr>
+<td>Lag 2: actual annual GARCH/DCC fits converge</td>
+<td>PASS</td>
+<td>Verified 2 annual refit(s), including January information timing.</td>
+</tr>
+<tr>
+<td>Lag 2: retained forecast block is positive definite</td>
+<td>PASS</td>
+<td>Smallest eigenvalue across exported months: 0.00887365.</td>
+</tr>
+</tbody>
+</table>
+<h2>Inspect the calculations</h2>
+<ul>
+<li><code>variance_trace.csv</code>: expected variance after every date, alongside explicitly labeled zero-imputation and compressed-time counterfactuals.</li>
+<li><code>dcc_missing_moments.csv</code> and <code>dcc_missing_state_trace.csv</code>: analytic conditional moments and the effect of 250 unavailable shocks on the DCC filter state.</li>
+<li><code>source_continuation.csv</code>: selected ER risk returns remain available after RL ends.</li>
+<li><code>fitted_parameters.csv</code>, <code>forecast_coverage.csv</code>, <code>forecast_covariances.csv</code>: actual SciPy estimates and production DCC forecasts on the synthetic fixture at both lags.</li>
+<li><code>checks.csv</code> and <code>manifest.json</code>: machine-readable outcomes, seed, versions and hashes.</li>
+</ul>
+<p>Missing-observation conditional moments and the 21-day covariance forecast remain modeling approximations. Real-data conclusions still require original daily prices, calendar/source verification, corrected historical replay and independent evaluation.</p>
+<p>To reproduce from the project root, choose a new directory:</p>
+<pre><code class="language-sh">PYTHONPATH=. .venv/bin/python scripts/verify_garch_fixes.py --output reports/garch_verification_new
+</code></pre></body></html>

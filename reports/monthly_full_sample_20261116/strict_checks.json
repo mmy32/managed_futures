@@ -1,0 +1,16 @@
+[
+  {
+    "case": "full_sample_rolling_inverse_vol_shadow",
+    "end": "2025-05",
+    "error": "Missing held return at 1997-03: ['DT', 'GS', 'LX']",
+    "start": "1976-01",
+    "status": "BLOCKED"
+  },
+  {
+    "case": "test_period_rolling_inverse_vol_shadow",
+    "end": "2025-05",
+    "error": "Missing held return at 2015-06: ['ZD']",
+    "start": "2015-01",
+    "status": "BLOCKED"
+  }
+]

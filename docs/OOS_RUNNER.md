@@ -1,4 +1,12 @@
-# Matched HRP evaluation runner
+# Daily-input matched HRP evaluation runner
+
+This guide describes the separate daily-price runner. The professor's original daily inputs
+and full monthly workbook have been supplied; their intentional endpoints are December 2014
+and May 2025. The completed monthly comparison uses 48 coverage-conditioned markets, four
+risk/sizing variants and 593 calendar months without requiring post-2014 daily prices. See
+[MONTHLY_FULL_SAMPLE.md](MONTHLY_FULL_SAMPLE.md) for that workflow and its current verification
+record. Its historical improvement did not persist in the 2015–May 2025 test period; the test
+universe is conditioned on full-sample availability.
 
 The runner compares the fixed inverse-volatility baseline with signed HRP within each asset
 class. Both use the same class-specific trend signals, baseline-derived DCC-GARCH rescale,
@@ -6,10 +14,18 @@ limits, band, ordinary trading costs and calendar. Lag 1 is primary and lag 2 is
 information-delay sensitivity. Both portfolios start flat at the evaluation boundary and
 liquidate at its end. These are idealized prior-endpoint fills, not executable fill estimates.
 
+The [GARCH/data remediation record](GARCH_DATA_REMEDIATION.md) describes the corrected source and
+remaining evidence requirements. DCC-GARCH is a research candidate, not an independently validated
+improvement. Existing daily-input historical replays and notebook results predate these repairs;
+a corrected full-period daily-input comparison still requires endpoint resolution and a matched
+rerun. The original raw course inputs are restored locally and hash-verified; they remain
+excluded from Git. Their expected layout is in [DATA_INPUTS.md](DATA_INPUTS.md).
+
 ## Input contract
 
-The course upload's format is not yet known. Before using it, normalize the historical warmup
-and released data into a consistent, continuous dataset:
+For a future assessment with this daily-input runner, normalize the historical warmup and
+evaluation prices into a consistent, continuous daily dataset. The professor's monthly workbook
+has its own loader and is not an input to this runner:
 
 ```text
 normalized/
@@ -38,6 +54,12 @@ directly comparing those historical figures with the new evaluation. The
 [historical validation](OOS_VALIDATION.md) documents a wider replay blocked by an HS endpoint
 gap and a restricted replay after that gap; neither is independent out-of-sample evidence.
 
+Unknown daily quotes do not become zero returns through forward filling. Risk fitting retains
+the observation grid and uses conditional moments for unknown innovations; it does not establish
+why a vendor omitted a quote. Supply verified session calendars and availability conventions
+where possible. Missing monthly held returns still stop the simulation. Retained strategy-market
+exclusions also apply to risk fitting and to the baseline shadow used for shared calibration.
+
 The price files must reach at least 38 months before the declared shadow start under the current
 36-month risk window and two-month maximum lag. The shadow must begin at least 36 months before
 evaluation under the current settings. The run also requires enough valid, nonflat shadow returns
@@ -51,7 +73,7 @@ the declared shadow start; it does not fit unused periods when the early univers
 1. Copy `config/oos_declaration.example.json` to a new file and replace all placeholders. The
    dates are illustrative, not approved evaluation dates. The example universe lists the 58
    markets from the archived development panel; the base configuration excludes EC and YM from
-   holdings, although they may still enter risk-model estimation. Review and fix the universe,
+   both holdings and risk-model estimation. Review and fix the retained universe,
    evaluation dates, shadow start, provenance and conventions before viewing performance. The
    evaluation must start after the 2014 development sample.
 2. From the project root, prepare a new directory. This validates the declaration and basic
@@ -80,5 +102,6 @@ metrics, paired monthly returns, ledgers, targets, exposures, diagnostics and ou
 
 The local preparation timestamp and hashes provide an audit trail, not independent proof that a
 declaration preceded all access to the data or that the vendor supplied historical vintages.
-Do not select parameters, dates or the preferred lag from the evaluation results. The released
-data still need the planned step-5 review before performance claims are made.
+Do not select parameters, dates or the preferred lag from the evaluation results. A future
+daily-input assessment needs its declared data/execution review before performance claims
+are made. Those requirements do not prevent the separate monthly comparison already reported.

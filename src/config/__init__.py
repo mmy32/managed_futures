@@ -6,6 +6,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RAW_DATA_DIR = PROJECT_ROOT / "data" / "raw"
 MONTHLY_RETURNS_PATH = RAW_DATA_DIR / "MonthlyReturns.csv"
+FULL_SAMPLE_MONTHLY_RETURNS_PATH = RAW_DATA_DIR / "MonthlyReturns_FullSample.xlsx"
 ASSET_MAP_PATH = RAW_DATA_DIR / "AssetMapCsv.csv"
 FUTURES_UNDERLYING_DIR = RAW_DATA_DIR / "futures_underlying"
 

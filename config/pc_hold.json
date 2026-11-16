@@ -13,7 +13,8 @@
     {"name": "hrp_all_markets", "kind": "hrp", "within_class": false, "signed": true}
   ],
   "bootstrap": {"block_months": 12, "draws": 2000, "seed": 20261111, "confidence": 0.9},
-  "cpcv": {"groups": 8, "test_groups": 2, "embargo_months": 36},
+  "walk_forward": {"train_months": 60, "test_months": 12, "minimum_test_months": 12},
+  "cpcv": {"enabled": false, "groups": 8, "test_groups": 2, "embargo_months": 36},
   "deflation_trial_counts": [25, 100],
-  "scope": "Rolling-covariance baseline (36 months, 50% shrinkage), TREND, 10% band, 2 bps, 1976-2014. Every variant is a trial on an inspected window."
+  "scope": "Historical development comparison, not independent out-of-sample evidence. Headline results are actual fixed-variant metrics; trailing-60-month selection is tested on the next 12 months without future training. Each candidate retains separate holdings/NAV, so fold scores are diagnostics, not an executable switching portfolio. CPCV is optional historical resampling. No automatic promotion."
 }

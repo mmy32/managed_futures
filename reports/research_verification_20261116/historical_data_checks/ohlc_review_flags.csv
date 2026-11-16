@@ -1,0 +1,2 @@
+market,date,flag,Open,High,Low,Close,Volume,OpenInterest,treatment
+ER,2012-05-28,close_outside_high_low,823.77,829.35,822.16,820.45,83570.0,442335.0,review_only_no_changes

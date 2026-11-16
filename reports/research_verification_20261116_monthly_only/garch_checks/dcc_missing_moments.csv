@@ -1,0 +1,13 @@
+case,row,column,fixed_moment,expected_moment
+both observed,0,0,4.0,4.0
+both observed,0,1,-2.0,-2.0
+both observed,1,0,-2.0,-2.0
+both observed,1,1,1.0,1.0
+one missing,0,0,4.0,4.0
+one missing,0,1,2.4,2.4
+one missing,1,0,2.4,2.4
+one missing,1,1,2.08,2.08
+both missing,0,0,1.0,1.0
+both missing,0,1,0.6,0.6
+both missing,1,0,0.6,0.6
+both missing,1,1,1.0,1.0

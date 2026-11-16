@@ -294,7 +294,10 @@ def write_class_tables(returns, eligible, meta, sample, out):
 def risk_inputs(returns, meta, base, settings, source, known):
     """Components for the configured strategy, with the rescale applied when configured."""
     needs_daily = settings.get("risk_model", {}).get("type") == "dcc_garch"
-    daily = load_daily_returns(returns.columns) if needs_daily else None
+    daily = (
+        load_daily_returns(returns.columns, settings, base["exclude_from_strategy"])
+        if needs_daily else None
+    )
     parts = configured_components(base, settings, meta, daily=daily)
     return rescaled_components(parts, returns, meta, base, settings, source, known)
 

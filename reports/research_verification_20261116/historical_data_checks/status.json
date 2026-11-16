@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "scope": "Historical arithmetic audit only. historical_span_endpoints uses full-file date spans, and the reconstructed RL/ER fallback uses the current month's availability. These retrospective conventions reproduce the supplied file; they are NOT trading inputs, an out-of-sample assessment, or verified executable futures P&L.",
+  "daily_files": 62,
+  "observed_daily_closes": 457155,
+  "daily_start": "1969-01-02",
+  "daily_end": "2014-12-31",
+  "monthly_months": 552,
+  "monthly_markets": 58,
+  "missingness_mismatches": 0,
+  "value_mismatches": 0,
+  "max_abs_difference": 4.6592380423040865e-08,
+  "review_flags": 1,
+  "strategy_scored": false
+}

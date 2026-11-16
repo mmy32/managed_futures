@@ -1,0 +1,59 @@
+market,first_observed,last_observed,missing_internal,missing_after_first,missing_post_2014,included_coverage,exclusion_reason
+AN,1988-02,2025-05,0,0,0,True,
+AP,2008-10,2025-05,33,33,33,False,Incomplete coverage after inception through the declared sample end
+AX,1997-12,2025-05,0,0,0,True,
+BN,1976-02,2025-05,0,0,0,True,
+CA,1999-02,2025-05,0,0,0,True,
+CB,1994-07,2025-05,0,0,0,True,
+CC,1981-02,2025-05,0,0,0,True,
+CN,1978-02,2025-05,0,0,0,True,
+CT,1973-02,2025-05,0,0,0,True,
+DA,1997-10,2025-05,0,0,0,True,
+DT,1989-12,2025-05,2,2,0,False,Incomplete coverage after inception through the declared sample end
+EC,1982-03,2023-04,0,25,25,False,Predeclared strategy exclusion: Instrument identity/classification unresolved; omit from strategy rather than assign an unverified class.
+FB,1989-02,2025-05,0,0,0,True,
+FN,1975-03,2025-05,0,0,0,True,
+GS,1989-12,2025-05,2,2,0,False,Incomplete coverage after inception through the declared sample end
+HS,1997-11,2025-05,4,4,2,False,Incomplete coverage after inception through the declared sample end
+JN,1978-02,2025-05,0,0,0,True,
+JO,1973-02,2025-05,0,0,0,True,
+KC,1974-02,2025-05,0,0,0,True,
+LB,1974-02,2025-05,0,0,0,True,
+LX,1990-02,2025-05,2,2,0,False,Incomplete coverage after inception through the declared sample end
+MD,1992-03,2025-05,0,0,0,True,
+MP,1995-06,2025-05,0,0,0,True,
+MW,1981-02,2025-05,0,0,0,True,
+ND,1996-05,2025-05,0,0,0,True,
+NK,1991-02,2025-05,0,0,0,True,
+RL,1993-03,2025-05,0,0,0,True,
+SB,1975-02,2025-05,0,0,0,True,
+SN,1976-02,2025-05,0,0,0,True,
+SP,1982-05,2025-05,0,0,0,True,
+SS,1991-10,2021-11,18,60,42,False,Incomplete coverage after inception through the declared sample end
+TU,1990-10,2025-05,0,0,0,True,
+TY,1983-02,2025-05,0,0,0,True,
+UB,1999-02,2025-05,0,0,0,True,
+US,1978-02,2025-05,0,0,0,True,
+UZ,1999-02,2025-05,0,0,0,True,
+XU,2001-04,2025-05,0,0,0,True,
+XX,2002-07,2025-01,0,4,4,False,Incomplete coverage after inception through the declared sample end
+YM,2002-05,2025-05,0,0,0,False,Predeclared strategy exclusion: Duplicate Dow exposure; retain older ZD series.
+ZA,1983-02,2025-05,0,0,0,True,
+ZB,1985-02,2025-05,0,0,0,True,
+ZC,1970-02,2025-05,0,0,0,True,
+ZD,1998-05,2015-05,0,120,120,False,Incomplete coverage after inception through the declared sample end
+ZF,1978-02,2025-05,0,0,0,True,
+ZG,1975-02,2025-05,0,0,0,True,
+ZI,1973-02,2025-05,0,0,0,True,
+ZK,1989-02,2025-05,0,0,0,True,
+ZL,1969-02,2025-05,0,0,0,True,
+ZM,1969-02,2025-05,0,0,0,True,
+ZN,1991-02,2025-05,0,0,0,True,
+ZO,1975-02,2025-05,0,0,0,True,
+ZP,1973-02,2025-05,0,0,0,True,
+ZR,1987-02,2025-05,0,0,0,True,
+ZS,1969-02,2025-05,0,0,0,True,
+ZT,1971-02,2025-05,0,0,0,True,
+ZU,1984-02,2025-05,0,0,0,True,
+ZW,1969-02,2025-05,0,0,0,True,
+ZZ,1970-02,2025-05,0,0,0,True,

@@ -1,0 +1,66 @@
+{
+  "garch_numerics": {
+    "command": [
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/.venv/bin/python",
+      "scripts/verify_garch_fixes.py",
+      "--output",
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/research_verification_20261116/garch_checks"
+    ],
+    "exit_code": 0,
+    "log": "checks/garch.log"
+  },
+  "historical_garch": {
+    "command": [
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/.venv/bin/python",
+      "scripts/verify_historical_garch.py",
+      "--raw-dir",
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/data/raw",
+      "--output",
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/research_verification_20261116/historical_garch"
+    ],
+    "exit_code": 0,
+    "log": "checks/historical_garch.log"
+  },
+  "lint": {
+    "new_findings": 0,
+    "passed": true,
+    "repository_findings": 132,
+    "scope": "No new findings in modified/new Python files"
+  },
+  "original_data": {
+    "command": [
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/.venv/bin/python",
+      "scripts/verify_original_inputs.py",
+      "--raw-dir",
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/data/raw",
+      "--output",
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/research_verification_20261116/historical_data_checks"
+    ],
+    "exit_code": 0,
+    "log": "checks/original_data.log"
+  },
+  "passed": true,
+  "tests": {
+    "command": [
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/.venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "--junitxml",
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/research_verification_20261116/checks/test_results.xml"
+    ],
+    "exit_code": 0,
+    "log": "checks/pytest.log",
+    "test_count": 379
+  },
+  "types": {
+    "command": [
+      "/Users/raina/Documents/Quant Portfolio Strategies/managed_futures/.venv/bin/python",
+      "-m",
+      "mypy",
+      "src"
+    ],
+    "exit_code": 0,
+    "log": "checks/mypy.log"
+  }
+}

@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Research verification</title>
+<style>body{font:17px/1.55 system-ui,sans-serif;max-width:1050px;margin:36px auto;padding:0 24px;color:#172b3a}
+table{border-collapse:collapse;width:100%;font-size:15px}th,td{padding:9px;border:1px solid #cad5dc;text-align:left}
+th{background:#edf3f7}img{max-width:100%}pre{overflow:auto;background:#f2f5f7;padding:16px}a{color:#075c9b}
+h1,h2{line-height:1.2}h2{margin-top:32px}</style><body><h1>Original supplied-data verification</h1>
+<p>Historical arithmetic audit only. historical_span_endpoints uses full-file date spans, and the reconstructed RL/ER fallback uses the current month's availability. These retrospective conventions reproduce the supplied file; they are NOT trading inputs, an out-of-sample assessment, or verified executable futures P&amp;L.</p>
+<p><strong>Status: passed</strong></p>
+<p>Checked 62 daily files and 457,155 observed positive, finite closes, spanning 1969-01-02 through 2014-12-31.</p>
+<p>The supplied monthly panel contains 552 months and 58 markets. Its full calendar and all missing cells were retained during reconstruction.</p>
+<p>Missing-state mismatches: <strong>0</strong>. Observed values outside stored precision: <strong>0</strong>. Maximum absolute difference: 4.66e-08.</p>
+<p>Tolerance is min(5e-8, half the final stored CSV digit) + 1e-12; stored zero uses 1e-12. No unknown return is replaced by zero.</p>
+<p>Vendor review flags: <strong>1</strong>. Flags do not alter data or certify field meaning. See <a href="ohlc_review_flags.csv">OHLC review flags</a>.</p>
+<p>All original-input identities and unchanged bytes are recorded in <a href="input_hashes.csv">input hashes</a>; <a href="checks.csv">checks</a> and <a href="reconciliation.csv">per-market reconciliation</a> provide the detailed results.</p>
+<p>These daily inputs end in 2014. This audit does not provide post-2014 daily data, select an evaluation period, fit a strategy or compute performance.</p></body></html>

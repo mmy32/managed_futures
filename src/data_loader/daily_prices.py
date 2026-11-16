@@ -57,7 +57,7 @@ def load_daily_prices(
     missing = [str(path) for path in paths if not path.is_file()]
     if missing:
         raise ValueError(f"Missing declared daily-price files: {missing}")
-    return pd.concat([_load_close(path, iso_dates=iso_dates) for path in paths], axis=1)
+    return pd.concat([_load_close(path, iso_dates=iso_dates) for path in paths], axis=1, sort=True)
 
 
 def load_daily_bars(directory: Path = FUTURES_UNDERLYING_DIR) -> dict[str, pd.DataFrame]:

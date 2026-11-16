@@ -1,0 +1,172 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Research verification</title>
+<style>body{font:17px/1.55 system-ui,sans-serif;max-width:1050px;margin:36px auto;padding:0 24px;color:#172b3a}
+table{border-collapse:collapse;width:100%;font-size:15px}th,td{padding:9px;border:1px solid #cad5dc;text-align:left}
+th{background:#edf3f7}img{max-width:100%}pre{overflow:auto;background:#f2f5f7;padding:16px}a{color:#075c9b}
+h1,h2{line-height:1.2}h2{margin-top:32px}</style><body><h1>Historical DCC-GARCH integration verification</h1>
+<p><strong>PASS: 15/15 checks passed.</strong></p>
+<p>These calculations use the restored original daily futures prices, not synthetic observations. They verify risk-model estimation, missing-data handling, source consistency and causality on inspected historical data through December 2014. No strategy portfolio was scored and no post-2014 observation was fitted or evaluated.</p>
+<p>The monthly workbook is explicitly loaded in decimal units and restricted through 2014-12. Its RL column is replaced by the same prior-only source rule used by the strategy; all other supplied monthly observations and missing cells are preserved. No March 1997 or Hong Kong endpoint overlay is applied.</p>
+<p>Forecasts use the configured 36-month eligibility window, 2% annual volatility floor and DCC shrinkage. These are covariance forecasts before portfolio-level shadow rescaling; the diagnostic does not simulate holdings, trades or performance.</p>
+<p>Runtime: 103.31 seconds. Original daily files matched: 62/62.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Result</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Original daily inputs match the frozen reference</td>
+<td>PASS</td>
+<td>62/62 original daily CSV hashes match; no raw input is modified.</td>
+</tr>
+<tr>
+<td>Unavailable daily quotes remain unknown</td>
+<td>PASS</td>
+<td>236,014 unavailable quote intervals inspected; none was assigned an observed or zero return.</td>
+</tr>
+<tr>
+<td>ER supplies risk returns after original RL terminates</td>
+<td>PASS</td>
+<td>RL's last quote is 2008-12-10; 1,521 subsequent ER risk returns retained.</td>
+</tr>
+<tr>
+<td>Excluded/unused markets and their extra dates cannot change risk returns</td>
+<td>PASS</td>
+<td>Perturbed excluded/unused price levels and an excluded-only Saturday; the complete retained risk-return panel is identical.</td>
+</tr>
+<tr>
+<td>Actual pooled GARCH and DCC annual fits converge</td>
+<td>PASS</td>
+<td>2 fitted annual models; diagnostics include optimizer objectives, iteration counts and elapsed fitting time.</td>
+</tr>
+<tr>
+<td>EC and YM are excluded before parameter estimation</td>
+<td>PASS</td>
+<td>56 retained estimation series; excluded markets absent from every fitted annual parameter set.</td>
+</tr>
+<tr>
+<td>Actual lag-1 future mutation preserves earlier forecasts</td>
+<td>PASS</td>
+<td>Independent estimation/filtering; maximum covariance difference through 2014-02: 0.</td>
+</tr>
+<tr>
+<td>Actual lag-1 truncated history preserves earlier forecasts</td>
+<td>PASS</td>
+<td>Independent estimation/filtering; maximum covariance difference through 2014-02: 0.</td>
+</tr>
+<tr>
+<td>Lag 1, 2014-01: active covariance is positive definite</td>
+<td>PASS</td>
+<td>56 eligible markets; minimum eigenvalue 7.18228e-05.</td>
+</tr>
+<tr>
+<td>Lag 1, 2014-02: active covariance is positive definite</td>
+<td>PASS</td>
+<td>56 eligible markets; minimum eigenvalue 8.03787e-05.</td>
+</tr>
+<tr>
+<td>Lag 1, 2014-12: active covariance is positive definite</td>
+<td>PASS</td>
+<td>56 eligible markets; minimum eigenvalue 7.11163e-05.</td>
+</tr>
+<tr>
+<td>Lag 2, 2014-01: active covariance is positive definite</td>
+<td>PASS</td>
+<td>56 eligible markets; minimum eigenvalue 6.83378e-05.</td>
+</tr>
+<tr>
+<td>Lag 2, 2014-02: active covariance is positive definite</td>
+<td>PASS</td>
+<td>56 eligible markets; minimum eigenvalue 7.18228e-05.</td>
+</tr>
+<tr>
+<td>Lag 2, 2014-12: active covariance is positive definite</td>
+<td>PASS</td>
+<td>56 eligible markets; minimum eigenvalue 7.92363e-05.</td>
+</tr>
+<tr>
+<td>Input and implementation hashes remain unchanged</td>
+<td>PASS</td>
+<td>Input files are immutable; hashes are checked before and after the calculations.</td>
+</tr>
+</tbody>
+</table>
+<h2>Declared historical forecast dates</h2>
+<table>
+<thead>
+<tr>
+<th>Lag</th>
+<th>Holding month</th>
+<th>Information through</th>
+<th>Eligible markets</th>
+<th>Median annual volatility</th>
+<th>RL annual volatility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2014-01</td>
+<td>2013-12</td>
+<td>56</td>
+<td>15.49%</td>
+<td>15.41%</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2014-02</td>
+<td>2014-01</td>
+<td>56</td>
+<td>15.21%</td>
+<td>17.68%</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2014-12</td>
+<td>2014-11</td>
+<td>56</td>
+<td>16.82%</td>
+<td>16.12%</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2014-01</td>
+<td>2013-11</td>
+<td>56</td>
+<td>13.24%</td>
+<td>14.36%</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2014-02</td>
+<td>2013-12</td>
+<td>56</td>
+<td>15.49%</td>
+<td>15.41%</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2014-12</td>
+<td>2014-10</td>
+<td>56</td>
+<td>18.18%</td>
+<td>22.14%</td>
+</tr>
+</tbody>
+</table>
+<h2>Inspect or reproduce</h2>
+<ul>
+<li><code>input_inventory.csv</code>: all input hashes and daily-file identity checks.</li>
+<li><code>fitted_parameters.csv</code>: actual annual estimates, convergence and timing.</li>
+<li><code>daily_gap_audit.csv</code> and <code>RL_ER_continuation.csv</code>: unknown intervals remain unknown; the selected source supplies its own returns.</li>
+<li><code>forecast_covariances.csv</code>, <code>forecast_summary.csv</code>, <code>forecast_coverage.csv</code>: forecast values and observed/missing daily history counts.</li>
+<li><code>monthly_eligibility_inputs.csv</code>: the historical monthly input panel actually used.</li>
+</ul>
+<p>Missing-observation Gaussian conditional moments and the 21-day covariance forecast remain modeling approximations. Passing these historical integration checks does not validate vendor vintages, executable fills, every historical month, strategy performance, or an independent out-of-sample advantage.</p>
+<p>Choose a new directory to rerun from the project root:</p>
+<pre><code class="language-sh">PYTHONPATH=. .venv/bin/python scripts/verify_historical_garch.py --output reports/historical_garch_new
+</code></pre></body></html>

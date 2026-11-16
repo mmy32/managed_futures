@@ -1,0 +1,22 @@
+{
+  "original_daily_files_matched": 62,
+  "daily_start": "1969-01-02",
+  "daily_end": "2014-12-31",
+  "daily_rows": 11756,
+  "retained_estimation_markets": 56,
+  "last_original_RL_quote": "2008-12-10",
+  "historical_monthly_end": "2014-12",
+  "historical_monthly_rows": 551,
+  "fit_years": [
+    2013,
+    2014
+  ],
+  "fit_seconds": {
+    "2013": 26.47459700005129,
+    "2014": 25.011944292113185
+  },
+  "runtime_seconds": 103.30642991606146,
+  "passed": true,
+  "independent_oos_assessment_performed": false,
+  "strategy_performance_computed": false
+}

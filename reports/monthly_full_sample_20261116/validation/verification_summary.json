@@ -1,0 +1,27 @@
+{
+  "tests": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "408",
+    "time": "86.480",
+    "timestamp": "2026-11-16T16:17:59.694994-05:00",
+    "hostname": "dhcp-10-60-3-69.eduroam.cornell.edu"
+  },
+  "independent_statistics_cases": 12,
+  "relocated_checkout_verification": "PASS",
+  "supplied_returns_exported": false,
+  "portfolio_metrics_unchanged_after_packaging_fixes": true,
+  "lint": {
+    "repository_findings": 132,
+    "new_findings": 0,
+    "passed": true,
+    "scope": "No new findings in modified/new Python files"
+  },
+  "commands": [
+    ".venv/bin/python -m pytest -q --junitxml=<validation/test_results.xml>",
+    ".venv/bin/mypy src scripts/run_monthly_full_sample.py",
+    "PYTHONPATH=. .venv/bin/python scripts/run_monthly_full_sample.py --verify-existing reports/monthly_full_sample_20261116"
+  ]
+}

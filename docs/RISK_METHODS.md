@@ -1,5 +1,11 @@
 # Fixed strategy and research definitions
 
+The rolling-covariance formulas and numerical comparisons below describe archived development
+research. The configured DCC-GARCH model remains an experimental candidate. Current code fixes,
+changed data conventions and the raw-data checks still needed before a corrected historical
+replay are recorded in [GARCH and data remediation](GARCH_DATA_REMEDIATION.md). Archived numbers
+must not be relabeled as performance of the corrected implementation.
+
 The evaluation calendar is January 1976–December 2014. Earlier observations initialize the model; no start date or eligibility threshold is silently changed. January 1976 has seven eligible instruments, below the required ten, so the existing rule leaves both portfolios flat. March 1997 has missing held DT, GS and LX returns, which blocks the full-period comparison under the preserved endpoint policy. See [data status](DATA_STATUS.md), [presentation report](../reports/qps_baseline/REPORT.md) and [endpoint audit](ENDPOINT_REVIEW.md).
 
 ## Data, signal and eligibility
@@ -53,6 +59,15 @@ Monthly limits are not intramonth guarantees. Execution at valuation endpoints, 
 `python scripts/run_research.py --endpoint-sensitivity` additionally evaluates the exact-date overlay in `config/endpoint_sensitivity.json`. It modifies a copy of the strategy return matrix, restoring only eight missing March/April 1997 cells from observed February 28 / March 27 / April 30 closes for DT, GS, LX and SS. It never writes to primary construction inputs. All forecasts and trading paths are recomputed using the same engine. This is an unverified data assumption, not a new strategy or a verified venue-calendar correction. Output snapshots, cost scenarios, class attribution and reports are isolated under `output/endpoint_sensitivity/` and `ENDPOINT_SENSITIVITY.*`. See [evidence and decision](ENDPOINT_DECISION.md).
 
 ## Covariance estimator comparison
+
+The current DCC implementation fits parameters annually to expanding history available through
+the prior December. The 36-month setting controls complete monthly eligibility, not the fitting
+window. Missing daily quotes are left unknown instead of forward-filled into zero returns.
+Missing-aware GARCH/DCC filters propagate conditional moments under the declared Gaussian QML
+assumption; these are model-based estimates, not observations or verified market calendars.
+Configured holding exclusions also apply to pooled risk estimation. Both sizing variants share
+the inverse-volatility shadow's past-only risk rescale. A near-one aggregate calibration does
+not establish correct individual volatilities, correlations, tails or executable fills.
 
 `python scripts/compare_risk_models.py` re-runs the v2 strategy using the configured primary cost and band (now 2 bps and 10%) on endpoint-sensitivity returns with the 36-month window weighted by exponential decay (half-lives in `config/risk_model_comparison.json`), keeping the 0.5 correlation shrinkage, 2% floor and limits. The window and eligibility are unchanged, so only the covariance forecast differs. Results are in-sample on the 1976–2014 calendar.
 

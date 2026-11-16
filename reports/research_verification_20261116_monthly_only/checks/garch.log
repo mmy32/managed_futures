@@ -1,0 +1,3 @@
+COMMAND: /Users/raina/Documents/Quant Portfolio Strategies/managed_futures/.venv/bin/python scripts/verify_garch_fixes.py --output /Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/research_verification_20261116/garch_checks
+
+PASS: /Users/raina/Documents/Quant Portfolio Strategies/managed_futures/reports/research_verification_20261116/garch_checks/SUMMARY.md

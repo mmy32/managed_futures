@@ -14,16 +14,19 @@ from compare_risk_models import SUMMARY_FIELDS, load_inputs
 from src.backtest.cross_validation import cpcv_paths, cpcv_splits
 from src.backtest.engine import simulate
 from src.backtest.performance import performance, sharpe_ratio
-from src.backtest.qps_baseline import forecasts_from, portfolio_limits, qps_components
+from src.backtest.qps_baseline import (
+    build_risk_model,
+    forecasts_from,
+    portfolio_limits,
+    qps_components,
+)
 from src.backtest.sample_diagnostics import risk_diagnostics
-from src.data_loader import load_daily_prices
+from src.data_processing.strategy_inputs import load_daily_returns
 from src.portfolio_construction import BandPolicy
 from src.risk_model import (
     DailyCovarianceRiskModel,
-    DccGarchRiskModel,
     RollingCovarianceRiskModel,
     ScaledRiskModel,
-    daily_returns,
     standardized_returns,
     trailing_scale,
 )
@@ -53,7 +56,7 @@ class Study:
 def load_study() -> Study:
     inputs = load_inputs()
     returns = inputs[2]
-    daily = daily_returns(load_daily_prices())[list(returns.columns)]
+    daily = load_daily_returns(returns.columns, inputs[0], inputs[1]["exclude_from_strategy"])
     return Study(inputs, daily)
 
 
@@ -83,13 +86,10 @@ def daily_model(study, block_days=1, shrinkage=None):
 
 def garch_model(study, shrinkage=None):
     settings, base = study.settings, study.base
-    return DccGarchRiskModel(
-        study.daily,
-        study.meta.AssetClass,
-        window=settings["volatility_months"],
-        lag=base["information_lag_months"],
-        volatility_floor=settings["volatility_floor_annual"],
-        correlation_shrinkage=shrinkage or settings["correlation_shrinkage"],
+    options = {"type": "dcc_garch",
+               "correlation_shrinkage": shrinkage or settings["correlation_shrinkage"]}
+    return build_risk_model(
+        base, {**settings, "risk_model": options}, study.meta, daily=study.daily,
     )
 
 

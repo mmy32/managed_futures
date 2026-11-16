@@ -151,6 +151,30 @@ def test_dcc_garch_is_built_from_config_with_its_own_shrinkage():
     assert model.correlation_shrinkage == 0.1
 
 
+def test_excluded_markets_cannot_change_dcc_estimation_or_aligned_targets():
+    returns, meta, base = data()
+    returns = returns.assign(EC=returns.A, YM=returns.B)
+    meta = pd.concat([meta, pd.DataFrame({"AssetClass": ["FX", "EQ"]}, index=["EC", "YM"])])
+    base = {**base, "exclude_from_strategy": {"EC": "unverified", "YM": "duplicate"},
+            "risk_forecast_start": "2000-01"}
+    settings = {**RISK_SETTINGS, "risk_model": {"type": "dcc_garch", "correlation_shrinkage": 0.1}}
+    daily = daily_returns_for(returns)
+    perturbed = daily.copy()
+    perturbed["EC"] = 0.05 - 10 * perturbed.EC
+    perturbed["YM"] = -0.02 + 7 * perturbed.YM
+    components = [configured_components(base, settings, meta, daily=panel)
+                  for panel in (daily, perturbed)]
+    assert set(components[0].risk_model.daily) == set(returns) - {"EC", "YM"}
+    pd.testing.assert_frame_equal(components[0].risk_model.daily, components[1].risk_model.daily)
+    outputs = [forecasts_from(parts, returns, meta, base) for parts in components]
+    for name in ("trend", "static"):
+        pd.testing.assert_frame_equal(outputs[0][0][name], outputs[1][0][name])
+        assert outputs[0][0][name].columns.equals(returns.columns)
+        assert outputs[0][0][name][["EC", "YM"]].eq(0).all().all()
+    for month in outputs[0][1]:
+        np.testing.assert_allclose(outputs[0][1][month], outputs[1][1][month])
+
+
 def test_dcc_garch_needs_daily_returns_and_the_correlated_model():
     returns, meta, base = data()
     settings = {**RISK_SETTINGS, "risk_model": {"type": "dcc_garch", "correlation_shrinkage": 0.1}}

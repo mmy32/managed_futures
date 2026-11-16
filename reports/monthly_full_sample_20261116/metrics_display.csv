@@ -1,0 +1,13 @@
+Period,Risk model,Sizing,Months,Annual net mean,CAGR,Annual volatility,Sharpe (RF=0),Maximum drawdown,Annual turnover,Annual cost,Positive months
+Development: January 1976–December 2014,Rolling covariance,Inverse volatility,468,9.64%,9.65%,8.92%,1.081,-13.63%,6.77×,0.14%,58.5%
+Test calendar: January 2015–May 2025,Rolling covariance,Inverse volatility,125,0.24%,-0.17%,9.12%,0.026,-27.20%,10.34×,0.21%,48.0%
+Combined: January 1976–May 2025,Rolling covariance,Inverse volatility,593,7.66%,7.50%,9.02%,0.849,-27.20%,7.52×,0.15%,56.3%
+Development: January 1976–December 2014,Rolling covariance,Within-class HRP,468,10.11%,10.16%,8.94%,1.130,-16.50%,11.90×,0.24%,58.3%
+Test calendar: January 2015–May 2025,Rolling covariance,Within-class HRP,125,-0.92%,-1.25%,8.17%,-0.113,-22.51%,16.70×,0.33%,48.8%
+Combined: January 1976–May 2025,Rolling covariance,Within-class HRP,593,7.78%,7.65%,8.87%,0.877,-22.51%,12.91×,0.26%,56.3%
+Development: January 1976–December 2014,Monthly DCC-GARCH,Inverse volatility,468,9.73%,9.77%,8.71%,1.117,-13.02%,6.83×,0.14%,59.0%
+Test calendar: January 2015–May 2025,Monthly DCC-GARCH,Inverse volatility,125,-0.17%,-0.57%,8.98%,-0.019,-24.78%,10.79×,0.22%,48.0%
+Combined: January 1976–May 2025,Monthly DCC-GARCH,Inverse volatility,593,7.64%,7.50%,8.84%,0.865,-24.78%,7.66×,0.15%,56.7%
+Development: January 1976–December 2014,Monthly DCC-GARCH,Within-class HRP,468,10.45%,10.60%,8.25%,1.267,-14.43%,11.57×,0.23%,61.1%
+Test calendar: January 2015–May 2025,Monthly DCC-GARCH,Within-class HRP,125,-1.00%,-1.27%,7.51%,-0.133,-20.75%,17.11×,0.34%,42.4%
+Combined: January 1976–May 2025,Monthly DCC-GARCH,Within-class HRP,593,8.04%,7.98%,8.20%,0.980,-20.75%,12.74×,0.25%,57.2%

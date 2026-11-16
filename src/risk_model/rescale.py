@@ -22,7 +22,21 @@ def trailing_scale(standardized: pd.Series, window: int, minimum: int, lag: int 
     `standardized` is return / forecast monthly volatility. The value at month t uses months
     through t - lag only; it is 1.0 until `minimum` observations are available.
     """
-    ratio = standardized.rolling(window, min_periods=minimum).std(ddof=1).shift(lag)
+    if any(type(value) is not int or value < 1 for value in (window, minimum, lag)):
+        raise ValueError("Calibration window, minimum and lag must be positive integers")
+    if minimum < 2 or minimum > window:
+        raise ValueError("Calibration requires 2 <= minimum <= window")
+    if not isinstance(standardized.index, pd.PeriodIndex) or standardized.index.freqstr != "M":
+        raise ValueError("Calibration requires a monthly PeriodIndex")
+    if not standardized.index.is_unique or not standardized.index.is_monotonic_increasing:
+        raise ValueError("Calibration months must be ordered and unique")
+    if standardized.empty:
+        return standardized.copy()
+    # Zero-risk months are omitted by standardized_returns. Restore their calendar
+    # slots before rolling/shifting so 60 months and lag two keep their stated units.
+    calendar = pd.period_range(standardized.index[0], standardized.index[-1], freq="M")
+    monthly = standardized.reindex(calendar)
+    ratio = monthly.rolling(window, min_periods=minimum).std(ddof=1).shift(lag)
     return ratio.fillna(1.0)
 
 

@@ -1,0 +1,13 @@
+risk_model,portfolio,period,status,max_statistic_error
+rolling,inverse_vol,in_sample,PASS,0.0
+rolling,inverse_vol,test_period,PASS,0.0
+rolling,inverse_vol,full_sample,PASS,0.0
+rolling,hrp_within_class,in_sample,PASS,0.0
+rolling,hrp_within_class,test_period,PASS,0.0
+rolling,hrp_within_class,full_sample,PASS,0.0
+monthly_dcc_garch,inverse_vol,in_sample,PASS,0.0
+monthly_dcc_garch,inverse_vol,test_period,PASS,0.0
+monthly_dcc_garch,inverse_vol,full_sample,PASS,0.0
+monthly_dcc_garch,hrp_within_class,in_sample,PASS,0.0
+monthly_dcc_garch,hrp_within_class,test_period,PASS,0.0
+monthly_dcc_garch,hrp_within_class,full_sample,PASS,0.0

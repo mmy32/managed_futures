@@ -121,9 +121,10 @@ def build_risk_model(base, settings, meta, model="correlated", daily=None) -> Ri
         raise ValueError("dcc_garch supports only the correlated risk model")
     if daily is None:
         raise ValueError("dcc_garch needs daily returns")
+    estimation = daily.drop(columns=list(base["exclude_from_strategy"]), errors="ignore")
     return DccGarchRiskModel(
-        daily,
-        meta.AssetClass,
+        estimation,
+        meta.AssetClass.reindex(estimation.columns),
         **common,
         correlation_shrinkage=options["correlation_shrinkage"],
         forecast_start=base.get("risk_forecast_start"),

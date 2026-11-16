@@ -1,6 +1,14 @@
-"""Baseline TSMOM (Moskowitz-Ooi-Pedersen 2012): clean → signal/risk → size → simulate → report."""
+"""Causal TSMOM development baseline with declared identities and no missing-held-return fill.
 
+Archived results used full-panel cleaning and zero-filled held returns. This paper-style baseline
+keeps raw RL for both returns and volatility; it is distinct from the final matched comparison's
+shared causal RL/ER policy. Use the matched OOS runner for that comparison. New baseline results
+require a new output directory and remain development evidence on the previously inspected history.
+"""
+
+import argparse
 import json
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,9 +17,9 @@ import pandas as pd
 from src.alpha_model import CompoundedReturnSignal
 from src.backtest.engine import simulate
 from src.backtest.performance import performance, signal_hit_rate
-from src.config import CONFIG_DIR, TSMOM_REPORT_DIR
-from src.data_cleaning import clean
-from src.data_loader import load_asset_map, load_daily_prices, load_monthly_returns
+from src.config import CONFIG_DIR
+from src.data_loader import load_asset_map, load_daily_prices
+from src.data_processing.endpoints import close_frames, endpoints
 from src.models import MarketData
 from src.portfolio_construction import (
     InverseVolatilitySizer,
@@ -32,25 +40,61 @@ STAT_COLUMNS = {
 }
 
 
-def load_market_data() -> MarketData:
-    cleaned = clean(load_monthly_returns(), load_daily_prices(), load_asset_map())
-    returns = cleaned.returns.copy()
-    returns.index = returns.index.to_period("M")
-    # The monthly panel starts before the daily prices; complete calendar is required downstream.
-    return MarketData(returns, cleaned.asset_map, cleaned.prices)
+def market_data_from_prices(prices: pd.DataFrame, meta: pd.DataFrame, config: dict) -> MarketData:
+    """Use fixed raw identities; availability affects eligibility only when it becomes known.
+
+    No full-history quality screen, correlation grouping, price averaging or source fallback is
+    used. In particular RL remains its own raw source; a missing held endpoint stops simulation.
+    """
+    universe = config["universe"]
+    if not universe or len(set(universe)) != len(universe):
+        raise ValueError("TSMOM requires a nonempty, unique predeclared universe")
+    markets = [name for name in universe if name not in config["exclude_from_strategy"]]
+    if not markets or set(markets) - set(prices) or set(markets) - set(meta.index):
+        raise ValueError("Missing declared TSMOM prices or asset metadata")
+    if not isinstance(prices.index, pd.DatetimeIndex) or not prices.index.is_unique:
+        raise ValueError("Daily prices require unique dates")
+    if not prices.index.is_monotonic_increasing:
+        raise ValueError("Daily prices must be ordered")
+    months = pd.period_range(config["history_start"], config["end"], freq="M")
+    if months.empty or pd.Period(config["start"], "M") < months[0]:
+        raise ValueError("TSMOM requires history_start <= start <= end")
+    if pd.Period(config["start"], "M") > months[-1]:
+        raise ValueError("TSMOM requires history_start <= start <= end")
+    selected = prices.loc[months[0].start_time : months[-1].end_time, markets].copy()
+    closes = {
+        market: endpoints(frame, months, lookback=config["endpoint_lookback_calendar_days"])
+        .endpoint_close
+        for market, frame in close_frames(selected).items()
+    }
+    returns = pd.DataFrame(closes, index=months).pct_change(fill_method=None)
+    return MarketData(returns, meta.loc[markets].copy(), selected)
 
 
-def run(data: MarketData, config: dict) -> tuple[pd.DataFrame, pd.DataFrame, list[str]]:
+def load_market_data(config: dict) -> MarketData:
+    markets = [name for name in config["universe"] if name not in config["exclude_from_strategy"]]
+    return market_data_from_prices(load_daily_prices(markets=markets), load_asset_map(), config)
+
+
+def run(
+    data: MarketData, config: dict, instrument_details=None
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     lag = config["information_lag_months"]
     sizer = InverseVolatilitySizer(
         config["instrument_volatility_scale"],
         config["volatility_floor_annual"],
         config["minimum_instruments"],
+        config["exclude_from_strategy"],
     )
     targets, _, _ = construct_targets(
         data,
         {"tsmom": CompoundedReturnSignal(config["signal_months"])},
-        EwmaVolatilityRiskModel(lag=lag),
+        EwmaVolatilityRiskModel(
+            lag=lag,
+            center_of_mass=config["ewma_center_of_mass_days"],
+            trading_days=config["ewma_trading_days_per_year"],
+            min_observations=config["ewma_min_observations"],
+        ),
         sizer,
         NO_LIMITS,
         lag=lag,
@@ -58,13 +102,10 @@ def run(data: MarketData, config: dict) -> tuple[pd.DataFrame, pd.DataFrame, lis
         end=config["end"],
     )
     sample = data.returns.loc[config["start"] : config["end"]]
-    # A held market with no supplied return (e.g. March 1997) earns zero rather than aborting.
-    filled = sample.isna() & targets["tsmom"].ne(0)
-    ledger, attribution = simulate(
-        sample.mask(filled, 0.0), targets["tsmom"], ZeroCost(), liquidate=False
+    return simulate(
+        sample, targets["tsmom"], ZeroCost(), liquidate=False,
+        instrument_details=instrument_details,
     )
-    stacked = filled.stack()
-    return ledger, attribution, [f"{m}:{market}" for m, market in stacked[stacked].index]
 
 
 def stats_row(ledger: pd.DataFrame, attribution: pd.DataFrame) -> dict:
@@ -134,21 +175,27 @@ def plot_cumulative(ledger: pd.DataFrame, start: str, path) -> None:
     plt.close(fig)
 
 
-def main() -> None:
+def main(output: Path) -> None:
+    if output.exists():
+        raise ValueError("Use a new output directory; archived TSMOM results must be preserved")
     config = json.loads((CONFIG_DIR / "tsmom_baseline.json").read_text())
-    data = load_market_data()
-    ledger, attribution, filled = run(data, config)
+    data = load_market_data(config)
+    ledger, attribution = run(data, config)
     classes = data.meta["AssetClass"]
     table = stats_table(ledger, attribution, classes, config)
     check = paper_check(ledger, attribution, config)
-    check["zero_filled_held_months"] = filled
-    TSMOM_REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    table.to_csv(TSMOM_REPORT_DIR / "stats.csv")
-    (TSMOM_REPORT_DIR / "paper_check.json").write_text(json.dumps(check, indent=2))
-    plot_cumulative(ledger, config["subsample_start"], TSMOM_REPORT_DIR / "cumulative_return.png")
+    check["input_policy"] = config["input_policy"]
+    check["independent_validation"] = False
+    output.mkdir(parents=True)
+    table.to_csv(output / "stats.csv")
+    (output / "paper_check.json").write_text(json.dumps(check, indent=2))
+    (output / "config.json").write_text(json.dumps(config, indent=2))
+    plot_cumulative(ledger, config["subsample_start"], output / "cumulative_return.png")
     print(table.to_string(float_format=lambda v: f"{v:.3f}"))
     print(json.dumps(check, indent=2))
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, required=True)
+    main(parser.parse_args().output.resolve())

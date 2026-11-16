@@ -21,3 +21,6 @@ reports/dcc_garch_studies/
 
 # Regenerable local report renderings; frozen release artifacts remain tracked.
 reports/qps_baseline/*.html
+
+# Supplied course-return panels remain local; publish derived results only.
+reports/monthly_full_sample_*/strategy_returns.csv.gz

@@ -1,0 +1,6 @@
+check,status,detail
+rolling_inverse_vol,PASS,"593-month accounting, held returns, limits and period metrics"
+rolling_hrp_within_class,PASS,"593-month accounting, held returns, limits and period metrics"
+monthly_dcc_garch_inverse_vol,PASS,"593-month accounting, held returns, limits and period metrics"
+monthly_dcc_garch_hrp_within_class,PASS,"593-month accounting, held returns, limits and period metrics"
+input_and_source_fingerprints,PASS,Immutable raw files and source bytes match the run declaration

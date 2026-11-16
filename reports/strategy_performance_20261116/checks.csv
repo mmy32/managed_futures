@@ -1,0 +1,5 @@
+information_lag_months,portfolio,months,calendar,net_accounting,cost_accounting,nav_accounting,declared_limit_flags,metrics_match,max_metric_absolute_error
+1,baseline,468,PASS,PASS,PASS,PASS,PASS,PASS,2.2204460492503131e-16
+1,enhanced,468,PASS,PASS,PASS,PASS,PASS,PASS,6.6613381477509392e-16
+2,baseline,468,PASS,PASS,PASS,PASS,PASS,PASS,0
+2,enhanced,468,PASS,PASS,PASS,PASS,PASS,PASS,1.1102230246251565e-16
